@@ -1,10 +1,745 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi" class="h-full bg-slate-50">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký Tài Khoản - CareHealth Y Tế Số</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        medical: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb', // Medical Blue (#2563EB)
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                        },
+                        teal: {
+                            500: '#14b8a6',
+                            600: '#0d9488', // Secondary Teal (#0D9488)
+                            700: '#0f766e',
+                        },
+                        emerald: {
+                            500: '#10b981', // Accent Emerald (#10B981)
+                            600: '#059669',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB;
+            overflow-x: hidden;
+        }
+
+        /* ----------------------------------------------------
+           1. ANIMATIONS & KEYFRAMES (60fps Motion Design)
+        ---------------------------------------------------- */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(18px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes shimmerSweep {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.2); }
+            50% { box-shadow: 0 0 0 8px rgba(37, 99, 235, 0); }
+        }
+
+        @keyframes checkBounce {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes eyeRotate {
+            0% { transform: scale(0.8) rotate(-15deg); }
+            50% { transform: scale(1.1) rotate(15deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        /* Staggered entrance class setup */
+        .animate-fade-in-up {
+            animation: fadeInUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        .delay-100 { animation-delay: 0.08s; }
+        .delay-150 { animation-delay: 0.14s; }
+        .delay-200 { animation-delay: 0.20s; }
+        .delay-250 { animation-delay: 0.26s; }
+        .delay-300 { animation-delay: 0.32s; }
+        .delay-350 { animation-delay: 0.38s; }
+        .delay-400 { animation-delay: 0.44s; }
+        .delay-450 { animation-delay: 0.50s; }
+
+        /* Button Hover Shine Sweep Effect */
+        .shine-button {
+            position: relative;
+            overflow: hidden;
+        }
+        .shine-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 50%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.35) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(25deg);
+            transition: none;
+            pointer-events: none;
+        }
+        .shine-button:hover::after {
+            animation: shimmerSweep 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Password meter shimmer light sweep */
+        .meter-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .meter-shimmer::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.6),
+                transparent
+            );
+            transform: translateX(-100%);
+        }
+        .meter-shimmer.active-sweep::after {
+            animation: shimmerSweep 0.6s ease-out;
+        }
+
+        /* Icon rotate for eye toggle */
+        .eye-animated {
+            animation: eyeRotate 0.25s ease-out;
+        }
+
+        /* Custom Checkbox Animated */
+        .custom-checkbox:checked + .checkbox-box {
+            background-color: #2563eb;
+            border-color: #2563eb;
+            animation: checkBounce 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .custom-checkbox:checked + .checkbox-box .check-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Smooth Pill Selector Slider */
+        .pill-active-bg {
+            transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Reduced Motion Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            .animate-fade-in-up,
+            .shine-button::after,
+            .meter-shimmer::after,
+            .eye-animated,
+            .pill-active-bg {
+                animation: none !important;
+                transition: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-600">
+
+    <!-- GLOBAL MAIN HEADER -->
+    <header class="bg-white border-b border-gray-100 py-3.5 px-4 sm:px-8 flex justify-between items-center shadow-xs sticky top-0 z-40 backdrop-blur-md bg-white/95">
+        <a href="#" class="flex items-center space-x-3 group">
+            <div class="bg-blue-600 text-white w-9 h-9 rounded-xl flex items-center justify-center font-bold text-lg shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform duration-200">
+                <i class="fa-solid fa-plus text-base"></i>
+            </div>
+            <div>
+                <span class="text-xl font-extrabold tracking-tight text-blue-600 block leading-tight">CareHealth</span>
+                <span class="text-[11px] font-medium text-gray-500 block">Hệ thống y tế thông minh</span>
+            </div>
+        </a>
+
+        <div class="flex items-center space-x-4 sm:space-x-6 text-sm">
+            <a href="#" class="hidden sm:inline-flex items-center text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                <i class="fa-solid fa-house mr-1.5 text-xs text-gray-400 group-hover:text-blue-600"></i>
+                Trang chủ
+            </a>
+            <a href="tel:19006868" class="inline-flex items-center text-gray-700 font-semibold hover:text-blue-600 transition-colors">
+                <i class="fa-solid fa-phone text-blue-600 mr-2 text-xs bg-blue-50 p-2 rounded-full"></i>
+                <span class="text-xs sm:text-sm">1900 6868</span>
+            </a>
+            <a href="#" onclick="showToast('Chuyển sang trang Đăng nhập...', 'info')" class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-semibold text-xs shadow-xs hover:bg-blue-600 hover:text-white transition-all duration-200" title="Tài khoản">
+                <i class="fa-regular fa-user"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN VIEW CONTAINER -->
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-6 lg:p-8">
+
+        <!-- ========================================================================= -->
+        <!-- REGISTRATION CARD CONTAINER -->
+        <!-- ========================================================================= -->
+        <section class="w-full max-w-lg my-2">
+            <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-gray-100 p-6 sm:p-9 space-y-6 animate-fade-in-up">
+                
+                <!-- Badge & Header -->
+                <div class="text-center space-y-2 animate-fade-in-up delay-100">
+                    <span class="inline-flex items-center space-x-1.5 bg-blue-50 text-blue-700 text-[11px] font-semibold px-3 py-1 rounded-full border border-blue-100/80 shadow-2xs">
+                        <i class="fa-solid fa-notes-medical text-blue-600"></i>
+                        <span>CỔNG ĐĂNG KÝ Y TẾ SỐ</span>
+                    </span>
+                    <h1 class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">Đăng Ký Tài Khoản Mới</h1>
+                    <p class="text-xs text-gray-500 leading-relaxed max-w-xs mx-auto">
+                        Tạo tài khoản bệnh nhân để quản lý hồ sơ khám chữa bệnh, đặt lịch hẹn bác sĩ và bảo mật thông tin y tế.
+                    </p>
+                </div>
+
+                <!-- Registration Form -->
+                <form id="register-form" onsubmit="handleRegisterSubmit(event)" class="space-y-4">
+                    
+                    <!-- 1. Full Name -->
+                    <div class="animate-fade-in-up delay-150">
+                        <label for="reg-fullname" class="block text-xs font-semibold text-gray-700 mb-1.5">
+                            Họ và tên <span class="text-rose-500">*</span>
+                        </label>
+                        <div class="relative group">
+                            <div class="input-icon-box absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-600 transition-colors duration-200">
+                                <i class="fa-regular fa-user text-sm"></i>
+                            </div>
+                            <input type="text" id="reg-fullname" required 
+                                   placeholder="VD: Nguyễn Văn A (theo CCCD/BHYT)"
+                                   class="w-full pl-10 pr-3.5 py-2.5 bg-gray-50/70 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all duration-200">
+                        </div>
+                    </div>
+
+                    <!-- 2. Phone Number with OTP Note -->
+                    <div class="animate-fade-in-up delay-200">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label for="reg-phone" class="text-xs font-semibold text-gray-700">
+                                Số điện thoại di động <span class="text-rose-500">*</span>
+                            </label>
+                            <span class="text-[11px] text-blue-600 font-medium flex items-center gap-1">
+                                <i class="fa-solid fa-comment-sms text-[10px]"></i> Nhận mã xác thực OTP
+                            </span>
+                        </div>
+                        <div class="relative flex rounded-xl shadow-2xs group">
+                            <span class="inline-flex items-center px-3.5 rounded-l-xl border border-r-0 border-gray-200 bg-gray-100/80 text-gray-600 text-xs font-bold select-none">
+                                +84
+                            </span>
+                            <input type="tel" id="reg-phone" required pattern="[0-9]{9,10}"
+                                   placeholder="0912 345 678"
+                                   class="w-full min-w-0 pl-3 pr-3.5 py-2.5 bg-gray-50/70 border border-gray-200 rounded-r-xl text-sm placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all duration-200">
+                        </div>
+                    </div>
+
+                    <!-- 3. Email Address (Optional) -->
+                    <div class="animate-fade-in-up delay-250">
+                        <label for="reg-email" class="block text-xs font-semibold text-gray-700 mb-1.5">
+                            Địa chỉ Email <span class="text-gray-400 font-normal">(Nhận kết quả khám)</span>
+                        </label>
+                        <div class="relative group">
+                            <div class="input-icon-box absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-600 transition-colors duration-200">
+                                <i class="fa-regular fa-envelope text-sm"></i>
+                            </div>
+                            <input type="email" id="reg-email" 
+                                   placeholder="example@gmail.com"
+                                   class="w-full pl-10 pr-3.5 py-2.5 bg-gray-50/70 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all duration-200">
+                        </div>
+                    </div>
+
+                    <!-- 4. Grid 2 Cols: Date of Birth & Gender Pill Selector -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 animate-fade-in-up delay-300">
+                        <!-- Date of Birth -->
+                        <div>
+                            <label for="reg-dob" class="block text-xs font-semibold text-gray-700 mb-1.5">
+                                Ngày sinh <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="relative group">
+                                <input type="date" id="reg-dob" required 
+                                       class="w-full px-3 py-2.5 bg-gray-50/70 border border-gray-200 rounded-xl text-sm text-gray-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all duration-200">
+                            </div>
+                        </div>
+
+                        <!-- Gender Pill Slider Selector -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1.5">
+                                Giới tính <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="relative bg-gray-100/90 p-1 rounded-xl flex border border-gray-200/80 text-xs font-semibold text-gray-600 select-none">
+                                <!-- Sliding active background pill -->
+                                <div id="pill-highlight" class="pill-active-bg absolute top-1 bottom-1 left-1 w-[31%] bg-white rounded-lg shadow-xs border border-gray-200/60 pointer-events-none"></div>
+
+                                <button type="button" onclick="setGender('Nam', 0)" id="gender-btn-0" 
+                                        class="relative z-10 flex-1 py-1.5 text-center text-blue-600 font-bold transition-colors duration-200">
+                                    Nam
+                                </button>
+                                <button type="button" onclick="setGender('Nữ', 1)" id="gender-btn-1" 
+                                        class="relative z-10 flex-1 py-1.5 text-center hover:text-gray-900 transition-colors duration-200">
+                                    Nữ
+                                </button>
+                                <button type="button" onclick="setGender('Khác', 2)" id="gender-btn-2" 
+                                        class="relative z-10 flex-1 py-1.5 text-center hover:text-gray-900 transition-colors duration-200">
+                                    Khác
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. Password with Strength Meter -->
+                    <div class="animate-fade-in-up delay-350">
+                        <label for="reg-password" class="block text-xs font-semibold text-gray-700 mb-1.5">
+                            Mật khẩu <span class="text-rose-500">*</span>
+                        </label>
+                        <div class="relative group">
+                            <div class="input-icon-box absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-600 transition-colors duration-200">
+                                <i class="fa-solid fa-lock text-sm"></i>
+                            </div>
+                            <input type="password" id="reg-password" required oninput="handlePasswordInput(this.value)"
+                                   placeholder="Tạo mật khẩu an toàn"
+                                   class="w-full pl-10 pr-10 py-2.5 bg-gray-50/70 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all duration-200">
+                            <button type="button" onclick="togglePasswordVisibility('reg-password', 'reg-eye-icon')" 
+                                    class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
+                                <i id="reg-eye-icon" class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+
+                        <!-- Password Strength Meter Bar & Rules -->
+                        <div class="mt-2 space-y-1.5">
+                            <div class="flex justify-between items-center text-[11px]">
+                                <span class="text-gray-500 font-medium">Độ bảo mật mật khẩu:</span>
+                                <span id="strength-label" class="font-bold text-gray-400 transition-colors duration-200">Chưa nhập</span>
+                            </div>
+
+                            <!-- 4-Level Progress Bar with Shimmer Sweep -->
+                            <div id="meter-container" class="meter-shimmer grid grid-cols-4 gap-1.5 h-1.5 w-full bg-gray-100 rounded-full p-0.5 border border-gray-200/50">
+                                <div id="meter-1" class="bg-gray-200 rounded-full transition-all duration-300"></div>
+                                <div id="meter-2" class="bg-gray-200 rounded-full transition-all duration-300"></div>
+                                <div id="meter-3" class="bg-gray-200 rounded-full transition-all duration-300"></div>
+                                <div id="meter-4" class="bg-gray-200 rounded-full transition-all duration-300"></div>
+                            </div>
+
+                            <!-- Real-time Validation Criteria Badges -->
+                            <div class="grid grid-cols-2 gap-x-2 gap-y-1 text-[10px] text-gray-400 pt-1">
+                                <div id="rule-length" class="flex items-center space-x-1 transition-colors duration-200">
+                                    <i class="fa-solid fa-circle-dot text-[8px]"></i>
+                                    <span>Tối thiểu 8 ký tự</span>
+                                </div>
+                                <div id="rule-upper" class="flex items-center space-x-1 transition-colors duration-200">
+                                    <i class="fa-solid fa-circle-dot text-[8px]"></i>
+                                    <span>Chứa chữ hoa (A-Z)</span>
+                                </div>
+                                <div id="rule-number" class="flex items-center space-x-1 transition-colors duration-200">
+                                    <i class="fa-solid fa-circle-dot text-[8px]"></i>
+                                    <span>Chứa chữ số (0-9)</span>
+                                </div>
+                                <div id="rule-special" class="flex items-center space-x-1 transition-colors duration-200">
+                                    <i class="fa-solid fa-circle-dot text-[8px]"></i>
+                                    <span>Ký tự đặc biệt (@, #, $)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 6. Confirm Password with Live Validation -->
+                    <div class="animate-fade-in-up delay-400">
+                        <label for="reg-confirm-password" class="block text-xs font-semibold text-gray-700 mb-1.5">
+                            Xác nhận mật khẩu <span class="text-rose-500">*</span>
+                        </label>
+                        <div class="relative group">
+                            <div class="input-icon-box absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-600 transition-colors duration-200">
+                                <i class="fa-solid fa-rotate-left text-sm"></i>
+                            </div>
+                            <input type="password" id="reg-confirm-password" required oninput="checkPasswordMatch()"
+                                   placeholder="Nhập lại mật khẩu"
+                                   class="w-full pl-10 pr-10 py-2.5 bg-gray-50/70 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all duration-200">
+                            
+                            <!-- Dynamic Match Status Icon -->
+                            <div id="match-icon-container" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-300 transition-all duration-200">
+                                <i class="fa-solid fa-circle-check text-sm"></i>
+                            </div>
+                        </div>
+                        <p id="match-text" class="text-[10px] mt-1 font-medium hidden transition-all duration-200"></p>
+                    </div>
+
+                    <!-- 7. Animated Checkbox Terms & Privacy -->
+                    <div class="pt-1 animate-fade-in-up delay-450">
+                        <label class="flex items-start space-x-2.5 text-xs text-gray-600 cursor-pointer select-none group">
+                            <div class="relative flex items-center mt-0.5">
+                                <input type="checkbox" id="reg-terms" required class="custom-checkbox sr-only">
+                                <div class="checkbox-box w-4 h-4 rounded border border-gray-300 bg-gray-50 flex items-center justify-center transition-all duration-200 group-hover:border-blue-500">
+                                    <i class="fa-solid fa-check check-icon text-[10px] text-white opacity-0 scale-50 transition-all duration-150"></i>
+                                </div>
+                            </div>
+                            <span class="leading-relaxed">
+                                Tôi đã đọc, hiểu rõ và đồng ý với 
+                                <a href="#" onclick="showToast('Điều khoản dịch vụ CareHealth', 'info'); return false;" class="text-blue-600 font-semibold hover:underline">Điều khoản dịch vụ</a> 
+                                và 
+                                <a href="#" onclick="showToast('Chính sách bảo mật HIPAA', 'info'); return false;" class="text-blue-600 font-semibold hover:underline">Chính sách bảo mật y tế</a> 
+                                của CareHealth.
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- 8. Submit Button with Shine & Hover Arrow Shift -->
+                    <button type="submit" id="submit-btn" class="shine-button w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-semibold py-3 px-4 rounded-xl shadow-md shadow-blue-500/20 flex items-center justify-center space-x-2 transition-all duration-200 group mt-3">
+                        <span id="btn-text" class="text-sm">Đăng Ký Tài Khoản</span>
+                        <i id="btn-arrow" class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1.5 transition-transform duration-200"></i>
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="relative flex py-1 items-center">
+                    <div class="flex-grow border-t border-gray-200/80"></div>
+                    <span class="flex-shrink mx-3 text-gray-400 text-[10px] font-bold uppercase tracking-wider">Hoặc đăng ký nhanh bằng</span>
+                    <div class="flex-grow border-t border-gray-200/80"></div>
+                </div>
+
+                <!-- SSO Buttons (Hover Lift) -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="button" onclick="showToast('Đang kết nối tài khoản Google...', 'info')" 
+                            class="flex items-center justify-center space-x-2 py-2.5 px-3 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-md hover:border-gray-300 active:translate-y-0 transition-all duration-200">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24">
+                            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.2 9 5 12 5z"/>
+                            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+                            <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15s.7 5.3 1.9 7.7l3.7-2.9c-.2-.7-.4-1.5-.4-2.3z"/>
+                            <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.2-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/>
+                        </svg>
+                        <span>Google</span>
+                    </button>
+
+                    <button type="button" onclick="showToast('Đang kết nối Cổng Định danh VNeID...', 'info')" 
+                            class="flex items-center justify-center space-x-2 py-2.5 px-3 bg-red-50/70 border border-red-200/80 rounded-xl text-xs font-bold text-red-700 hover:bg-red-100/70 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 transition-all duration-200">
+                        <i class="fa-solid fa-id-card text-red-600 text-sm"></i>
+                        <span>Định danh VNeID</span>
+                    </button>
+                </div>
+
+                <!-- Back to Login Link -->
+                <div class="text-center pt-2">
+                    <p class="text-xs text-gray-500">
+                        Đã có tài khoản CareHealth? 
+                        <a href="#" onclick="showToast('Chuyển hướng đến màn hình Đăng Nhập...', 'info'); return false;" class="text-blue-600 font-bold hover:underline ml-1">
+                            Đăng nhập ngay
+                        </a>
+                    </p>
+                </div>
+
+                <!-- Security Compliance Box -->
+                <div class="bg-teal-50/80 border border-teal-100/90 rounded-xl p-3 flex items-start space-x-3 text-teal-900 shadow-2xs">
+                    <i class="fa-solid fa-user-shield text-teal-600 text-base mt-0.5 flex-shrink-0"></i>
+                    <p class="text-[11px] leading-relaxed text-teal-800">
+                        Thông tin y tế và định danh cá nhân được mã hóa đạt chuẩn bảo mật y khoa quốc tế <span class="font-bold">HIPAA & HL7 Compliance</span>.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- TRUST BADGES FOOTER -->
+    <div class="bg-slate-100/80 border-t border-gray-200/80 py-3.5 px-4">
+        <div class="max-w-4xl mx-auto flex flex-wrap justify-center items-center gap-4 sm:gap-8 text-xs text-gray-600 font-semibold text-center">
+            <span class="flex items-center">
+                <i class="fa-solid fa-circle-check text-emerald-500 mr-1.5 text-sm"></i>
+                Xác thực bởi Bộ Y Tế
+            </span>
+            <span class="flex items-center">
+                <i class="fa-solid fa-lock text-blue-600 mr-1.5 text-sm"></i>
+                Bảo mật 2 lớp 2FA
+            </span>
+            <span class="flex items-center">
+                <i class="fa-solid fa-headset text-teal-600 mr-1.5 text-sm"></i>
+                Hỗ trợ y tế 24/7
+            </span>
+        </div>
+    </div>
+
+    <!-- GLOBAL MAIN FOOTER -->
+    <footer class="bg-white border-t border-gray-200/80 py-4 px-4 sm:px-8 text-xs text-gray-500 flex flex-col sm:flex-row justify-between items-center gap-2">
+        <p>© 2026 CareHealth Việt Nam. Bảo lưu mọi quyền.</p>
+        <div class="flex items-center space-x-4">
+            <a href="#" class="hover:text-blue-600 transition-colors">Điều khoản sử dụng</a>
+            <span>•</span>
+            <a href="#" class="hover:text-blue-600 transition-colors">Chính sách bảo mật y tế</a>
+            <span>•</span>
+            <a href="tel:19006868" class="hover:text-blue-600 font-semibold text-gray-700">Hỗ trợ: 1900 6868</a>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE TOAST NOTIFICATION DECK -->
+    <div id="toast-notification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-slate-900/95 backdrop-blur-md text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 text-xs border border-slate-700/80 max-w-md">
+            <i id="toast-icon" class="fa-solid fa-circle-info text-blue-400 text-lg flex-shrink-0"></i>
+            <span id="toast-message" class="font-medium text-slate-200">Thông báo hệ thống</span>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT INTERACTIVE LOGIC -->
+    <script>
+        // State
+        let selectedGender = 'Nam';
+        let currentGenderIndex = 0;
+
+        // 1. Interactive Gender Pill Selector with Smooth Slider Transition
+        function setGender(gender, index) {
+            selectedGender = gender;
+            currentGenderIndex = index;
+
+            const highlight = document.getElementById('pill-highlight');
+            const btns = [
+                document.getElementById('gender-btn-0'),
+                document.getElementById('gender-btn-1'),
+                document.getElementById('gender-btn-2')
+            ];
+
+            // Calculate percentage position for slider
+            const positions = ['1%', '34.5%', '68%'];
+            highlight.style.left = positions[index];
+
+            // Update text styles
+            btns.forEach((btn, idx) => {
+                if (idx === index) {
+                    btn.className = "relative z-10 flex-1 py-1.5 text-center text-blue-600 font-bold transition-colors duration-200";
+                } else {
+                    btn.className = "relative z-10 flex-1 py-1.5 text-center text-gray-600 hover:text-gray-900 transition-colors duration-200";
+                }
+            });
+        }
+
+        // 2. Toggle Password Visibility with Rotation Icon Effect
+        function togglePasswordVisibility(inputId, eyeIconId) {
+            const input = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(eyeIconId);
+
+            eyeIcon.classList.add('eye-animated');
+            setTimeout(() => eyeIcon.classList.remove('eye-animated'), 250);
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        // 3. Realtime Password Strength Evaluator with Shimmer Sweep
+        function handlePasswordInput(password) {
+            const label = document.getElementById('strength-label');
+            const m1 = document.getElementById('meter-1');
+            const m2 = document.getElementById('meter-2');
+            const m3 = document.getElementById('meter-3');
+            const m4 = document.getElementById('meter-4');
+            const container = document.getElementById('meter-container');
+
+            // Criteria elements
+            const rLength = document.getElementById('rule-length');
+            const rUpper = document.getElementById('rule-upper');
+            const rNumber = document.getElementById('rule-number');
+            const rSpecial = document.getElementById('rule-special');
+
+            // Trigger shimmer sweep effect on type
+            container.classList.remove('active-sweep');
+            void container.offsetWidth; // force reflow
+            container.classList.add('active-sweep');
+
+            // Reset meter bars
+            [m1, m2, m3, m4].forEach(m => m.className = "bg-gray-200 rounded-full transition-all duration-300");
+
+            if (!password) {
+                label.textContent = "Chưa nhập";
+                label.className = "font-bold text-gray-400";
+                updateRuleBadge(rLength, false);
+                updateRuleBadge(rUpper, false);
+                updateRuleBadge(rNumber, false);
+                updateRuleBadge(rSpecial, false);
+                checkPasswordMatch();
+                return;
+            }
+
+            // Criteria validation
+            const hasLength = password.length >= 8;
+            const hasUpper = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[^A-Za-z0-9]/.test(password);
+
+            updateRuleBadge(rLength, hasLength);
+            updateRuleBadge(rUpper, hasUpper);
+            updateRuleBadge(rNumber, hasNumber);
+            updateRuleBadge(rSpecial, hasSpecial);
+
+            let score = 0;
+            if (hasLength) score++;
+            if (hasUpper) score++;
+            if (hasNumber) score++;
+            if (hasSpecial) score++;
+
+            // Update UI based on Score
+            if (score === 1) {
+                label.textContent = "Yếu";
+                label.className = "font-bold text-rose-500";
+                m1.className = "bg-rose-500 rounded-full transition-all duration-300";
+            } else if (score === 2) {
+                label.textContent = "Trung bình";
+                label.className = "font-bold text-amber-500";
+                m1.className = "bg-amber-500 rounded-full transition-all duration-300";
+                m2.className = "bg-amber-500 rounded-full transition-all duration-300";
+            } else if (score === 3) {
+                label.textContent = "Khá mạnh";
+                label.className = "font-bold text-emerald-500";
+                m1.className = "bg-emerald-500 rounded-full transition-all duration-300";
+                m2.className = "bg-emerald-500 rounded-full transition-all duration-300";
+                m3.className = "bg-emerald-500 rounded-full transition-all duration-300";
+            } else if (score >= 4) {
+                label.textContent = "Rất mạnh";
+                label.className = "font-bold text-emerald-600";
+                m1.className = "bg-emerald-600 rounded-full transition-all duration-300";
+                m2.className = "bg-emerald-600 rounded-full transition-all duration-300";
+                m3.className = "bg-emerald-600 rounded-full transition-all duration-300";
+                m4.className = "bg-emerald-600 rounded-full transition-all duration-300";
+            }
+
+            checkPasswordMatch();
+        }
+
+        function updateRuleBadge(el, isValid) {
+            if (isValid) {
+                el.className = "flex items-center space-x-1 text-emerald-600 font-semibold transition-colors duration-200";
+                el.querySelector('i').className = "fa-solid fa-circle-check text-[10px]";
+            } else {
+                el.className = "flex items-center space-x-1 text-gray-400 font-normal transition-colors duration-200";
+                el.querySelector('i').className = "fa-solid fa-circle-dot text-[8px]";
+            }
+        }
+
+        // 4. Live Confirm Password Match Validation
+        function checkPasswordMatch() {
+            const pass = document.getElementById('reg-password').value;
+            const confirmPass = document.getElementById('reg-confirm-password').value;
+            const iconContainer = document.getElementById('match-icon-container');
+            const matchText = document.getElementById('match-text');
+
+            if (!confirmPass) {
+                iconContainer.className = "absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-300 transition-all duration-200";
+                matchText.classList.add('hidden');
+                return;
+            }
+
+            if (pass === confirmPass) {
+                iconContainer.className = "absolute inset-y-0 right-0 pr-3.5 flex items-center text-emerald-500 transition-all duration-200";
+                matchText.textContent = "Mật khẩu xác nhận chính xác";
+                matchText.className = "text-[10px] mt-1 font-semibold text-emerald-600 block transition-all duration-200";
+            } else {
+                iconContainer.className = "absolute inset-y-0 right-0 pr-3.5 flex items-center text-rose-500 transition-all duration-200";
+                matchText.textContent = "Mật khẩu xác nhận chưa trùng khớp";
+                matchText.className = "text-[10px] mt-1 font-semibold text-rose-500 block transition-all duration-200";
+            }
+        }
+
+        // 5. Submit Form Handler with Loading State & Toast
+        function handleRegisterSubmit(e) {
+            e.preventDefault();
+
+            const pass = document.getElementById('reg-password').value;
+            const confirmPass = document.getElementById('reg-confirm-password').value;
+            const name = document.getElementById('reg-fullname').value;
+
+            if (pass !== confirmPass) {
+                showToast('Mật khẩu xác nhận chưa trùng khớp. Vui lòng kiểm tra lại!', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const btnArrow = document.getElementById('btn-arrow');
+
+            // Spinner Loading state
+            btn.disabled = true;
+            btnText.textContent = 'Đang khởi tạo tài khoản...';
+            btnArrow.className = 'fa-solid fa-spinner fa-spin text-xs';
+
+            setTimeout(() => {
+                btn.disabled = false;
+                btnText.textContent = 'Đăng Ký Tài Khoản';
+                btnArrow.className = 'fa-solid fa-arrow-right text-xs group-hover:translate-x-1.5 transition-transform duration-200';
+
+                showToast(`Đăng ký thành công tài khoản bệnh nhân: ${name}!`, 'success');
+            }, 1500);
+        }
+
+        // 6. Interactive Toast Notification System
+        let toastTimeout;
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast-notification');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.textContent = message;
+
+            if (type === 'success') {
+                toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-lg flex-shrink-0";
+            } else if (type === 'error') {
+                toastIcon.className = "fa-solid fa-circle-exclamation text-rose-400 text-lg flex-shrink-0";
+            } else {
+                toastIcon.className = "fa-solid fa-circle-info text-blue-400 text-lg flex-shrink-0";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3200);
+        }
+
+        // Initialize gender pill positioning on load
+        window.addEventListener('DOMContentLoaded', () => {
+            setGender('Nam', 0);
+        });
+    </script>
 </body>
 </html>
