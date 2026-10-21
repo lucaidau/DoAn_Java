@@ -1,0 +1,446 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"error-container":"#ffdad6","on-primary":"#ffffff","inverse-surface":"#2e3132","secondary-container":"#86f2e4","on-secondary":"#ffffff","primary":"#004ac6","on-surface":"#191c1d","secondary":"#006a61","primary-fixed-dim":"#b4c5ff","tertiary-fixed-dim":"#ffb596","tertiary":"#943700","on-tertiary":"#ffffff","background":"#f8f9fa","surface-variant":"#e1e3e4","surface-container-low":"#f3f4f5","on-tertiary-fixed-variant":"#7d2d00","inverse-on-surface":"#f0f1f2","on-secondary-container":"#006f66","status-cancelled":"#F43F5E","on-surface-variant":"#434655","surface-bright":"#f8f9fa","tertiary-container":"#bc4800","on-error-container":"#93000a","inverse-primary":"#b4c5ff","status-confirmed":"#10B981","primary-fixed":"#dbe1ff","surface-tint":"#0053db","secondary-fixed":"#89f5e7","on-tertiary-fixed":"#360f00","on-secondary-fixed-variant":"#005049","status-pending":"#F59E0B","on-secondary-fixed":"#00201d","error":"#ba1a1a","on-background":"#191c1d","tertiary-fixed":"#ffdbcd","on-primary-fixed":"#00174b","surface-container":"#edeeef","primary-container":"#2563eb","surface":"#f8f9fa","status-completed":"#2563EB","on-tertiary-container":"#ffede6","on-primary-fixed-variant":"#003ea8","secondary-fixed-dim":"#6bd8cb","on-primary-container":"#eeefff","outline":"#737686","surface-container-high":"#e7e8e9","surface-container-lowest":"#ffffff","on-error":"#ffffff","outline-variant":"#c3c6d7","surface-dim":"#d9dadb","surface-container-highest":"#e1e3e4"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"gutter":"1.5rem","space-sm":"0.5rem","margin":"2rem","space-lg":"1.5rem","space-md":"1rem","space-xl":"2.5rem","space-xs":"0.25rem"},fontFamily:{"label-sm":["Inter"],"headline-lg":["Inter"],"body-lg":["Inter"],"body-sm":["Inter"],"headline-sm":["Inter"],"label-md":["Inter"],"body-md":["Inter"],"headline-md":["Inter"]},fontSize:{"label-sm":["12px",{"lineHeight":"16px","fontWeight":"500"}],"headline-lg":["32px",{"lineHeight":"40px","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-sm":["18px",{"lineHeight":"24px","fontWeight":"600"}],"label-md":["14px",{"lineHeight":"20px","fontWeight":"500"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface min-h-screen"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 flex items-center gap-3 px-space-lg"><div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[24px]">local_hospital</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary tracking-tight leading-none">CareHealth</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-tight mt-0.5">Cổng Bác Sĩ &amp; Quản Trị</span></div></div><div class="px-space-md py-space-sm"><div class="bg-surface-container-low rounded-lg p-space-sm flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Khoa: Tim Mạch</span><span class="w-2 h-2 rounded-full bg-status-confirmed"></span></div></div><nav class="flex flex-col gap-1 px-space-md mt-space-sm" data-active-classes="bg-primary text-on-primary font-medium rounded-xl shadow-sm"><a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="trang-chu-&amp;-lich-hen" href="#"><span class="material-symbols-outlined text-[20px]">calendar_today</span><span>Trang chủ &amp; Lịch hẹn</span></a><a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="chi-tiet-lich-hen" href="#"><span class="material-symbols-outlined text-[20px]">schedule</span><span>Chi tiết lịch hẹn</span></a><a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="thong-tin-ca-kham" href="#"><span class="material-symbols-outlined text-[20px]">clinical_notes</span><span>Thông tin ca khám</span></a><a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="bao-cao-&amp;-thong-ke" href="#"><span class="material-symbols-outlined text-[20px]">bar_chart</span><span>Báo cáo &amp; Thống kê</span></a><a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="ho-so-ca-nhan" href="#"><span class="material-symbols-outlined text-[20px]">person</span><span>Hồ sơ cá nhân</span></a></nav></div><div class="p-space-md flex flex-col gap-space-sm"><div class="bg-surface-container-low rounded-xl p-space-md flex flex-col gap-2"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col min-w-0"><span class="font-label-md text-label-md text-on-surface font-semibold truncate">BS. CKII Nguyễn Văn A</span><span class="font-body-sm text-body-sm text-on-surface-variant truncate">Bệnh viện ĐHYD TP.HCM</span></div></div></div><button class="flex items-center justify-center gap-2 w-full py-space-sm px-space-md rounded-xl text-error font-label-md text-label-md hover:bg-error-container hover:text-on-error-container transition-all"><span class="material-symbols-outlined text-[18px]">logout</span><span>Đăng xuất</span></button></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex-1 max-w-lg"><div class="relative flex items-center w-full"><span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px]">search</span><input class="w-full pl-10 pr-4 py-space-sm rounded-xl bg-surface-container-low text-on-surface placeholder:text-on-surface-variant font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Tìm kiếm bệnh nhân, mã hồ sơ, lịch hẹn..." type="text"></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-low text-status-confirmed font-label-sm text-label-sm"><span class="w-2.5 h-2.5 rounded-full bg-status-confirmed animate-pulse"></span><span class="font-medium text-on-surface">Sẵn sàng tiếp nhận bệnh nhân</span></div><button class="relative p-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span></button><div class="h-6 w-px bg-surface-variant"></div><div class="flex items-center gap-3 pl-1"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="hidden xl:flex flex-col text-left"><span class="font-label-md text-label-md font-semibold text-on-surface leading-none">BS. CKII Nguyễn Văn A</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-tight mt-0.5">Khoa Tim Mạch</span></div></div></div></header><main class="w-full pt-16 bg-background min-h-screen"><div class="flex flex-col w-full">
+<div class="px-gutter py-space-lg flex flex-col gap-space-lg">
+<!-- Top Greeting & Operational Summary Header -->
+<div class="relative overflow-hidden bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="absolute -right-16 -top-16 w-64 h-64 bg-primary/5 rounded-full pointer-events-none blur-3xl"></div>
+<div class="flex flex-col gap-1 z-10">
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm uppercase tracking-wider">Phiên làm việc</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-status-confirmed animate-ping"></span>
+            Hệ thống trực tuyến
+          </span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mt-1">Xin chào, BS. CKII Nguyễn Văn A</h1>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-on-surface-variant font-body-sm text-body-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">calendar_today</span>
+            Hôm nay: Thứ Ba, 17/10/2026
+          </span>
+<span class="text-surface-variant">•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">schedule</span>
+            Ca trực: 07:30 - 17:00
+          </span>
+<span class="text-surface-variant">•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary">meeting_room</span>
+            Phòng khám Tim Mạch 204 (Tầng 2 - Khu B)
+          </span>
+</div>
+</div>
+<!-- Quick Action CTAs -->
+<div class="flex items-center flex-wrap gap-space-sm z-10">
+<button class="inline-flex items-center gap-2 px-space-md py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-label-md text-label-md transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+<span>Cài đặt ca làm việc</span>
+</button>
+<button class="inline-flex items-center gap-2 px-space-md py-2.5 rounded-xl bg-primary text-on-primary font-label-md text-label-md hover:opacity-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>+ Tiếp nhận bệnh nhân nhanh</span>
+</button>
+</div>
+</div>
+<!-- 4 Metric KPI Cards Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- KPI 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between transition-transform hover:-translate-y-0.5 duration-200">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">Tổng lịch hôm nay</span>
+<div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[22px]">format_list_bulleted</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-on-surface">12</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">bệnh nhân</span>
+</div>
+<div class="mt-3 pt-3 bg-surface-container-low rounded-lg p-2 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-status-confirmed"></span>8 Đã duyệt</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-status-pending"></span>4 Chờ duyệt</span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between transition-transform hover:-translate-y-0.5 duration-200">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">Chờ duyệt / Tiếp nhận</span>
+<div class="w-10 h-10 rounded-xl bg-status-pending/15 flex items-center justify-center text-status-pending">
+<span class="material-symbols-outlined text-[22px]">notification_important</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-on-surface">04</span>
+<span class="px-2 py-0.5 rounded-full bg-status-pending/20 text-on-surface font-label-sm text-label-sm">Yêu cầu mới</span>
+</div>
+<div class="mt-3 pt-3 bg-surface-container-low rounded-lg p-2 flex items-center gap-2 font-label-sm text-label-sm text-status-pending">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+<span class="text-on-surface truncate">Cần phản hồi trước 11:30 sáng</span>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between transition-transform hover:-translate-y-0.5 duration-200">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">Đã hoàn thành ca khám</span>
+<div class="w-10 h-10 rounded-xl bg-status-confirmed/10 flex items-center justify-center text-status-confirmed">
+<span class="material-symbols-outlined text-[22px]">task_alt</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline justify-between">
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-on-surface">05</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ 12 ca</span>
+</div>
+<span class="font-label-md text-label-md text-status-confirmed font-semibold">42%</span>
+</div>
+<div class="mt-3 w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+<div class="bg-status-confirmed h-2 rounded-full transition-all duration-500" style="width: 42%"></div>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between transition-transform hover:-translate-y-0.5 duration-200">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">Doanh thu tạm tính</span>
+<div class="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[22px]">payments</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-1">
+<span class="font-headline-lg text-headline-lg text-on-surface">3.600.000</span>
+<span class="font-label-md text-label-md text-on-surface-variant">đ</span>
+</div>
+<div class="mt-3 pt-3 bg-surface-container-low rounded-lg p-2 flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Khám chuyên khoa: 10</span>
+<span class="text-secondary font-medium">BHYT: 60%</span>
+</div>
+</div>
+</div>
+<!-- Filter & Search Toolbar Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<!-- Search bar -->
+<div class="relative flex-1 max-w-xl">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface-container-low text-on-surface placeholder:text-on-surface-variant font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary shadow-inner" placeholder="Tìm theo mã hẹn, tên bệnh nhân, số điện thoại..." type="text">
+</div>
+<!-- Date & Export Actions -->
+<div class="flex items-center flex-wrap gap-space-sm">
+<div class="bg-surface-container-low p-1 rounded-xl flex items-center gap-1 font-label-sm text-label-sm">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-medium shadow-sm">Hôm nay</button>
+<button class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors">Ngày mai</button>
+<button class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors">Tuần này</button>
+<button class="px-2 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-1">
+<span>Tùy chọn</span>
+<span class="material-symbols-outlined text-[16px]">calendar_month</span>
+</button>
+</div>
+<button class="inline-flex items-center gap-1.5 px-space-md py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Xuất danh sách</span>
+</button>
+</div>
+</div>
+<!-- Status Tab Filter Bar -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 -mb-1">
+<button class="px-3.5 py-1.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md whitespace-nowrap shadow-sm">
+          Tất cả (12)
+        </button>
+<button class="px-3.5 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-status-pending"></span>
+<span>Chờ duyệt (4)</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-status-confirmed"></span>
+<span>Đã duyệt (5)</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-status-completed"></span>
+<span>Đang khám (1)</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-surface-variant"></span>
+<span>Đã khám (2)</span>
+</button>
+</div>
+</div>
+<!-- Main Interactive Data Table Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/60 text-on-surface-variant font-label-sm text-label-sm">
+<th class="py-3.5 px-4 font-medium">MÃ HẸN</th>
+<th class="py-3.5 px-4 font-medium">BỆNH NHÂN</th>
+<th class="py-3.5 px-4 font-medium">GIỜ HẸN</th>
+<th class="py-3.5 px-4 font-medium">TRIỆU CHỨNG / CHẨN ĐOÁN BAN ĐẦU</th>
+<th class="py-3.5 px-4 font-medium">TRẠNG THÁI</th>
+<th class="py-3.5 px-4 font-medium text-right">THAO TÁC</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm">
+<!-- Row 1: LH-1001 -->
+<tr class="hover:bg-surface-container-low/40 transition-colors">
+<td class="py-4 px-4 font-label-md text-label-md font-semibold text-primary">
+                LH-1001
+              </td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center font-label-md text-label-md font-bold text-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait photo of a 32 year old Asian male patient with friendly expression, natural studio lighting, modern medical setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOrRMrcegbOFS9Jxa84Um4fbk18yo8UfQqmi6l1FjMyd9cmOibGNkBnwbkwWr4vz3GUVvnyj2Tycf5H_7MBoVsixkoBAU2IBZ8EiAP6VHtthUoFvOBHlUTzqEcuqsVeNKohD5HR05eXYixPV77sZr0QPuocdt1pIgFBCDbJ646b5ZpKeraaPJm167NL0sZrbzHRp6O-OWNhSprRlIE9Fo6uplUmNqMnNGyAYeJHdv9DytwgxZnON0iWw">
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Lê Văn Bình</span>
+<span class="text-on-surface-variant text-[11px] leading-tight">Nam, 32t • CCCD: 079092004812</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-1.5 font-label-md text-label-md font-medium text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary">schedule</span>
+<span>08:30</span>
+</div>
+<span class="text-[11px] text-on-surface-variant">Hôm nay</span>
+</td>
+<td class="py-4 px-4 max-w-xs">
+<p class="font-body-sm text-body-sm text-on-surface truncate">Đau tức ngực nhẹ khi vận động</p>
+<span class="inline-block mt-0.5 text-[11px] text-primary bg-primary/10 px-2 py-0.5 rounded">Khám định kỳ</span>
+</td>
+<td class="py-4 px-4">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-completed/10 text-status-completed font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-status-completed animate-ping"></span>
+<span>Đang khám</span>
+</div>
+</td>
+<td class="py-4 px-4 text-right">
+<button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 shadow-sm transition-all">
+<span class="material-symbols-outlined text-[16px]">stethoscope</span>
+<span>Vào ca khám</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: LH-1002 -->
+<tr class="hover:bg-surface-container-low/40 transition-colors bg-surface-container-low/20">
+<td class="py-4 px-4 font-label-md text-label-md font-semibold text-primary">
+                LH-1002
+              </td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center font-label-md text-label-md font-bold text-secondary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait photo of a 28 year old Vietnamese female patient with calm look, neutral background, soft diffused medical clinic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXMnXzk9-uijhIK6oLOBqSYWFjKCYANIkFKnlxU99onOWyQr9SdToPin9zyIp9dB8w8yWsmzZeI33Nnq7OoBwkNU0p3-MNWVp8isoDtjHQpkL-7QGGDhPLRPEI0Xcc9GK_1VS1_yskR5G3G1DDO_ezAeC_4p_QY50w_XGgohLPN732kBvyMSfkuSWLIF_rKrOgZPQev1dPHJjZINlv1v0OsSQXBSJF3iJ1akvssqDnyGlv-ctTvZaC-g">
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Trần Thị Mai</span>
+<span class="text-on-surface-variant text-[11px] leading-tight">Nữ, 28t • CCCD: 079196001290</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-1.5 font-label-md text-label-md font-medium text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-status-pending">schedule</span>
+<span>09:15</span>
+</div>
+<span class="text-[11px] text-on-surface-variant">Hôm nay</span>
+</td>
+<td class="py-4 px-4 max-w-xs">
+<p class="font-body-sm text-body-sm text-on-surface truncate">Tái khám tăng huyết áp &amp; kiểm tra điện tâm đồ</p>
+<span class="inline-block mt-0.5 text-[11px] text-status-pending bg-status-pending/10 px-2 py-0.5 rounded">Tái khám định kỳ</span>
+</td>
+<td class="py-4 px-4">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-pending/15 text-status-pending font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-status-pending"></span>
+<span>Chờ duyệt</span>
+</div>
+</td>
+<td class="py-4 px-4 text-right">
+<div class="inline-flex items-center gap-1.5 justify-end">
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-status-confirmed text-on-primary font-label-sm text-label-sm hover:opacity-90 shadow-sm transition-all">
+<span class="material-symbols-outlined text-[16px]">check</span>
+<span>Duyệt lịch</span>
+</button>
+<button class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-error-container text-on-error-container font-label-sm text-label-sm hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-[16px]">close</span>
+<span>Từ chối</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: LH-1003 -->
+<tr class="hover:bg-surface-container-low/40 transition-colors">
+<td class="py-4 px-4 font-label-md text-label-md font-semibold text-primary">
+                LH-1003
+              </td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center font-label-md text-label-md font-bold text-tertiary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait photography of a 45-year-old Asian businessman patient in glasses, warm natural lighting, professional healthcare environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJxfSApSZoFfYrFLOOAX9QwOsgsyUYFWNo61V9yBzFUovCQQNTuLlOXn77-lIR-xgWATuDuZbLC00k_nHQr-4D4V-N1Ejx1SeXj_4o2DlRmxiZ4DlNtnbu2dXCAKDreXlErbcHK5zprMaz0YYZu4aziqps3ZkhCqBlq00AnwrlNWL-uTSMJijA8VE8iIUcKFtdKsvNMSqmJvyibLnGRcXkhlMM6lN9E1bTan6qDMY4XLPrVOTHOHONDQ">
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Hoàng Văn Đức</span>
+<span class="text-on-surface-variant text-[11px] leading-tight">Nam, 45t • CCCD: 080081005612</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-1.5 font-label-md text-label-md font-medium text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-status-confirmed">schedule</span>
+<span>10:00</span>
+</div>
+<span class="text-[11px] text-on-surface-variant">Hôm nay</span>
+</td>
+<td class="py-4 px-4 max-w-xs">
+<p class="font-body-sm text-body-sm text-on-surface truncate">Khám tầm soát mạch vành có yếu tố gia đình</p>
+<span class="inline-block mt-0.5 text-[11px] text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded">Gói dịch vụ VIP</span>
+</td>
+<td class="py-4 px-4">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-confirmed/10 text-status-confirmed font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-status-confirmed"></span>
+<span>Đã xác nhận</span>
+</div>
+</td>
+<td class="py-4 px-4 text-right">
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-all">
+<span>Xem chi tiết</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: LH-1004 -->
+<tr class="hover:bg-surface-container-low/40 transition-colors bg-surface-container-low/20">
+<td class="py-4 px-4 font-label-md text-label-md font-semibold text-primary">
+                LH-1004
+              </td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center font-label-md text-label-md font-bold text-on-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait photography of a 50 year old female patient wearing a soft teal cardigan, clean minimalist medical background, soft studio illumination" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnyj-oWKiWE7evbHvRbpcsNIYWlPWbu5cLtViZxtxvFCHSAQdxyUIwX87eltHHiE4pxZZBPRXS6ho_G-pPMhW1hZ5s_rVHZa_bpq3f1dLiRf3W8BLOVsKLrbvKJK4GY1O7YOkqANyu1EBrDtaWjGfSHoWe_ORDnZXD-G1vZmKop-bveD5VNIFpvpUUkWTIxjhMt9wyaURvCLDCVmxzwNvUZeY5VEtxb8P6pWMAzc0sZVL788QKCu39YA">
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Phạm Thị Hằng</span>
+<span class="text-on-surface-variant text-[11px] leading-tight">Nữ, 50t • CCCD: 077174003341</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-1.5 font-label-md text-label-md font-medium text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-status-pending">schedule</span>
+<span>10:45</span>
+</div>
+<span class="text-[11px] text-on-surface-variant">Hôm nay</span>
+</td>
+<td class="py-4 px-4 max-w-xs">
+<p class="font-body-sm text-body-sm text-on-surface truncate">Khó thở về đêm, tiền sử hở van 2 lá</p>
+<span class="inline-block mt-0.5 text-[11px] text-error bg-error-container/60 px-2 py-0.5 rounded">Cần lưu ý theo dõi</span>
+</td>
+<td class="py-4 px-4">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-pending/15 text-status-pending font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-status-pending"></span>
+<span>Chờ duyệt</span>
+</div>
+</td>
+<td class="py-4 px-4 text-right">
+<div class="inline-flex items-center gap-1.5 justify-end">
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-status-confirmed text-on-primary font-label-sm text-label-sm hover:opacity-90 shadow-sm transition-all">
+<span class="material-symbols-outlined text-[16px]">check</span>
+<span>Duyệt lịch</span>
+</button>
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined text-[16px]">update</span>
+<span>Đổi giờ</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: LH-1005 -->
+<tr class="hover:bg-surface-container-low/40 transition-colors">
+<td class="py-4 px-4 font-label-md text-label-md font-semibold text-primary">
+                LH-1005
+              </td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center font-label-md text-label-md font-bold text-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait photography of a 61 year old senior Vietnamese male patient with graying hair, gentle smile, modern medical clinic office lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHudKysP0jkzGWiOXo9BRKWBsrBXMm-AohBdT1WKHmVRlIv_RiEbT_xqQTf1X7FlJKx94AJaKhZjDgZqW8CFru-s0zwcSeUIjAFhsQ4kPoCqo2-jDYXX1OJ7eumO2OL0NwuLRy9nXgWFEA6w0kTSiGTu5ZogaJJp4jMtCNnotOb3aMv0G2tGLN_to5nAYnshEIxq3Vn8JJmisNN5Wr19CRSI99haMmE7ellJTIo-h0OMShzu3AEcA_UA">
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Nguyễn Thành Long</span>
+<span class="text-on-surface-variant text-[11px] leading-tight">Nam, 61t • CCCD: 079063009081</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-1.5 font-label-md text-label-md font-medium text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-status-confirmed">schedule</span>
+<span>14:00</span>
+</div>
+<span class="text-[11px] text-on-surface-variant">Hôm nay</span>
+</td>
+<td class="py-4 px-4 max-w-xs">
+<p class="font-body-sm text-body-sm text-on-surface truncate">Khám sau phẫu thuật can thiệp Stent</p>
+<span class="inline-block mt-0.5 text-[11px] text-secondary bg-secondary/10 px-2 py-0.5 rounded">Hậu phẫu</span>
+</td>
+<td class="py-4 px-4">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-confirmed/10 text-status-confirmed font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-status-confirmed"></span>
+<span>Đã xác nhận</span>
+</div>
+</td>
+<td class="py-4 px-4 text-right">
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-all">
+<span>Xem chi tiết</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination Footer -->
+<div class="px-space-md py-3.5 bg-surface-container-low/40 flex flex-col sm:flex-row items-center justify-between gap-space-sm font-body-sm text-body-sm">
+<div class="text-on-surface-variant font-label-sm text-label-sm">
+          Hiển thị <span class="font-semibold text-on-surface">5</span> / <span class="font-semibold text-on-surface">12</span> bệnh nhân
+        </div>
+<div class="flex items-center gap-1.5">
+<button class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant disabled:opacity-40 hover:bg-surface-container-high transition-colors" disabled="">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm font-semibold shadow-sm">1</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors">2</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors">3</button>
+<button class="p-1.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Clinical Notes & Operational Insight Footer Strip -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[20px]">medical_services</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Phòng thủ thuật số 2</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Sẵn sàng thiết bị siêu âm Doppler tim &amp; điện tâm đồ gắng sức.</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-status-pending/10 flex items-center justify-center text-status-pending shrink-0">
+<span class="material-symbols-outlined text-[20px]">assignment_late</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Lưu ý chuyên môn</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">2 ca khám cần kiểm tra tiền sử dị ứng thuốc cản quang trước khi chỉ định CT.</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[20px]">support_agent</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Điều dưỡng phụ tá</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">ĐD. Lê Thị Hồng • Nội bộ: 2041 (Sẵn sàng tiếp nhận hỗ trợ phân luồng).</span>
+</div>
+</div>
+</div>
+</div>
+</div></main></div></body></html>
