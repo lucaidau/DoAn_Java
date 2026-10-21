@@ -1,0 +1,503 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_standard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"error-container":"#ffdad6","tertiary-container":"#bc4800","on-secondary-fixed":"#00201d","surface-container-low":"#f3f4f5","on-primary-container":"#eeefff","primary":"#004ac6","tertiary":"#943700","outline":"#737686","on-background":"#191c1d","on-tertiary-fixed-variant":"#7d2d00","surface-container-high":"#e7e8e9","surface":"#f8f9fa","on-surface-variant":"#434655","secondary-container":"#86f2e4","secondary":"#006a61","background":"#f8f9fa","status-confirmed":"#10B981","on-tertiary-fixed":"#360f00","status-pending":"#F59E0B","on-error-container":"#93000a","tertiary-fixed":"#ffdbcd","outline-variant":"#c3c6d7","surface-bright":"#f8f9fa","primary-container":"#2563eb","inverse-on-surface":"#f0f1f2","on-primary":"#ffffff","on-primary-fixed-variant":"#003ea8","tertiary-fixed-dim":"#ffb596","surface-variant":"#e1e3e4","on-secondary":"#ffffff","secondary-fixed-dim":"#6bd8cb","on-surface":"#191c1d","surface-dim":"#d9dadb","on-error":"#ffffff","surface-container":"#edeeef","status-completed":"#2563EB","surface-tint":"#0053db","on-secondary-container":"#006f66","primary-fixed-dim":"#b4c5ff","status-cancelled":"#F43F5E","inverse-primary":"#b4c5ff","on-tertiary":"#ffffff","on-secondary-fixed-variant":"#005049","secondary-fixed":"#89f5e7","error":"#ba1a1a","on-tertiary-container":"#ffede6","primary-fixed":"#dbe1ff","surface-container-highest":"#e1e3e4","on-primary-fixed":"#00174b","inverse-surface":"#2e3132","surface-container-lowest":"#ffffff"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"gutter":"1.5rem","margin":"2rem","space-lg":"1.5rem","space-md":"1rem","space-xl":"2.5rem","space-xs":"0.25rem","space-sm":"0.5rem"},fontFamily:{"label-sm":["Inter"],"body-sm":["Inter"],"body-md":["Inter"],"body-lg":["Inter"],"headline-lg":["Inter"],"headline-sm":["Inter"],"headline-md":["Inter"],"label-md":["Inter"]},fontSize:{"label-sm":["12px",{"lineHeight":"16px","fontWeight":"500"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-lg":["32px",{"lineHeight":"40px","fontWeight":"700"}],"headline-sm":["18px",{"lineHeight":"24px","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"label-md":["14px",{"lineHeight":"20px","fontWeight":"500"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 w-full px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm focus:outline-none" data-path="trang-chu" href="#"><div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[24px]">local_hospital</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary tracking-tight">CareHealth</span><span class="font-label-sm text-label-sm text-secondary -mt-1">Y tế thông minh</span></div></a><nav class="hidden lg:flex items-center gap-space-xs" data-active-classes="bg-surface-container-high text-primary font-label-md"><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="trang-chu" href="#">Trang chủ</a><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="chuyen-khoa" href="#">Chuyên khoa</a><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="bac-si" href="#">Bác sĩ</a><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="lich-hen-cua-toi" href="#">Lịch hẹn của tôi</a></nav></div><div class="flex items-center gap-space-md"><div class="hidden xl:flex items-center relative w-72"><span class="material-symbols-outlined absolute left-3 text-outline text-[20px]">search</span><input class="w-full bg-surface-container-low text-on-surface font-body-sm text-body-sm pl-10 pr-4 py-space-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest transition-all" placeholder="Tìm bác sĩ, chuyên khoa..." type="text"><span class="absolute right-3 font-label-sm text-label-sm text-outline border border-outline-variant px-1 rounded">⌘K</span></div><a class="hidden sm:inline-flex items-center gap-space-xs bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-md py-space-sm rounded-lg shadow-sm transition-all" data-path="dat-lich-kham" href="#"><span class="material-symbols-outlined text-[18px]">calendar_today</span><span>Đặt lịch khám</span></a><div class="flex items-center gap-space-sm pl-space-xs"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="hidden md:flex flex-col text-left"><span class="font-label-sm text-label-sm text-on-surface leading-tight">Nguyễn Văn A</span><span class="font-body-sm text-[11px] text-secondary leading-tight">Bệnh nhân VIP</span></div></div></div></div></header><main class="w-full pt-20 bg-background"><div class="flex flex-col w-full">
+<!-- Top Ambient Glow Decor (Contained) -->
+<div class="relative w-full overflow-hidden">
+<div class="absolute -top-32 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -top-20 right-1/4 w-80 h-80 bg-secondary/5 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Main Content Container -->
+<div class="w-full px-gutter py-space-xl max-w-7xl mx-auto flex flex-col gap-space-xl">
+<!-- Breadcrumbs & Headline Section -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-space-lg">
+<div class="flex flex-col max-w-3xl">
+<!-- Breadcrumb -->
+<nav class="flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface-variant mb-space-sm">
+<a class="hover:text-primary transition-colors flex items-center gap-1" data-path="trang-chu" href="#">
+<span class="material-symbols-outlined text-[16px]">home</span>
+<span>Trang chủ</span>
+</a>
+<span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+<span class="text-primary font-label-md">Danh mục Chuyên khoa</span>
+</nav>
+<!-- Headline & Metadata Tag -->
+<div class="flex items-center gap-space-sm mb-space-xs">
+<span class="px-space-sm py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm tracking-wide uppercase">CareHealth Network</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-status-confirmed inline-block"></span> 18 Chuyên khoa hoạt động
+            </span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight text-balance">
+            Danh mục Chuyên khoa Y tế
+          </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-space-xs leading-relaxed max-w-2xl">
+            Lựa chọn chuyên khoa phù hợp với nhu cầu và tình trạng sức khỏe của bạn để kết nối với bác sĩ chuyên gia đầu ngành.
+          </p>
+</div>
+<!-- Metric pill widget -->
+<div class="flex items-center gap-space-md bg-surface-container-low p-space-md rounded-xl shadow-sm self-start md:self-auto">
+<div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[26px]">medical_services</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface leading-tight">250+</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Giáo sư, Tiến sĩ liên kết</span>
+</div>
+</div>
+</section>
+<!-- Search & Filters Container Card -->
+<section class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-lg">
+<!-- Search Input & Sort Toolbar -->
+<div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md">
+<!-- Big Search Bar -->
+<div class="relative flex-1 group">
+<span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-outline text-[22px] group-focus-within:text-primary transition-colors">
+              search
+            </span>
+<input class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md pl-12 pr-12 py-3 rounded-xl focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline" id="specialtySearchInput" placeholder="Tìm kiếm chuyên khoa (ví dụ: Tim mạch, Cơ xương khớp, Thần kinh...)" type="text">
+<button aria-label="Xóa nội dung tìm kiếm" class="absolute right-space-md top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors" onclick="document.getElementById('specialtySearchInput').value=''">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Sort Dropdown & Quick Stats -->
+<div class="flex items-center justify-between lg:justify-end gap-space-md">
+<div class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-outline">sort</span>
+<span>Sắp xếp:</span>
+</div>
+<div class="relative">
+<select class="appearance-none bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md pl-space-md pr-10 py-3 rounded-xl cursor-pointer focus:outline-none transition-colors">
+<option value="popular">Phổ biến nhất</option>
+<option value="doctors">Nhiều bác sĩ nhất</option>
+<option value="alpha">Tên A-Z</option>
+<option value="price-low">Giá khám thấp nhất</option>
+</select>
+<span class="material-symbols-outlined absolute right-space-md top-1/2 -translate-y-1/2 pointer-events-none text-outline text-[18px]">
+                expand_more
+              </span>
+</div>
+</div>
+</div>
+<!-- Category Tags / Filter Pills -->
+<div class="flex items-center gap-space-xs flex-wrap pt-space-xs">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider mr-space-xs hidden sm:inline-block">Nhóm khoa:</span>
+<button class="filter-pill active px-space-md py-space-xs rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-sm transition-all" data-category="all">
+            Tất cả chuyên khoa (18)
+          </button>
+<button class="filter-pill px-space-md py-space-xs rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all" data-category="noi">
+            Nội khoa
+          </button>
+<button class="filter-pill px-space-md py-space-xs rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all" data-category="ngoai">
+            Ngoại khoa
+          </button>
+<button class="filter-pill px-space-md py-space-xs rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all" data-category="nhi">
+            Nhi khoa
+          </button>
+<button class="filter-pill px-space-md py-space-xs rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all" data-category="san">
+            Sản phụ khoa
+          </button>
+<button class="filter-pill px-space-md py-space-xs rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all" data-category="cdha">
+            Chẩn đoán hình ảnh
+          </button>
+<button class="filter-pill px-space-md py-space-xs rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all" data-category="yhoc">
+            Y học cổ truyền
+          </button>
+</div>
+</section>
+<!-- Specialty Grid Section (8 cards) -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-lg">
+<!-- CARD 1: Khoa Tim Mạch -->
+<article class="group bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
+<div class="absolute -right-6 -top-6 w-24 h-24 bg-error-container/40 rounded-full blur-xl group-hover:scale-125 transition-transform pointer-events-none"></div>
+<div class="flex flex-col">
+<!-- Icon & Quick Badge -->
+<div class="flex items-center justify-between mb-space-md">
+<div class="w-14 h-14 rounded-xl bg-error-container text-on-error-container flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[30px]" style="font-variation-settings: 'FILL' 1;">cardiology</span>
+</div>
+<span class="font-label-sm text-label-sm px-space-sm py-space-xs rounded-full bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">groups</span> 18 bác sĩ
+              </span>
+</div>
+<!-- Title & Description -->
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors tracking-tight">
+              Khoa Tim Mạch
+            </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs line-clamp-3 leading-relaxed">
+              Chẩn đoán, can thiệp điều trị bệnh lý động mạch vành, tăng huyết áp, suy tim và tầm soát rối loạn nhịp tim toàn diện.
+            </p>
+<!-- Lead Doctor Avatar & Name -->
+<div class="mt-space-md pt-space-sm bg-surface-container-low p-space-sm rounded-lg flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-xs flex-shrink-0" data-alt="Chân dung bác sĩ tim mạch chuyên khoa II, đeo áo blouse trắng và ống nghe y tế, mỉm cười thân thiện trong phòng khám hiện đại với tone màu xanh lam và xám sạch sẽ." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCT6h394tq5U7UqieONRtenDIPl_Ri8AXZq5QDWm49VikO99jJxH_sJKsxyFwJxz0xY1jFl5iEMEWzANwKy2zS7D2H_MMRv-2sT84W_CG3UrPLRrZdNFgnElK1DhYZWzaODuFBqyemIFY_7z6joWtnMb_IkXI7Jvg3xi7TJ0a4MIQp-M_96_0lq9pDpJy2AUj6bIeRn0jz_D_3n_BxDBOgzPT9XYejwXcjaKmKYLemCsruJ9_rQUoD0sA">
+<div class="min-w-0 flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Chuyên gia phụ trách</span>
+<span class="font-label-md text-label-md text-on-surface truncate">PGS.TS.BS Trần Minh Nhật</span>
+</div>
+</div>
+</div>
+<!-- Bottom Price & CTA -->
+<div class="mt-space-lg pt-space-sm flex items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-outline">Giá khám từ</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">300.000 đ</span>
+</div>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md bg-surface-container-high hover:bg-primary text-on-surface hover:text-on-primary px-space-md py-space-sm rounded-lg transition-all" data-path="bac-si" href="#">
+<span>Xem bác sĩ</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- CARD 2: Khoa Nha Khoa & Răng Hàm Mặt -->
+<article class="group bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
+<div class="absolute -right-6 -top-6 w-24 h-24 bg-secondary-container/40 rounded-full blur-xl group-hover:scale-125 transition-transform pointer-events-none"></div>
+<div class="flex flex-col">
+<!-- Icon & Badge -->
+<div class="flex items-center justify-between mb-space-md">
+<div class="w-14 h-14 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[30px]" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+</div>
+<span class="font-label-sm text-label-sm px-space-sm py-space-xs rounded-full bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">groups</span> 24 bác sĩ
+              </span>
+</div>
+<!-- Title & Description -->
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors tracking-tight">
+              Khoa Nha Khoa &amp; RHM
+            </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs line-clamp-3 leading-relaxed">
+              Nha khoa tổng quát, cấy ghép implant, niềng răng thẩm mỹ và điều trị chuyên sâu các bệnh lý khoang miệng kỹ thuật số.
+            </p>
+<!-- Lead Doctor -->
+<div class="mt-space-md pt-space-sm bg-surface-container-low p-space-sm rounded-lg flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-xs flex-shrink-0" data-alt="Nữ nha sĩ chuyên gia chỉnh nha mỉm cười tự tin, mặc áo choàng phòng mổ xanh ngọc bích, bối cảnh phòng khám nha khoa kỹ thuật cao với ánh sáng chuẩn y tế." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrK55gkfFJK4nQK5wUX3dJI4AqGEXff2erBwSoT1StBIpjsS83NzgHkUlMFc5xGr2Xx03HoiQX1B6dDHj1hQ_mr8BOGKz5UjByOXsG9TomeFafq_ltOcqcEpxYWhLsHpPKH9ARdQHs1roY7uFXHE9CnItAdrH2p-OiQFTW-SRV2VJuC8zKmCqdIjukWzYHEQXpGDWXw_Del5LPMKbonmBo0o1pJ_fp1a7xIcD3C6mqGSCbWhcBIRINLw">
+<div class="min-w-0 flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Chuyên gia phụ trách</span>
+<span class="font-label-md text-label-md text-on-surface truncate">ThS.BS Nguyễn Bích Ngọc</span>
+</div>
+</div>
+</div>
+<!-- Price & CTA -->
+<div class="mt-space-lg pt-space-sm flex items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-outline">Giá khám từ</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">250.000 đ</span>
+</div>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md bg-surface-container-high hover:bg-primary text-on-surface hover:text-on-primary px-space-md py-space-sm rounded-lg transition-all" data-path="bac-si" href="#">
+<span>Xem bác sĩ</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- CARD 3: Khoa Mắt (Nhãn Khoa) -->
+<article class="group bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
+<div class="absolute -right-6 -top-6 w-24 h-24 bg-primary-fixed/40 rounded-full blur-xl group-hover:scale-125 transition-transform pointer-events-none"></div>
+<div class="flex flex-col">
+<!-- Icon & Badge -->
+<div class="flex items-center justify-between mb-space-md">
+<div class="w-14 h-14 rounded-xl bg-primary-fixed text-on-primary-fixed flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[30px]" style="font-variation-settings: 'FILL' 1;">visibility</span>
+</div>
+<span class="font-label-sm text-label-sm px-space-sm py-space-xs rounded-full bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">groups</span> 15 bác sĩ
+              </span>
+</div>
+<!-- Title & Description -->
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors tracking-tight">
+              Khoa Mắt (Nhãn Khoa)
+            </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs line-clamp-3 leading-relaxed">
+              Khám tật khúc xạ, đo thị lực điện tử, phẫu thuật Phaco đục thủy tinh thể và điều trị chuyên sâu bệnh võng mạc tiểu đường.
+            </p>
+<!-- Lead Doctor -->
+<div class="mt-space-md pt-space-sm bg-surface-container-low p-space-sm rounded-lg flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-xs flex-shrink-0" data-alt="Bác sĩ nhãn khoa cao cấp đang kiểm tra hình ảnh mắt võng mạc trên màn hình y tế chất lượng cao, thần thái tập trung, tác phong chuyên nghiệp lâm sàng." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLjS3NPiW5t4Jlrz0NUzpPU6DJioHX7Vur4dhWM1qKfT1ug3YGLOpRCefvQzhsntTTVwBQPNKB3AHY9cs5qSB6KcrfdR-UvQQjrYasP6eOfzT3twFqFn93cnpOKzQsdF7aC-KGtECcymdSVKvJzsoh6aTxga82RmBQRgmxXQ0OHoK1R0FJEZl_zif-6mK6-ZqYum45DcvSPY0701HCWSAe3dRotngwL6fydSvdF5wYjFi72hU6TRxq9Q">
+<div class="min-w-0 flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Chuyên gia phụ trách</span>
+<span class="font-label-md text-label-md text-on-surface truncate">CKII. Vũ Hoàng Nam</span>
+</div>
+</div>
+</div>
+<!-- Price & CTA -->
+<div class="mt-space-lg pt-space-sm flex items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-outline">Giá khám từ</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">300.000 đ</span>
+</div>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md bg-surface-container-high hover:bg-primary text-on-surface hover:text-on-primary px-space-md py-space-sm rounded-lg transition-all" data-path="bac-si" href="#">
+<span>Xem bác sĩ</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- CARD 4: Khoa Tai Mũi Họng -->
+<article class="group bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
+<div class="absolute -right-6 -top-6 w-24 h-24 bg-tertiary-fixed/40 rounded-full blur-xl group-hover:scale-125 transition-transform pointer-events-none"></div>
+<div class="flex flex-col">
+<!-- Icon & Badge -->
+<div class="flex items-center justify-between mb-space-md">
+<div class="w-14 h-14 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[30px]" style="font-variation-settings: 'FILL' 1;">hearing</span>
+</div>
+<span class="font-label-sm text-label-sm px-space-sm py-space-xs rounded-full bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-tertiary">groups</span> 20 bác sĩ
+              </span>
+</div>
+<!-- Title & Description -->
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors tracking-tight">
+              Khoa Tai Mũi Họng
+            </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs line-clamp-3 leading-relaxed">
+              Nội soi tầm soát ống mềm, điều trị viêm xoang, thanh quản, polyp dây thanh và phẫu thuật amidan vi phẫu hiện đại.
+            </p>
+<!-- Lead Doctor -->
+<div class="mt-space-md pt-space-sm bg-surface-container-low p-space-sm rounded-lg flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-xs flex-shrink-0" data-alt="Bác sĩ Tai Mũi Họng giàu kinh nghiệm trong phòng soi nội soi vô trùng, áo blouse chuẩn y tế, ánh nhìn tận tâm chu đáo với người bệnh." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1OWABhvCQubAbeCc9Yn4CGxgexGfFUgIuQZ9UEwYTGxpF54TgL5volbfglSKcK8Q-19cz7w6TGVm2jw9YbqBmyBBlLu2PEh-EKs5QLrdiEF5nsM1nI6VePw5FyZaokiF7BWLmZAOCDX9NMy09IrQmwZcQkXqYaWrwA0dS7F0zzn8Ujfyad_YrbGfRDUPMnYNW8SO1nAk8C1oEtyFPsuyDJcRy7IXpYW1ogkdW9enGk-xFUcS80htHbQ">
+<div class="min-w-0 flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Chuyên gia phụ trách</span>
+<span class="font-label-md text-label-md text-on-surface truncate">TS.BS Lê Quỳnh Anh</span>
+</div>
+</div>
+</div>
+<!-- Price & CTA -->
+<div class="mt-space-lg pt-space-sm flex items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-outline">Giá khám từ</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">280.000 đ</span>
+</div>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md bg-surface-container-high hover:bg-primary text-on-surface hover:text-on-primary px-space-md py-space-sm rounded-lg transition-all" data-path="bac-si" href="#">
+<span>Xem bác sĩ</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- CARD 5: Khoa Nhi -->
+<article class="group bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
+<div class="absolute -right-6 -top-6 w-24 h-24 bg-secondary-fixed/50 rounded-full blur-xl group-hover:scale-125 transition-transform pointer-events-none"></div>
+<div class="flex flex-col">
+<!-- Icon & Badge -->
+<div class="flex items-center justify-between mb-space-md">
+<div class="w-14 h-14 rounded-xl bg-secondary-fixed text-on-secondary-fixed-variant flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[30px]" style="font-variation-settings: 'FILL' 1;">child_care</span>
+</div>
+<span class="font-label-sm text-label-sm px-space-sm py-space-xs rounded-full bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">groups</span> 22 bác sĩ
+              </span>
+</div>
+<!-- Title & Description -->
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors tracking-tight">
+              Khoa Nhi (Nhi Khoa)
+            </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs line-clamp-3 leading-relaxed">
+              Khám sức khỏe tổng quát trẻ em, tư vấn dinh dưỡng phát triển, tiêm chủng ngừa bệnh và điều trị bệnh lý hô hấp sơ sinh.
+            </p>
+<!-- Lead Doctor -->
+<div class="mt-space-md pt-space-sm bg-surface-container-low p-space-sm rounded-lg flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-xs flex-shrink-0" data-alt="Nữ bác sĩ nhi khoa ấm áp đang tương tác vui vẻ với trẻ nhỏ, không gian phòng khám nhi tràn ngập ánh sáng tự nhiên với đồ chơi màu sắc nhẹ nhàng." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMIwtLcM42EValzxprLa5-P7N2JDixtUe21PqNq8iSmbhtD-AKj77Ykt23qNor9uDi9Jdl97H4iE_sEj3Lv39P-jqgxYmL5afpbIGhMkAgRIG7udhxRt3BDurIhyxDdfac5WGivufupG4G3alIVaNpys38eAyMr9lqTOJvORf_GBZS0n0jBZi8m-RSyIbpr4pIO-7uqRF-k6jhlIyZFXRdlxDiYqwUZOjVt1WY7XMu7x1Np--Uozibqw">
+<div class="min-w-0 flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Chuyên gia phụ trách</span>
+<span class="font-label-md text-label-md text-on-surface truncate">ThS.BS Đặng Thu Hương</span>
+</div>
+</div>
+</div>
+<!-- Price & CTA -->
+<div class="mt-space-lg pt-space-sm flex items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-outline">Giá khám từ</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">220.000 đ</span>
+</div>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md bg-surface-container-high hover:bg-primary text-on-surface hover:text-on-primary px-space-md py-space-sm rounded-lg transition-all" data-path="bac-si" href="#">
+<span>Xem bác sĩ</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- CARD 6: Khoa Cơ Xương Khớp -->
+<article class="group bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
+<div class="absolute -right-6 -top-6 w-24 h-24 bg-primary-fixed-dim/40 rounded-full blur-xl group-hover:scale-125 transition-transform pointer-events-none"></div>
+<div class="flex flex-col">
+<!-- Icon & Badge -->
+<div class="flex items-center justify-between mb-space-md">
+<div class="w-14 h-14 rounded-xl bg-primary-fixed-dim text-on-primary-fixed-variant flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[30px]" style="font-variation-settings: 'FILL' 1;">personal_injury</span>
+</div>
+<span class="font-label-sm text-label-sm px-space-sm py-space-xs rounded-full bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">groups</span> 16 bác sĩ
+              </span>
+</div>
+<!-- Title & Description -->
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors tracking-tight">
+              Khoa Cơ Xương Khớp
+            </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs line-clamp-3 leading-relaxed">
+              Điều trị thoái hóa cột sống, viêm khớp dạng thấp, loãng xương, chấn thương thể thao và phác đồ phục hồi chức năng vận động.
+            </p>
+<!-- Lead Doctor -->
+<div class="mt-space-md pt-space-sm bg-surface-container-low p-space-sm rounded-lg flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-xs flex-shrink-0" data-alt="Bác sĩ chuyên khoa chấn thương chỉnh hình cơ xương khớp đang giải thích mô hình cột sống 3D cho bệnh nhân, phòng tư vấn hiện đại chuyên nghiệp." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1Tb1sR5nPcRqi1_V6KzsxQhdPkb1OQjmfj2q_TlUM3Lac-rEHATik86TvaYFcjx-CN18K8Q3445zumkZFP58tiPU3OENVNoeFhOyZG_4nga87UUgZUvsiv9Wo45owW6-GVlshuflES9xMQdN-_GEucXx8jhnZsT_vUkpc-nrcoXAytK4nIpW86Xe3OqNA2gj0HxdX0z_JXQZRRxmS8fFHSTmayGALpiNV1TIbrYqPu4631jbnHIo2mw">
+<div class="min-w-0 flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Chuyên gia phụ trách</span>
+<span class="font-label-md text-label-md text-on-surface truncate">GS.TS Phạm Quang Vinh</span>
+</div>
+</div>
+</div>
+<!-- Price & CTA -->
+<div class="mt-space-lg pt-space-sm flex items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-outline">Giá khám từ</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">350.000 đ</span>
+</div>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md bg-surface-container-high hover:bg-primary text-on-surface hover:text-on-primary px-space-md py-space-sm rounded-lg transition-all" data-path="bac-si" href="#">
+<span>Xem bác sĩ</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- CARD 7: Khoa Da Liễu -->
+<article class="group bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
+<div class="absolute -right-6 -top-6 w-24 h-24 bg-secondary-container/30 rounded-full blur-xl group-hover:scale-125 transition-transform pointer-events-none"></div>
+<div class="flex flex-col">
+<!-- Icon & Badge -->
+<div class="flex items-center justify-between mb-space-md">
+<div class="w-14 h-14 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[30px]" style="font-variation-settings: 'FILL' 1;">spa</span>
+</div>
+<span class="font-label-sm text-label-sm px-space-sm py-space-xs rounded-full bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">groups</span> 12 bác sĩ
+              </span>
+</div>
+<!-- Title & Description -->
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors tracking-tight">
+              Khoa Da Liễu
+            </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs line-clamp-3 leading-relaxed">
+              Điều trị mụn chuẩn y khoa, dị ứng, viêm da cơ địa vảy nến và các liệu trình thẩm mỹ da liễu công nghệ cao an toàn.
+            </p>
+<!-- Lead Doctor -->
+<div class="mt-space-md pt-space-sm bg-surface-container-low p-space-sm rounded-lg flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-xs flex-shrink-0" data-alt="Bác sĩ da liễu thẩm mỹ nữ thanh lịch, áo blouse trắng, làn da rạng rỡ, phòng điều trị laser y khoa tối tân với bảng màu xám ngọc bích sang trọng." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXSA70xllxBMyc_ujUDfaoP6M98nzZp9bK13T_4cgmVuTcGgd6hsudyCl04awxAp2f5tsAglqGvI_chzPmdFOLp6xblWKzxWvVsOd_MxAhYVrl6Jor_gO5X-b7VNKl1D_NvYiWp7fZEYduAR82fer9Z32CqD5QXuqrL0BpQla-x4gO_W-YmPICiMQCTpj_ck_xxPYXIX3ufYm_W3xXglufn-p_rQF6d0QQwu2SMyJiRvnoME82-NDvxg">
+<div class="min-w-0 flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Chuyên gia phụ trách</span>
+<span class="font-label-md text-label-md text-on-surface truncate">CKI. Hoàng Mai Linh</span>
+</div>
+</div>
+</div>
+<!-- Price & CTA -->
+<div class="mt-space-lg pt-space-sm flex items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-outline">Giá khám từ</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">300.000 đ</span>
+</div>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md bg-surface-container-high hover:bg-primary text-on-surface hover:text-on-primary px-space-md py-space-sm rounded-lg transition-all" data-path="bac-si" href="#">
+<span>Xem bác sĩ</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- CARD 8: Khoa Thần Kinh -->
+<article class="group bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
+<div class="absolute -right-6 -top-6 w-24 h-24 bg-tertiary-container/20 rounded-full blur-xl group-hover:scale-125 transition-transform pointer-events-none"></div>
+<div class="flex flex-col">
+<!-- Icon & Badge -->
+<div class="flex items-center justify-between mb-space-md">
+<div class="w-14 h-14 rounded-xl bg-tertiary-fixed-dim text-on-tertiary-fixed flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[30px]" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<span class="font-label-sm text-label-sm px-space-sm py-space-xs rounded-full bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-tertiary">groups</span> 10 bác sĩ
+              </span>
+</div>
+<!-- Title & Description -->
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors tracking-tight">
+              Khoa Thần Kinh
+            </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs line-clamp-3 leading-relaxed">
+              Khám đau nửa đầu tiền đình, rối loạn giấc ngủ, tầm soát tai biến mạch máu não và hỗ trợ điều trị suy giảm trí nhớ ở người cao tuổi.
+            </p>
+<!-- Lead Doctor -->
+<div class="mt-space-md pt-space-sm bg-surface-container-low p-space-sm rounded-lg flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-xs flex-shrink-0" data-alt="Bác sĩ nội thần kinh uy tín đang kiểm tra phim cộng hưởng từ sọ não MRI trên màn hình y tế phòng đọc kết quả, phong thái thận trọng tỉ mỉ." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHg2_2YTQLUzafn0jpRDN0loQ2dxLXD1nSqe6imaaaIyCS0rTRKAlVjwwvcUEgVa_iy0_DRcZKQN8cp8p9YMo2Xe0oEnu_3lY6BwNC-g3w3MOtoNHQeg8hnrNWLV_nK_vKAiKerTVPScSktiYtmibUGr4oEEtQIcayoyQdu-fqi_bP791ODdDqK2q7awPu1_AWXcxVWRSgKLZegiiH7blhagQZDnCHMCNwSmQKSBjxfdHKlsqN0FNXbw">
+<div class="min-w-0 flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Chuyên gia phụ trách</span>
+<span class="font-label-md text-label-md text-on-surface truncate">TS.BS Đỗ Khắc Cường</span>
+</div>
+</div>
+</div>
+<!-- Price & CTA -->
+<div class="mt-space-lg pt-space-sm flex items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-outline">Giá khám từ</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">400.000 đ</span>
+</div>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md bg-surface-container-high hover:bg-primary text-on-surface hover:text-on-primary px-space-md py-space-sm rounded-lg transition-all" data-path="bac-si" href="#">
+<span>Xem bác sĩ</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</article>
+</section>
+<!-- Pagination and Showing Counter Section -->
+<section class="flex flex-col sm:flex-row items-center justify-between gap-space-md bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1">
+<span>Đang hiển thị</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">8</span>
+<span>trên tổng số</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">18</span>
+<span>chuyên khoa y tế</span>
+</div>
+<nav aria-label="Phân trang chuyên khoa" class="flex items-center gap-space-xs">
+<!-- Button Prev (Disabled State) -->
+<button class="px-space-md py-space-sm rounded-lg bg-surface-container-low text-outline font-label-md text-label-md cursor-not-allowed opacity-60 flex items-center gap-1" disabled="">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span>Trước</span>
+</button>
+<!-- Numeric Pages -->
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold flex items-center justify-center shadow-sm">
+              1
+            </button>
+<button class="w-10 h-10 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center transition-colors">
+              2
+            </button>
+</div>
+<!-- Button Next (Active) -->
+<button class="px-space-md py-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-1 transition-colors">
+<span>Tiếp theo</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</nav>
+</section>
+<!-- Quick Consultation Floating Card Banner -->
+<section class="relative overflow-hidden bg-primary text-on-primary rounded-xl p-space-lg lg:p-space-xl flex flex-col md:flex-row items-center justify-between gap-space-lg shadow-md">
+<div class="absolute -right-10 -bottom-10 w-72 h-72 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex items-center gap-space-md z-10">
+<div class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[32px] text-white">support_agent</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline-sm text-headline-sm font-bold text-white">Chưa rõ triệu chứng nên khám khoa nào?</h3>
+<p class="font-body-md text-body-md text-on-primary/80 mt-1 max-w-xl">
+              Hệ thống trợ lý phân luồng thông minh hoặc đội ngũ điều dưỡng viên trực tuyến sẵn sàng tư vấn miễn phí 24/7.
+            </p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm z-10 w-full md:w-auto flex-shrink-0">
+<a class="w-full md:w-auto text-center px-space-lg py-3 rounded-lg bg-surface-container-lowest text-primary font-label-md text-label-md font-semibold hover:bg-surface-container-low shadow-sm transition-all" data-path="dat-lich-kham" href="#">
+            Tư vấn phân khoa ngay
+          </a>
+</div>
+</section>
+</div>
+</div>
+</div>
+<script>
+  // Simple Pill Selection Toggle Micro-interaction
+  document.querySelectorAll('.filter-pill').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-pill').forEach(b => {
+        b.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+        b.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+      });
+      this.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+      this.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+    });
+  });
+</script></main><footer class="w-full bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] mt-space-xl"><div class="w-full px-gutter py-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-xl mb-space-xl"><div><div class="flex items-center gap-space-sm mb-space-md"><div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary"><span class="material-symbols-outlined text-[20px]">local_hospital</span></div><span class="font-headline-sm text-headline-sm text-primary">CareHealth</span></div><p class="font-body-md text-body-md text-on-surface-variant mb-space-md leading-relaxed">Nền tảng đặt lịch khám bệnh trực tuyến kết nối bệnh nhân với hệ thống bệnh viện và bác sĩ chuyên khoa đầu ngành uy tín tại Việt Nam.</p><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[18px]">call</span></div><div><p class="font-label-sm text-label-sm text-on-surface-variant">Tổng đài đặt khám 24/7</p><p class="font-headline-sm text-headline-sm text-primary">1900 6868</p></div></div></div><div><h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-md">Dịch vụ y tế</h4><ul class="space-y-space-sm"><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer">Khám chuyên khoa từ xa</li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer">Đặt hẹn khám tại bệnh viện</li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer">Xét nghiệm tại nhà</li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer">Gói khám sức khỏe tổng quát</li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer">Tư vấn sức khỏe trực tuyến</li></ul></div><div><h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-md">Hỗ trợ bệnh nhân</h4><ul class="space-y-space-sm"><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer">Hướng dẫn đặt lịch khám</li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer">Quy trình khám bệnh và bảo hiểm</li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer">Chính sách hoàn tiền &amp; hủy lịch</li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer">Hỏi đáp thắc mắc thường gặp</li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer">Liên hệ hợp tác phòng khám</li></ul></div><div><h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-md">Trụ sở điều hành</h4><p class="font-body-md text-body-md text-on-surface-variant mb-space-sm"><span class="material-symbols-outlined text-[16px] align-middle mr-1 text-primary">location_on</span>Tòa nhà CareHealth Medical Tower, Quận 1, TP. Hồ Chí Minh</p><p class="font-body-md text-body-md text-on-surface-variant mb-space-sm"><span class="material-symbols-outlined text-[16px] align-middle mr-1 text-primary">mail</span>support@carehealth.vn</p><p class="font-body-md text-body-md text-on-surface-variant mb-space-md"><span class="material-symbols-outlined text-[16px] align-middle mr-1 text-primary">schedule</span>Thứ Hai - Chủ Nhật: 07:00 - 21:00</p><div class="flex items-center gap-space-xs"><span class="px-space-sm py-space-xs rounded bg-surface-container font-label-sm text-label-sm text-on-surface-variant">Chứng nhận Bộ Y Tế</span><span class="px-space-sm py-space-xs rounded bg-surface-container font-label-sm text-label-sm text-on-surface-variant">ISO 27001</span></div></div></div><div class="pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md bg-surface-container-low px-space-lg py-space-md rounded-xl"><p class="font-body-sm text-body-sm text-on-surface-variant">© 2025 CareHealth Việt Nam. Bảo lưu mọi quyền.</p><div class="flex items-center gap-space-lg"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Điều khoản sử dụng</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Chính sách bảo mật y tế</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Tiêu chuẩn dữ liệu</a></div></div></div></footer></body></html>
