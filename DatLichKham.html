@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt phiếu khám bệnh chuyên khoa - CareHealth</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col justify-between">
+
+<!-- Top Navigation Header -->
+<header class="bg-white border-b border-gray-100 px-6 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-xs">
+    <div class="flex items-center space-x-3">
+        <a th:href="@{/}" class="flex items-center space-x-2">
+            <div class="bg-blue-600 text-white w-9 h-9 rounded-xl flex items-center justify-center font-bold text-lg shadow-sm">
+                <i class="fa-solid fa-square-plus"></i>
+            </div>
+            <div>
+                <span class="text-lg font-bold text-gray-900 tracking-tight leading-none block">CareHealth</span>
+                <span class="text-[10px] text-gray-500 font-medium tracking-wide block">Hệ thống y tế thông minh</span>
+            </div>
+        </a>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
+        <a th:href="@{/}" class="hover:text-blue-600 transition-colors">Trang chủ</a>
+        <a href="#" class="hover:text-blue-600 transition-colors">Chuyên khoa</a>
+        <a href="#" class="hover:text-blue-600 transition-colors">Bác sĩ</a>
+        <a href="#" class="hover:text-blue-600 transition-colors">Lịch hẹn của tôi</a>
+    </nav>
+
+    <!-- Search Bar & User Profile -->
+    <div class="flex items-center space-x-4">
+        <form th:action="@{/bac-si/tim-kiem}" method="GET" class="hidden lg:flex items-center bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 w-64 focus-within:bg-white focus-within:border-blue-600 transition-all">
+            <i class="fa-solid fa-magnifying-glass text-gray-400 text-xs mr-2"></i>
+            <input type="text" name="keyword" placeholder="Tìm bác sĩ, chuyên khoa..." class="bg-transparent text-xs outline-none w-full text-gray-700">
+            <span class="text-[10px] bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded ml-1">36K</span>
+        </form>
+
+        <a href="#" class="hidden sm:flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm transition-all">
+            <i class="fa-solid fa-calendar-check"></i> Đặt lịch khám
+        </a>
+
+        <div class="flex items-center space-x-2 border-l pl-4 border-gray-200">
+            <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold">
+                <i class="fa-regular fa-user"></i>
+            </div>
+            <span class="text-xs font-semibold text-gray-700 hidden lg:inline-block">Nguyễn Văn A</span>
+        </div>
+    </div>
+</header>
+
+<!-- Main Container -->
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3 text-xs text-gray-500 flex items-center space-x-2">
+        <a th:href="@{/}" class="hover:text-blue-600">Trang chủ[cite: 3]</a>
+        <i class="fa-solid fa-chevron-right text-[10px] text-gray-400"></i>
+        <a th:href="@{/bac-si/nguyen-van-a}" class="hover:text-blue-600">Bác sĩ[cite: 3]</a>
+        <i class="fa-solid fa-chevron-right text-[10px] text-gray-400"></i>
+        <a th:href="@{/bac-si/nguyen-van-a}" class="hover:text-blue-600">BS. CKII Nguyễn Văn A[cite: 3]</a>
+        <i class="fa-solid fa-chevron-right text-[10px] text-gray-400"></i>
+        <span class="text-gray-800 font-semibold">Đặt lịch khám[cite: 3]</span>
+    </nav>
+
+    <!-- Top Alert & Heading -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+        <div>
+            <div class="flex items-center gap-2 text-xs text-emerald-600 font-medium mb-1">
+                <i class="fa-solid fa-shield-halved"></i> QUY TRÌNH Y TẾ AN TOÀN & CHUẨN XÁC[cite: 3]
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Đặt phiếu khám bệnh chuyên khoa[cite: 3]</h1>
+        </div>
+        <div class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-medium px-3 py-1.5 rounded-xl flex items-center gap-1.5 self-start sm:self-auto">
+            <i class="fa-solid fa-rotate text-emerald-500"></i> Hệ thống đồng bộ lịch thực từ Bệnh viện[cite: 3]
+        </div>
+    </div>
+
+    <!-- Progress Steps Bar -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+        <!-- Step 1: Active -->
+        <div class="bg-blue-600 text-white p-3.5 rounded-2xl flex items-center justify-between shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center font-bold text-xs">1</div>
+                <div>
+                    <span class="text-[10px] uppercase tracking-wider block opacity-80">Bước 1 · Đang chọn</span>
+                    <span class="text-xs font-bold">Chọn ngày & giờ khám[cite: 3]</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-check text-xs bg-white/20 p-1.5 rounded-full"></i>
+        </div>
+        <!-- Step 2 -->
+        <div class="bg-white border border-gray-200 text-gray-600 p-3.5 rounded-2xl flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center font-bold text-xs text-gray-500">2</div>
+                <div>
+                    <span class="text-[10px] uppercase tracking-wider block text-gray-400">Bước 2 · Trống hồ sơ</span>
+                    <span class="text-xs font-semibold text-gray-700">Thông tin & triệu chứng[cite: 3]</span>
+                </div>
+            </div>
+        </div>
+        <!-- Step 3 -->
+        <div class="bg-white border border-gray-200 text-gray-600 p-3.5 rounded-2xl flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center font-bold text-xs text-gray-500">3</div>
+                <div>
+                    <span class="text-[10px] uppercase tracking-wider block text-gray-400">Bước 3</span>
+                    <span class="text-xs font-semibold text-gray-700">Xác nhận & Hoàn tất[cite: 3]</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Grid Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Left 2 Columns: Booking Form Sections -->
+        <div class="lg:col-span-2 space-y-6">
+
+            <!-- 1. Chọn ngày khám phù hợp -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">1</span>
+                        <h3 class="text-base font-bold text-gray-900">Chọn ngày khám phù hợp[cite: 3]</h3>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <button class="w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+                        <button class="w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 mb-4">Lịch công tác được cập nhật thời gian thực theo phiên khám bác sĩ[cite: 3]</p>
+
+                <!-- Date Selection Cards -->
+                <div class="grid grid-cols-2 sm:grid-cols-6 gap-2.5 text-center">
+                    <div class="border border-gray-200 rounded-xl p-3 cursor-pointer hover:border-blue-600 transition-all">
+                        <span class="text-[11px] text-gray-500 block mb-1">Thứ Hai[cite: 3]</span>
+                        <span class="text-base font-bold text-gray-900 block mb-1">16/10[cite: 3]</span>
+                        <span class="text-[10px] text-gray-400">8 suất hẹn[cite: 3]</span>
+                    </div>
+                    <!-- Selected Date -->
+                    <div class="border-2 border-blue-600 bg-blue-600 text-white rounded-xl p-3 cursor-pointer shadow-sm relative">
+                        <span class="absolute -top-2 left-1/2 -translate-x-1/2 bg-amber-400 text-gray-900 text-[9px] font-bold px-1.5 py-0.5 rounded-full">Hôm nay[cite: 3]</span>
+                        <span class="text-[11px] opacity-90 block mb-1 mt-0.5">Thứ Ba[cite: 3]</span>
+                        <span class="text-base font-bold block mb-1">17/10[cite: 3]</span>
+                        <span class="text-[10px] bg-blue-700 px-2 py-0.5 rounded-full inline-block">Đang chọn[cite: 3]</span>
+                    </div>
+                    <div class="border border-gray-200 rounded-xl p-3 cursor-pointer hover:border-blue-600 transition-all">
+                        <span class="text-[11px] text-gray-500 block mb-1">Thứ Tư[cite: 3]</span>
+                        <span class="text-base font-bold text-gray-900 block mb-1">18/10[cite: 3]</span>
+                        <span class="text-[10px] text-gray-400">12 suất hẹn[cite: 3]</span>
+                    </div>
+                    <div class="border border-gray-200 rounded-xl p-3 cursor-pointer hover:border-blue-600 transition-all">
+                        <span class="text-[11px] text-gray-500 block mb-1">Thứ Năm[cite: 3]</span>
+                        <span class="text-base font-bold text-gray-900 block mb-1">19/10[cite: 3]</span>
+                        <span class="text-[10px] text-gray-400">5 suất hẹn[cite: 3]</span>
+                    </div>
+                    <div class="border border-gray-200 rounded-xl p-3 cursor-pointer hover:border-blue-600 transition-all">
+                        <span class="text-[11px] text-gray-500 block mb-1">Thứ Sáu[cite: 3]</span>
+                        <span class="text-base font-bold text-gray-900 block mb-1">20/10[cite: 3]</span>
+                        <span class="text-[10px] text-gray-400">10 suất hẹn[cite: 3]</span>
+                    </div>
+                    <div class="border border-gray-200 bg-gray-100 text-gray-400 rounded-xl p-3 cursor-not-allowed">
+                        <span class="text-[11px] block mb-1">Thứ Bảy[cite: 3]</span>
+                        <span class="text-base font-bold block mb-1">21/10[cite: 3]</span>
+                        <span class="text-[10px] text-red-500 font-medium">Đổi lịch/Nghỉ[cite: 3]</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Chọn khung giờ khám trống -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">2</span>
+                        <h3 class="text-base font-bold text-gray-900">Chọn khung giờ khám trống[cite: 3]</h3>
+                    </div>
+                    <div class="flex items-center gap-4 text-xs text-gray-500">
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-[8px] text-blue-600"></i> Đang chọn[cite: 3]</span>
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-[8px] text-gray-400"></i> Còn chỗ[cite: 3]</span>
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-[8px] text-gray-300"></i> Đã kín[cite: 3]</span>
+                    </div>
+                </div>
+
+                <!-- Time Slots Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-medium">
+                    <!-- Slot 1 -->
+                    <div class="border border-gray-200 rounded-xl p-3.5 flex items-center justify-between cursor-pointer hover:border-blue-600 transition-all">
+                        <div>
+                            <span class="text-sm font-bold text-gray-900 block mb-1">08:00 - 09:00[cite: 3]</span>
+                            <span class="text-emerald-600 font-medium">Còn 2 chỗ trống[cite: 3]</span>
+                        </div>
+                        <i class="fa-regular fa-clock text-gray-400"></i>
+                    </div>
+                    <!-- Slot 2: Selected -->
+                    <div class="border-2 border-blue-600 bg-blue-50/50 rounded-xl p-3.5 flex items-center justify-between relative cursor-pointer shadow-xs">
+                        <div>
+                            <span class="text-sm font-bold text-blue-900 block mb-1">09:00 - 10:00[cite: 3]</span>
+                            <span class="text-blue-600 font-bold">Khung giờ được chọn[cite: 3]</span>
+                        </div>
+                        <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <span class="absolute -top-2.5 right-3 bg-blue-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">Tối ưu[cite: 3]</span>
+                    </div>
+                    <!-- Slot 3 -->
+                    <div class="border border-gray-200 rounded-xl p-3.5 flex items-center justify-between cursor-pointer hover:border-blue-600 transition-all">
+                        <div>
+                            <span class="text-sm font-bold text-gray-900 block mb-1">10:00 - 11:00[cite: 3]</span>
+                            <span class="text-amber-600 font-medium">Chỉ còn 1 chỗ duy nhất[cite: 3]</span>
+                        </div>
+                        <i class="fa-regular fa-clock text-gray-400"></i>
+                    </div>
+                    <!-- Slot 4 -->
+                    <div class="border border-gray-200 rounded-xl p-3.5 flex items-center justify-between cursor-pointer hover:border-blue-600 transition-all">
+                        <div>
+                            <span class="text-sm font-bold text-gray-900 block mb-1">14:00 - 15:00[cite: 3]</span>
+                            <span class="text-emerald-600 font-medium">Còn 4 chỗ trống[cite: 3]</span>
+                        </div>
+                        <i class="fa-regular fa-clock text-gray-400"></i>
+                    </div>
+                    <!-- Slot 5: Disabled -->
+                    <div class="border border-gray-200 bg-gray-100/70 rounded-xl p-3.5 flex items-center justify-between opacity-60 cursor-not-allowed">
+                        <div>
+                            <span class="text-sm font-bold text-gray-400 block mb-1">15:00 - 16:00[cite: 3]</span>
+                            <span class="text-gray-400">Đã kín chỗ khám[cite: 3]</span>
+                        </div>
+                        <i class="fa-solid fa-ban text-gray-400"></i>
+                    </div>
+                    <!-- Slot 6 -->
+                    <div class="border border-gray-200 rounded-xl p-3.5 flex items-center justify-between cursor-pointer hover:border-blue-600 transition-all">
+                        <div>
+                            <span class="text-sm font-bold text-gray-900 block mb-1">16:00 - 17:00[cite: 3]</span>
+                            <span class="text-emerald-600 font-medium">Còn 3 chỗ trống[cite: 3]</span>
+                        </div>
+                        <i class="fa-regular fa-clock text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Thông tin người đến khám -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">3</span>
+                        <h3 class="text-base font-bold text-gray-900">Thông tin người đến khám[cite: 3]</h3>
+                    </div>
+                    <span class="text-xs text-red-500 font-medium">(*) Bắt buộc[cite: 3]</span>
+                </div>
+                <p class="text-xs text-gray-400 mb-4">Dữ liệu dùng để tạo mã hồ sơ bệnh án điện tử tại bệnh viện[cite: 3]</p>
+
+                <!-- Patient Target Switcher -->
+                <div class="bg-gray-100/80 p-1.5 rounded-xl flex mb-5 text-xs font-semibold max-w-md">
+                    <label class="flex-1 py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 bg-white text-blue-600 shadow-xs cursor-pointer transition-all">
+                        <input type="radio" name="patientTarget" checked class="hidden"> Đặt cho bản thân[cite: 3]
+                    </label>
+                    <label class="flex-1 py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 text-gray-500 hover:text-gray-700 cursor-pointer transition-all">
+                        <input type="radio" name="patientTarget" class="hidden"> Đặt cho người thân / Gia đình[cite: 3]
+                    </label>
+                </div>
+
+                <!-- Input Fields Form -->
+                <div class="space-y-4 text-xs sm:text-sm">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1.5">Họ và tên bệnh nhân <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                    <i class="fa-regular fa-user"></i>
+                                </div>
+                                <input type="text" value="Nguyễn Văn A" class="w-full pl-10 pr-3.5 py-2.5 border border-gray-200 rounded-xl bg-gray-50/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all text-xs sm:text-sm font-medium">
+                            </div>
+                            <span class="text-[11px] text-gray-400 mt-1 block">Viết hoa đúng như CMND/CCCD hoặc BHYT[cite: 3]</span>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1.5">Số điện thoại liên hệ <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <input type="text" value="0912 345 678" class="w-full pl-10 pr-3.5 py-2.5 border border-gray-200 rounded-xl bg-gray-50/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all text-xs sm:text-sm font-medium">
+                            </div>
+                            <span class="text-[11px] text-gray-400 mt-1 block">Dùng để nhận tin nhắn SMS nhắc lịch và mã số khám[cite: 3]</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1.5">Ngày sinh <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                    <i class="fa-regular fa-calendar"></i>
+                                </div>
+                                <input type="text" value="15/08/1988" class="w-full pl-10 pr-3.5 py-2.5 border border-gray-200 rounded-xl bg-gray-50/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all text-xs sm:text-sm">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1.5">Giới tính <span class="text-red-500">*</span></label>
+                            <select class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl bg-gray-50/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all text-xs sm:text-sm">
+                                <option>Nam[cite: 3]</option>
+                                <option>Nữ</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1.5">Số CCCD / Mã thẻ BHYT <span class="text-gray-400 font-normal">(Không bắt buộc)</span></label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                    <i class="fa-regular fa-id-card"></i>
+                                </div>
+                                <input type="text" value="079088******" class="w-full pl-10 pr-3.5 py-2.5 border border-gray-200 rounded-xl bg-gray-50/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all text-xs sm:text-sm">
+                            </div>
+                            <span class="text-[11px] text-gray-400 mt-1 block">Hỗ trợ đối soát quyền lợi BHYT khi thanh toán tại viện[cite: 3]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Lý do khám & Triệu chứng ban đầu -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">4</span>
+                    <h3 class="text-base font-bold text-gray-900">Lý do khám & Triệu chứng ban đầu[cite: 3]</h3>
+                </div>
+                <p class="text-xs text-gray-400 mb-4">Mô tả càng chi tiết giúp bác sĩ chuẩn bị trước hồ sơ bệnh lý[cite: 3]</p>
+
+                <div class="space-y-4 text-xs sm:text-sm">
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1.5">Mô tả biểu hiện sức khỏe hiện tại</label>
+                        <textarea rows="3" class="w-full p-3.5 border border-gray-200 rounded-xl bg-gray-50/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all text-xs sm:text-sm">Thỉnh thoảng có cảm giác hồi hộp, đau thắt tức vùng ngực trái khi gắng sức hoặc leo cầu thang, muốn khám tổng quát và đo điện tâm đồ...</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1.5">Tài liệu đính kèm (Kết quả xét nghiệm, đơn thuốc cũ, ảnh chụp X-quang)[cite: 3]</label>
+                        <div class="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center hover:border-blue-600 transition-all bg-gray-50/30 cursor-pointer">
+                            <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-2">
+                                <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
+                            </div>
+                            <span class="text-xs font-bold text-blue-600 block mb-1">Nhập để tải lên</span>
+                            <span class="text-xs text-gray-500 block mb-1">hoặc kéo thả file vào đây[cite: 3]</span>
+                            <span class="text-[10px] text-gray-400">Định dạng hỗ trợ: JPG, PNG, PDF (Tối đa 15MB/file)[cite: 3]</span>
+                        </div>
+                    </div>
+
+                    <!-- Uploaded File Badge -->
+                    <div class="flex items-center justify-between bg-blue-50/40 border border-blue-100 rounded-xl p-3 text-xs">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-regular fa-file-pdf text-red-500 text-base"></i>
+                            <div>
+                                <span class="font-semibold text-gray-900 block">Ket_qua_ECG_thang_06_2023.pdf[cite: 3]</span>
+                                <span class="text-[10px] text-gray-400">1.8 MB • Đã tải lên[cite: 3]</span>
+                            </div>
+                        </div>
+                        <button type="button" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Summary Sidebar -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-24 space-y-5">
+
+                <!-- Header summary -->
+                <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+                        <span class="text-xs font-bold text-gray-900 flex items-center gap-1.5">
+                            <i class="fa-solid fa-receipt text-blue-600"></i> Phiếu tóm tắt đặt khám[cite: 3]
+                        </span>
+                    <span class="text-[10px] bg-blue-50 text-blue-600 font-semibold px-2 py-0.5 rounded-md">Phiên làm việc #4028[cite: 3]</span>
+                </div>
+
+                <!-- Doctor Mini Info Card -->
+                <div class="flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                    <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=150&auto=format&fit=crop" class="w-12 h-12 rounded-xl object-cover">
+                    <div>
+                        <span class="text-[10px] text-blue-600 font-semibold block">Chuyên gia hàng đầu[cite: 3]</span>
+                        <h4 class="text-xs font-bold text-gray-900">BS. CKII Nguyễn Văn A[cite: 3]</h4>
+                        <span class="text-[10px] text-gray-400 block">Chuyên khoa Tim mạch can thiệp[cite: 3]</span>
+                        <span class="text-[10px] text-amber-500 font-semibold flex items-center gap-1 mt-0.5">
+                                <i class="fa-solid fa-star"></i> 4.9 <span class="text-gray-400 font-normal">(1,245+ lượt khám)[cite: 3]</span>
+                            </span>
+                    </div>
+                </div>
+
+                <!-- Appointment Time & Location -->
+                <div class="space-y-3 text-xs">
+                    <div class="flex items-start gap-2.5">
+                        <i class="fa-regular fa-calendar-days text-blue-600 mt-0.5"></i>
+                        <div>
+                            <span class="text-gray-400 block text-[10px]">Thời gian khám</span>
+                            <span class="font-bold text-gray-900">09:00 - 10:00 • Thứ Ba, 17/10/2026[cite: 3]</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i>
+                        <div>
+                            <span class="text-gray-400 block text-[10px]">Địa điểm thêm khám</span>
+                            <span class="font-bold text-gray-900">Phòng khám Tim mạch 204, Lầu 2<br><span class="font-normal text-gray-500">Bệnh viện Đại học Y Dược TP.HCM[cite: 3]</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fee Breakdown -->
+                <div class="border-t border-gray-100 pt-4 space-y-2 text-xs">
+                    <span class="font-bold text-gray-900 block mb-2">BẢNG KÊ CHI PHÍ TẠM TÍNH[cite: 3]</span>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Phi khám chuyên khoa CK[cite: 3]</span>
+                        <span class="font-semibold text-gray-900">300.000 đ[cite: 3]</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Phí tiện ích đặt lịch CareHealth <span class="text-emerald-600 text-[10px] bg-emerald-50 px-1.5 py-0.5 rounded font-medium">Ưu đãi</span>[cite: 3]</span>
+                        <span class="font-semibold text-emerald-600">0 đ[cite: 3]</span>
+                    </div>
+                    <div class="border-t border-dashed border-gray-200 pt-2 flex justify-between items-center text-sm">
+                        <span class="font-bold text-gray-900">Tổng thanh toán:[cite: 3]</span>
+                        <span class="font-bold text-red-600 text-base">300.000 đ[cite: 3]</span>
+                    </div>
+                    <span class="text-[10px] text-gray-400 block text-right">Đã bao gồm thuế GTGT[cite: 3]</span>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="border-t border-gray-100 pt-4 space-y-3">
+                    <span class="font-bold text-gray-900 text-xs block">Phương thức thanh toán[cite: 3]</span>
+
+                    <label class="flex items-center justify-between p-3 border-2 border-blue-600 bg-blue-50/30 rounded-xl cursor-pointer text-xs">
+                        <div class="flex items-center gap-2">
+                            <input type="radio" name="payment" checked class="text-blue-600">
+                            <div>
+                                <span class="font-bold text-gray-900 block">Thanh toán tại quầy khi đến khám (CCO)[cite: 3]</span>
+                                <span class="text-[10px] text-gray-500">Nhận số thứ tự ưu tiên, trả tiền tại quầy viện[cite: 3]</span>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-hospital text-blue-600 text-base"></i>
+                    </label>
+
+                    <label class="flex items-center justify-between p-3 border border-gray-200 rounded-xl cursor-pointer text-xs hover:border-gray-300">
+                        <div class="flex items-center gap-2">
+                            <input type="radio" name="payment" class="text-blue-600">
+                            <div>
+                                <span class="font-bold text-gray-900 block">Thanh toán trực tuyến[cite: 3]</span>
+                                <span class="text-[10px] text-gray-500">Cổng VNPAY / Momo / Thẻ quốc tế[cite: 3]</span>
+                            </div>
+                        </div>
+                        <i class="fa-regular fa-credit-card text-gray-400 text-base"></i>
+                    </label>
+                </div>
+
+                <!-- Security Notice Box -->
+                <div class="p-3 bg-gray-50 rounded-xl border border-gray-100 text-[11px] text-gray-500 flex items-start gap-2">
+                    <i class="fa-solid fa-shield-halved text-blue-600 text-sm mt-0.5 shrink-0"></i>
+                    <div>
+                        <span class="font-bold text-gray-800 block mb-0.5">Cam kết bảo mật y tế:[cite: 3]</span>
+                        Dữ liệu mã hóa theo chuẩn ISO 27001. Miễn phí đổi hoặc hủy lịch khám trước giờ hẹn <b>2 tiếng</b> của ứng dụng.[cite: 3]
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl text-xs shadow-sm transition-all flex items-center justify-center gap-2 group">
+                    <span>Xác nhận & Hoàn tất Đặt lịch khám</span>
+                    <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-0.5 transition-transform"></i>
+                </button>
+
+                <div class="text-center text-xs text-gray-400 pt-2">
+                    Cần hỗ trợ gấp? Gọi <strong class="text-gray-800 font-bold">1900 6868</strong>[cite: 3]
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+<!-- Page Footer -->
+<footer class="bg-white border-t border-gray-100 mt-12 py-8 text-xs text-gray-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+                <div class="flex items-center space-x-2 mb-3">
+                    <div class="bg-blue-600 text-white w-7 h-7 rounded-lg flex items-center justify-center font-bold text-sm">
+                        <i class="fa-solid fa-square-plus"></i>
+                    </div>
+                    <span class="text-base font-bold text-gray-900 tracking-tight">CareHealth</span>
+                </div>
+                <p class="text-gray-500 leading-relaxed">Nền tảng đặt lịch khám bệnh trực tuyến kết nối bệnh nhân với hệ thống bệnh viện và bác sĩ chuyên khoa đầu ngành tại Việt Nam.[cite: 3]</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-gray-900 mb-3">Dịch vụ y tế[cite: 3]</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-blue-600">Khám chuyên khoa từ xa[cite: 3]</a></li>
+                    <li><a href="#" class="hover:text-blue-600">Đặt hẹn khám tại bệnh viện[cite: 3]</a></li>
+                    <li><a href="#" class="hover:text-blue-600">Xét nghiệm tại nhà[cite: 3]</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-gray-900 mb-3">Hỗ trợ bệnh nhân[cite: 3]</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-blue-600">Hướng dẫn đặt lịch khám[cite: 3]</a></li>
+                    <li><a href="#" class="hover:text-blue-600">Quy trình khám bảo hiểm[cite: 3]</a></li>
+                    <li><a href="#" class="hover:text-blue-600">Chính sách hoàn tiền & hủy lịch[cite: 3]</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-gray-900 mb-3">Trụ sở điều hành[cite: 3]</h4>
+                <p class="mb-2"><i class="fa-solid fa-building text-blue-600 mr-1"></i> Tòa nhà CareHealth Medical Tower, Quận 1, TP. Hồ Chí Minh[cite: 3]</p>
+                <p><i class="fa-solid fa-phone text-blue-600 mr-1"></i> 1900 6868[cite: 3]</p>
+            </div>
+        </div>
+        <div class="border-t border-gray-100 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p>© 2026 CareHealth Việt Nam. Bảo lưu mọi quyền.[cite: 3]</p>
+            <div class="flex items-center space-x-6">
+                <a href="#" class="hover:text-gray-700">Điều khoản sử dụng[cite: 3]</a>
+                <a href="#" class="hover:text-gray-700">Chính sách bảo mật y tế[cite: 3]</a>
+                <a href="#" class="hover:text-gray-700">ISO 27001 Certified[cite: 3]</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
