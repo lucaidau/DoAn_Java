@@ -11,7 +11,7 @@
 <span class="text-outline-variant">/</span>
 <a class="hover:text-primary transition-colors" data-path="bac-si" th:href="@{/patient/doctors}">Bác sĩ</a>
 <span class="text-outline-variant">/</span>
-<span class="font-label-sm text-label-sm text-primary">BS. CKII Nguyễn Văn A</span>
+<span class="font-label-sm text-label-sm text-primary" th:text='${doctor.degree + " " + doctor.doctorName}'>BS. CKII Nguyễn Văn A</span>
 </div>
 </div>
 <!-- Profile Hero Section with Bento Stat Cards -->
@@ -25,7 +25,7 @@
 <!-- Doctor Portrait & Verification Shield -->
 <div class="relative flex-shrink-0 self-center lg:self-start">
 <div class="w-44 h-44 sm:w-52 sm:h-52 rounded-xl overflow-hidden bg-surface-container shadow-md relative group">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Chân dung BS CKII Nguyễn Văn A, bác sĩ nam trung niên người Việt khoảng 48 tuổi, đeo ống nghe y tế cao cấp, mặc áo blouse trắng tinh tế có thêu logo bệnh viện, nụ cười hiền hậu, ánh mắt tự tin, ánh sáng studio y khoa chuyên nghiệp màu xanh dương ấm áp và nền phòng khám hiện đại làm mờ nhẹ." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAckNuFx98F06teJm0Fi-qbNoVHaSgqe5-KoiJm1h9Kr4Wccu2_7tQDcUbkp-07lh5vZINFx2scsiA8Iy6zEuZww_0tJ1Ib3ioSnG12NpWwI7R8ebauLkBecx69cC2R5mveOw0wL5PqbPcneJKZXysjH16C5T-TgAG20HtU5jnvnz-GyTnbrZP8NGDtpgMIuntmdLhdk_VuRqgwgjwZmJRpVlBMUr9VdemjycHCegCpt44KfKL2IkM2MA">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Chân dung BS CKII Nguyễn Văn A, bác sĩ nam trung niên người Việt khoảng 48 tuổi, đeo ống nghe y tế cao cấp, mặc áo blouse trắng tinh tế có thêu logo bệnh viện, nụ cười hiền hậu, ánh mắt tự tin, ánh sáng studio y khoa chuyên nghiệp màu xanh dương ấm áp và nền phòng khám hiện đại làm mờ nhẹ." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAckNuFx98F06teJm0Fi-qbNoVHaSgqe5-KoiJm1h9Kr4Wccu2_7tQDcUbkp-07lh5vZINFx2scsiA8Iy6zEuZww_0tJ1Ib3ioSnG12NpWwI7R8ebauLkBecx69cC2R5mveOw0wL5PqbPcneJKZXysjH16C5T-TgAG20HtU5jnvnz-GyTnbrZP8NGDtpgMIuntmdLhdk_VuRqgwgjwZmJRpVlBMUr9VdemjycHCegCpt44KfKL2IkM2MA"/>
 <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
 <span class="absolute bottom-2 left-2 px-2 py-1 bg-surface-container-lowest/90 backdrop-blur-md rounded font-label-sm text-[11px] text-primary flex items-center gap-1 shadow-sm">
 <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
@@ -42,9 +42,7 @@
 <div>
 <div class="flex flex-wrap items-center gap-space-xs mb-space-xs">
 <span class="px-space-sm py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm flex items-center gap-1">
-<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">cardiology</span>
-                  Chuyên khoa Tim mạch
-                </span>
+<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">cardiology</span><span th:text="${'Chuyên khoa ' + doctor.specialty}"></span></span>
 <span class="px-space-sm py-0.5 rounded-full bg-status-confirmed/15 text-secondary font-label-sm text-label-sm flex items-center gap-1">
 <span class="material-symbols-outlined text-[15px]">verified_user</span>
                   Bác sĩ uy tín - Đã xác minh
@@ -53,7 +51,7 @@
                   <span th:text="${'Mã BS: #' + bacSi.id}">Mã BS: #CRH-8821</span>
                 </span>
 </div>
-<h1 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight mb-space-xs" th:text="${(bacSi.hocHamHocVi != null ? bacSi.hocHamHocVi + ' ' : '') + bacSi.hoTen}">
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight mb-space-xs" th:text='${doctor.degree + " " + doctor.doctorName}'>
                 BS. CKII Nguyễn Văn A
               </h1>
 <div class="flex flex-col sm:flex-row sm:items-center gap-y-1 gap-x-space-md text-on-surface-variant font-body-md text-body-md mb-space-md">
@@ -91,7 +89,7 @@
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-space-xs pt-space-xs">
 <div class="bg-surface-container p-space-sm rounded-lg flex flex-col justify-center">
 <span class="font-body-sm text-body-sm text-on-surface-variant">Kinh nghiệm</span>
-<span class="font-headline-sm text-headline-sm text-primary font-bold">18+ năm</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold" th:text='${doctor.experience + " năm"}'>18+ năm</span>
 <span class="font-label-sm text-[11px] text-outline">Chuyên sâu can thiệp</span>
 </div>
 <div class="bg-surface-container p-space-sm rounded-lg flex flex-col justify-center">
@@ -115,7 +113,7 @@
 </div>
 <!-- CTA Row on Desktop Banner -->
 <div class="mt-space-md flex flex-wrap items-center gap-space-sm">
-<a class="inline-flex items-center gap-space-sm bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-lg py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200" data-path="dat-lich-kham" th:href="@{/patient/booking}">
+<a class="inline-flex items-center gap-space-sm bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-lg py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200" th:href="@{/dat-lich-kham(bacSiId=${doctor.doctorId},lichLamViecId=${schedules[0].scheduleId})}" th:if="${!#lists.isEmpty(schedules)}">
 <span class="material-symbols-outlined text-[20px]">calendar_add_on</span>
 <span>Đặt lịch khám với Bác sĩ</span>
 <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -286,7 +284,7 @@
 </div>
 <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Lĩnh vực chuyên môn sâu</h2>
 </div>
-<p class="font-body-md text-body-md text-on-surface-variant mb-space-md">
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-md" th:text="${doctor.introduction}">
               Bác sĩ nhận khám và điều trị chuyên sâu cho các bệnh nhân có triệu chứng hoặc đã được chẩn đoán mắc các bệnh lý tuần hoàn và tim mạch sau:
             </p>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm">
@@ -348,108 +346,24 @@
 <span class="font-body-sm text-body-sm text-secondary bg-secondary-container/30 px-2.5 py-1 rounded-full">Cập nhật mỗi đầu tuần</span>
 </div>
 <!-- Schedule Table Grid -->
-<div class="overflow-x-auto">
-<table class="w-full text-left font-body-md text-body-md">
-<thead>
-<tr class="bg-surface-container-low text-on-surface-variant font-label-md text-label-md">
-<th class="p-space-sm rounded-l-lg">Thứ trong tuần</th>
-<th class="p-space-sm">Ca Sáng (07:30 - 11:30)</th>
-<th class="p-space-sm rounded-r-lg">Ca Chiều (13:30 - 16:30)</th>
-</tr>
-</thead>
 <tbody class="divide-y divide-surface-container">
-<tr class="hover:bg-surface-container-low/50 transition-colors">
-<td class="p-space-sm font-semibold text-on-surface">Thứ Hai</td>
-<td class="p-space-sm">
-<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-status-confirmed/10 text-secondary font-label-sm text-label-sm font-medium">
-<span class="w-1.5 h-1.5 rounded-full bg-status-confirmed"></span>
-                        Có lịch khám (PK 204)
-                      </span>
+<tr class="hover:bg-surface-container-low/50 transition-colors" th:each="schedule : ${schedules}">
+<td class="p-space-sm font-semibold" th:text="${#dates.format(schedule.workDate, 'dd/MM/yyyy')}">
+</td>
+<td class="p-space-sm" th:text="${schedule.shiftName}">
+</td>
+<td class="p-space-sm" th:text="${schedule.startTime + ' - ' + schedule.endTime}">
 </td>
 <td class="p-space-sm">
-<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-status-confirmed/10 text-secondary font-label-sm text-label-sm font-medium">
-<span class="w-1.5 h-1.5 rounded-full bg-status-confirmed"></span>
-                        Có lịch khám (PK 204)
-                      </span>
-</td>
-</tr>
-<tr class="hover:bg-surface-container-low/50 transition-colors">
-<td class="p-space-sm font-semibold text-on-surface">Thứ Ba</td>
-<td class="p-space-sm">
-<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container font-label-sm text-label-sm text-outline">
-<span class="material-symbols-outlined text-[14px]">local_hospital</span>
-                        Phẫu thuật &amp; Can thiệp Catheter
-                      </span>
-</td>
-<td class="p-space-sm">
-<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-status-confirmed/10 text-secondary font-label-sm text-label-sm font-medium">
-<span class="w-1.5 h-1.5 rounded-full bg-status-confirmed"></span>
-                        Có lịch khám (PK 204)
-                      </span>
-</td>
-</tr>
-<tr class="hover:bg-surface-container-low/50 transition-colors">
-<td class="p-space-sm font-semibold text-on-surface">Thứ Tư</td>
-<td class="p-space-sm">
-<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-status-confirmed/10 text-secondary font-label-sm text-label-sm font-medium">
-<span class="w-1.5 h-1.5 rounded-full bg-status-confirmed"></span>
-                        Có lịch khám (PK 204)
-                      </span>
-</td>
-<td class="p-space-sm">
-<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-status-confirmed/10 text-secondary font-label-sm text-label-sm font-medium">
-<span class="w-1.5 h-1.5 rounded-full bg-status-confirmed"></span>
-                        Có lịch khám (PK 204)
-                      </span>
-</td>
-</tr>
-<tr class="hover:bg-surface-container-low/50 transition-colors">
-<td class="p-space-sm font-semibold text-on-surface">Thứ Năm</td>
-<td class="p-space-sm">
-<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-status-confirmed/10 text-secondary font-label-sm text-label-sm font-medium">
-<span class="w-1.5 h-1.5 rounded-full bg-status-confirmed"></span>
-                        Có lịch khám (PK 204)
-                      </span>
-</td>
-<td class="p-space-sm">
-<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container font-label-sm text-label-sm text-outline">
-<span class="material-symbols-outlined text-[14px]">school</span>
-                        Giảng dạy lâm sàng ĐHYD
-                      </span>
-</td>
-</tr>
-<tr class="hover:bg-surface-container-low/50 transition-colors">
-<td class="p-space-sm font-semibold text-on-surface">Thứ Sáu</td>
-<td class="p-space-sm">
-<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-status-confirmed/10 text-secondary font-label-sm text-label-sm font-medium">
-<span class="w-1.5 h-1.5 rounded-full bg-status-confirmed"></span>
-                        Có lịch khám (PK 204)
-                      </span>
-</td>
-<td class="p-space-sm">
-<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-status-confirmed/10 text-secondary font-label-sm text-label-sm font-medium">
-<span class="w-1.5 h-1.5 rounded-full bg-status-confirmed"></span>
-                        Có lịch khám (PK 204)
-                      </span>
-</td>
-</tr>
-<tr class="hover:bg-surface-container-low/50 transition-colors">
-<td class="p-space-sm font-semibold text-on-surface">Thứ Bảy</td>
-<td class="p-space-sm">
-<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-status-confirmed/10 text-secondary font-label-sm text-label-sm font-medium">
-<span class="w-1.5 h-1.5 rounded-full bg-status-confirmed"></span>
-                        Có lịch khám theo yêu cầu
-                      </span>
-</td>
-<td class="p-space-sm">
-<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-low text-outline font-label-sm text-label-sm">
-                        Nghỉ cuối tuần
-                      </span>
+<a class="text-primary hover:underline" th:href="@{/dat-lich-kham(
+                bacSiId=${doctor.doctorId},
+                lichLamViecId=${schedule.scheduleId}
+            )}">
+                Đặt lịch
+            </a>
 </td>
 </tr>
 </tbody>
-</table>
-</div>
 <p class="font-body-sm text-body-sm text-on-surface-variant mt-space-md flex items-center gap-1.5">
 <span class="material-symbols-outlined text-[16px] text-primary">info</span>
               Lưu ý: Bệnh nhân nên đặt trước tối thiểu 24 giờ để đảm bảo giữ số thứ tự ưu tiên khám đúng giờ hẹn.
@@ -676,7 +590,7 @@
 </div>
 </div>
 <!-- Primary Direct Booking Button -> UI5 -->
-<a class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all font-semibold" data-path="dat-lich-kham" th:href="@{/patient/booking}">
+<a class="inline-flex items-center gap-space-sm bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-lg py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200" th:href="@{/dat-lich-kham(bacSiId=${doctor.doctorId},lichLamViecId=${schedules[0].scheduleId})}" th:if="${!#lists.isEmpty(schedules)}">
 <span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
 <span>Tiến hành Đặt Lịch Khám</span>
 <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
