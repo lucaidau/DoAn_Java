@@ -19,7 +19,7 @@
 <!-- Top Navigation Header -->
 <header class="bg-white border-b border-gray-100 px-6 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-xs">
 <div class="flex items-center space-x-3">
-<a class="flex items-center space-x-2" th:href="@{/}">
+<a class="flex items-center space-x-2" th:href="@{/patient/dashboard}">
 <div class="bg-blue-600 text-white w-9 h-9 rounded-xl flex items-center justify-center font-bold text-lg shadow-sm">
 <i class="fa-solid fa-square-plus"></i>
 </div>
@@ -31,10 +31,10 @@
 </div>
 <!-- Navigation Menu -->
 <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
-<a class="hover:text-blue-600 transition-colors" th:href="@{/}">Trang chủ</a>
+<a class="hover:text-blue-600 transition-colors" href="/patient/dashboard" th:href="@{/patient/dashboard}">Trang chủ</a>
 <a class="hover:text-blue-600 transition-colors" href="#">Chuyên khoa</a>
 <a class="hover:text-blue-600 transition-colors" href="#">Bác sĩ</a>
-<a class="hover:text-blue-600 transition-colors" href="#">Lịch hẹn của tôi</a>
+<a class="hover:text-blue-600 transition-colors" href="/patient/lich-hen" th:href="@{/patient/lich-hen}">Lịch hẹn của tôi</a>
 </nav>
 <!-- Search Bar & User Profile -->
 <div class="flex items-center space-x-4">
@@ -43,7 +43,7 @@
 <input class="bg-transparent text-xs outline-none w-full text-gray-700" name="keyword" placeholder="Tìm bác sĩ, chuyên khoa..." type="text"/>
 <span class="text-[10px] bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded ml-1">36K</span>
 </form>
-<a class="hidden sm:flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm transition-all" href="#">
+<a class="hidden sm:flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm transition-all" href="/patient/doctors" th:href="@{/patient/doctors}">
 <i class="fa-solid fa-calendar-check"></i> Đặt lịch khám
         </a>
 <div class="flex items-center space-x-2 border-l pl-4 border-gray-200">
@@ -58,11 +58,11 @@
 <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
 <!-- Breadcrumb -->
 <nav aria-label="breadcrumb" class="mb-3 text-xs text-gray-500 flex items-center space-x-2">
-<a class="hover:text-blue-600" th:href="@{/}">Trang chủ[cite: 3]</a>
+<a class="hover:text-blue-600" href="/patient/dashboard" th:href="@{/patient/dashboard}">Trang chủ[cite: 3]</a>
 <i class="fa-solid fa-chevron-right text-[10px] text-gray-400"></i>
-<a class="hover:text-blue-600" th:href="@{/ho-so-bac-si/{id}(id=${doctor.doctorId})}">Bác sĩ[cite: 3]</a>
+<a class="hover:text-blue-600" th:href="@{/ho-so-bac-si/{id}(id=${bacSi.id})}">Bác sĩ[cite: 3]</a>
 <i class="fa-solid fa-chevron-right text-[10px] text-gray-400"></i>
-<a class="hover:text-blue-600" th:href="@{/ho-so-bac-si/{id}(id=${doctor.doctorId})}">BS. CKII Nguyễn Văn A[cite: 3]</a>
+<a class="hover:text-blue-600" th:href="@{/ho-so-bac-si/{id}(id=${bacSi.id})}">BS. CKII Nguyễn Văn A[cite: 3]</a>
 <i class="fa-solid fa-chevron-right text-[10px] text-gray-400"></i>
 <span class="text-gray-800 font-semibold">Đặt lịch khám[cite: 3]</span>
 </nav>
@@ -112,10 +112,10 @@
 </div>
 </div>
 </div>
-<form method="post" th:action="@{/dat-lich-kham}" th:object="${form}"><div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" th:if="${error != null}" th:text="${error}"></div>
-<input th:field="*{doctorId}" type="hidden"/>
-<input th:field="*{scheduleId}" type="hidden"/>
-<input th:field="*{appointmentDate}" type="hidden"/>
+<form method="post" th:action="@{/dat-lich-kham}" th:object="${thongTinDatLich}"><div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" th:if="${error != null}" th:text="${error}"></div>
+<input th:field="*{bacSiId}" type="hidden"/>
+<input th:field="*{lichLamViecId}" type="hidden"/>
+<input th:field="*{ngayKham}" type="hidden"/>
 <!-- Main Grid Layout -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 <!-- Left 2 Columns: Booking Form Sections -->
@@ -124,20 +124,20 @@
 <div class="grid grid-cols-2 sm:grid-cols-6 gap-2.5 text-center">
 <div class="border-2 border-blue-600 bg-blue-600 text-white rounded-xl p-3">
 <span class="text-[11px] block mb-1">Ngày khám đã chọn</span>
-<span class="text-base font-bold block" th:text="${#dates.format(schedule.ngay_lam_viec, 'dd/MM/yyyy')}"></span>
+<span class="text-base font-bold block" th:text="${#temporals.format(lichLamViec.ngayLamViec, 'dd/MM/yyyy')}"></span>
 <span class="text-[10px]">Lịch bác sĩ</span>
 </div>
 </div>
 <!-- 2. Chọn khung giờ khám trống -->
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-medium">
-<label class="border border-gray-200 rounded-xl p-3.5 flex items-center justify-between cursor-pointer hover:border-blue-600 transition-all" th:each="slot : ${availableSlots}">
+<label class="border border-gray-200 rounded-xl p-3.5 flex items-center justify-between cursor-pointer hover:border-blue-600 transition-all" th:each="khungGio : ${khungGioConTrong}">
 <div>
-<span class="text-sm font-bold text-gray-900 block mb-1" th:text="${slot}"></span>
+<span class="text-sm font-bold text-gray-900 block mb-1" th:text="${khungGio}"></span>
 <span class="text-emerald-600 font-medium">Còn chỗ trống</span>
 </div>
-<input required="" th:field="*{timeSlot}" th:value="${slot}" type="radio"/>
+<input required="" th:field="*{khungGioKham}" th:value="${khungGio}" type="radio"/>
 </label>
-<p class="text-red-500 col-span-3" th:if="${#lists.isEmpty(availableSlots)}">
+<p class="text-red-500 col-span-3" th:if="${#lists.isEmpty(khungGioConTrong)}">
                         Hiện không còn khung giờ trống.
                     </p>
 </div>
@@ -169,7 +169,7 @@
 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
 <i class="fa-regular fa-user"></i>
 </div>
-<input class="w-full pl-10 pr-3.5 py-2.5 border border-gray-200 rounded-xl bg-gray-50/30" readonly="readonly" th:value="${patient.fullName}" type="text"/>
+<input class="w-full pl-10 pr-3.5 py-2.5 border border-gray-200 rounded-xl bg-gray-50/30" readonly="readonly" th:value="${benhNhan.hoTen}" type="text"/>
 </div>
 <span class="text-[11px] text-gray-400 mt-1 block">Viết hoa đúng như CMND/CCCD hoặc BHYT[cite: 3]</span>
 </div>
@@ -179,7 +179,7 @@
 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
 <i class="fa-solid fa-phone"></i>
 </div>
-<input class="w-full pl-10 pr-3.5 py-2.5 border border-gray-200 rounded-xl bg-gray-50/30" readonly="readonly" th:value="${patient.phone}" type="text"/>
+<input class="w-full pl-10 pr-3.5 py-2.5 border border-gray-200 rounded-xl bg-gray-50/30" readonly="readonly" th:value="${benhNhan.taiKhoan.soDienThoai}" type="text"/>
 </div>
 <span class="text-[11px] text-gray-400 mt-1 block">Dùng để nhận tin nhắn SMS nhắc lịch và mã số khám[cite: 3]</span>
 </div>
@@ -191,11 +191,11 @@
 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
 <i class="fa-regular fa-calendar"></i>
 </div>
-<input class="w-full pl-10 pr-3.5 py-2.5 border border-gray-200 rounded-xl bg-gray-50/30" readonly="readonly" th:value="${#dates.format(patient.birthDate, 'dd/MM/yyyy')}" type="text"/> </div>
+<input class="w-full pl-10 pr-3.5 py-2.5 border border-gray-200 rounded-xl bg-gray-50/30" readonly="readonly" th:value="${benhNhan.ngaySinh != null ? #temporals.format(benhNhan.ngaySinh, 'dd/MM/yyyy') : 'Chưa cập nhật'}" type="text"/> </div>
 </div>
 <div>
 <label class="block font-semibold text-gray-700 mb-1.5">Giới tính <span class="text-red-500">*</span></label>
-<input class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl bg-gray-50/30" readonly="readonly" th:value="${patient.gender}" type="text"/>
+<input class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl bg-gray-50/30" readonly="readonly" th:value="${benhNhan.gioiTinh}" type="text"/>
 </div>
 <div>
 <label class="block font-semibold text-gray-700 mb-1.5">Số CCCD / Mã thẻ BHYT <span class="text-gray-400 font-normal">(Không bắt buộc)</span></label>
@@ -220,7 +220,7 @@
 <div class="space-y-4 text-xs sm:text-sm">
 <div>
 <label class="block font-semibold text-gray-700 mb-1.5">Mô tả biểu hiện sức khỏe hiện tại</label>
-<textarea class="w-full p-3.5 border border-gray-200 rounded-xl bg-gray-50/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all text-xs sm:text-sm" placeholder="Mô tả triệu chứng của bạn..." rows="3" th:field="*{symptoms}">
+<textarea class="w-full p-3.5 border border-gray-200 rounded-xl bg-gray-50/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all text-xs sm:text-sm" placeholder="Mô tả triệu chứng của bạn..." rows="3" th:field="*{trieuChung}">
                             </textarea>
 </div>
 <div>
@@ -263,27 +263,27 @@
 <img class="w-12 h-12 rounded-xl object-cover" src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&amp;w=150&amp;auto=format&amp;fit=crop"/>
 <div>
 <span class="text-[10px] text-blue-600 font-semibold block">Chuyên gia hàng đầu[cite: 3]</span>
-<h4 class="text-xs font-bold text-gray-900" th:text='${doctor.degree + " " + doctor.doctorName}'>BS. CKII Nguyễn Văn A[cite: 3]</h4>
-<span class="text-[10px] text-gray-400 block" th:text="${doctor.specialty}">Chuyên khoa Tim mạch can thiệp[cite: 3]</span>
+<h4 class="text-xs font-bold text-gray-900" th:text='${bacSi.hocHamHocVi + " " + bacSi.hoTen}'>BS. CKII Nguyễn Văn A[cite: 3]</h4>
+<span class="text-[10px] text-gray-400 block" th:text="${bacSi.chuyenKhoa.tenChuyenKhoa}">Chuyên khoa Tim mạch can thiệp[cite: 3]</span>
 <span class="text-[10px] text-amber-500 font-semibold flex items-center gap-1 mt-0.5">
 <i class="fa-solid fa-star"></i> 4.9 <span class="text-gray-400 font-normal">(1,245+ lượt khám)[cite: 3]</span>
 </span>
 </div>
 </div>
-<!-- Appointment Time & Location -->
+<!-- Thời gian và địa điểm khám -->
 <div class="space-y-3 text-xs">
 <div class="flex items-start gap-2.5">
 <i class="fa-regular fa-calendar-days text-blue-600 mt-0.5"></i>
 <div>
 <span class="text-gray-400 block text-[10px]">Thời gian khám</span>
-<span class="font-bold text-gray-900" th:text="${#dates.format(schedule.ngay_lam_viec, 'dd/MM/yyyy') + ' • ' + schedule.ten_ca + ' • ' + schedule.gio_bat_dau + ' - ' + schedule.gio_ket_thuc}">09:00 - 10:00 • Thứ Ba, 17/10/2026[cite: 3]</span>
+<span class="font-bold text-gray-900" th:text="${#temporals.format(lichLamViec.ngayLamViec, 'dd/MM/yyyy') + ' • ' + lichLamViec.tenCa + ' • ' + #temporals.format(lichLamViec.gioBatDau, 'HH:mm') + ' - ' + #temporals.format(lichLamViec.gioKetThuc, 'HH:mm')}">09:00 - 10:00 • Thứ Ba, 17/10/2026[cite: 3]</span>
 </div>
 </div>
 <div class="flex items-start gap-2.5">
 <i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i>
 <div>
 <span class="text-gray-400 block text-[10px]">Địa điểm thêm khám</span>
-<span class="font-bold text-gray-900" th:text="${doctor.specialty}">Phòng khám Tim mạch 204, Lầu 2<br/><span class="font-normal text-gray-500">Bệnh viện Đại học Y Dược TP.HCM[cite: 3]</span></span>
+<span class="font-bold text-gray-900" th:text="${bacSi.chuyenKhoa.tenChuyenKhoa}">Phòng khám Tim mạch 204, Lầu 2<br/><span class="font-normal text-gray-500">Bệnh viện Đại học Y Dược TP.HCM[cite: 3]</span></span>
 </div>
 </div>
 </div>
