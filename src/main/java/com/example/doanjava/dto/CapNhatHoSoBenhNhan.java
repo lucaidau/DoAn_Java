@@ -1,4 +1,4 @@
-package vn.carehealth.dto;
+package com.example.doanjava.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

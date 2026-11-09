@@ -1,5 +1,11 @@
-package vn.carehealth.controller;
+package com.example.doanjava.controller;
 
+import com.example.doanjava.entity.BacSi;
+import com.example.doanjava.entity.BenhNhan;
+import com.example.doanjava.entity.TaiKhoan;
+import com.example.doanjava.repository.BacSiRepository;
+import com.example.doanjava.repository.BenhNhanRepository;
+import com.example.doanjava.repository.TaiKhoanRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -11,12 +17,7 @@ import vn.carehealth.dto.CapNhatHoSoBenhNhan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import vn.carehealth.model.BacSi;
-import vn.carehealth.model.BenhNhan;
-import vn.carehealth.model.TaiKhoan;
-import vn.carehealth.repository.BacSiRepository;
-import vn.carehealth.repository.BenhNhanRepository;
-import vn.carehealth.repository.TaiKhoanRepository;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller

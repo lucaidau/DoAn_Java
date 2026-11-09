@@ -1,4 +1,4 @@
-package vn.carehealth.controller;
+package com.example.doanjava.controller;
 
 
 import org.springframework.stereotype.Controller;

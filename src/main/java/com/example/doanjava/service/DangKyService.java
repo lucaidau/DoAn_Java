@@ -1,14 +1,15 @@
-package vn.carehealth.service;
+package com.example.doanjava.service;
 
+import com.example.doanjava.entity.BenhNhan;
+import com.example.doanjava.entity.TaiKhoan;
+import com.example.doanjava.repository.BenhNhanRepository;
+import com.example.doanjava.repository.TaiKhoanRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.carehealth.dto.ThongTinDangKy;
-import vn.carehealth.model.BenhNhan;
-import vn.carehealth.model.TaiKhoan;
-import vn.carehealth.repository.BenhNhanRepository;
-import vn.carehealth.repository.TaiKhoanRepository;
+
 
 @Service
 public class DangKyService {

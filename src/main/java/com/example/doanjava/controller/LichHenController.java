@@ -1,10 +1,11 @@
-package com.example.demo.controller;
+package com.example.doanjava.controller;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import java.nio.charset.StandardCharsets;
-import com.example.demo.entity.*;
-import com.example.demo.service.LichHenService;
+import com.example.doanjava.entity.*;
+import com.example.doanjava.service.LichHenService;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;

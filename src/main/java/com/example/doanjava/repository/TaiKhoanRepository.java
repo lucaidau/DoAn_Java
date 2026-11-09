@@ -1,9 +1,11 @@
-package vn.carehealth.repository;
+package com.example.doanjava.repository;
 
 import java.util.List;
 import java.util.Optional;
+
+import com.example.doanjava.entity.TaiKhoan;
 import org.springframework.data.jpa.repository.JpaRepository;
-import vn.carehealth.model.TaiKhoan;
+
 
 public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, Long> {
     Optional<TaiKhoan> findByTenDangNhapIgnoreCase(String tenDangNhap);

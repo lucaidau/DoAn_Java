@@ -1,7 +1,7 @@
 
-package com.example.demo.service;
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
+package com.example.doanjava.service;
+import com.example.doanjava.entity.*;
+import com.example.doanjava.repository.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,8 +1,10 @@
-package vn.carehealth.repository;
+package com.example.doanjava.repository;
 
 import java.util.Optional;
+
+import com.example.doanjava.entity.BenhNhan;
 import org.springframework.data.jpa.repository.JpaRepository;
-import vn.carehealth.model.BenhNhan;
+
 
 public interface BenhNhanRepository extends JpaRepository<BenhNhan, Long> {
     Optional<BenhNhan> findFirstByTaiKhoanId(Long taiKhoanId);
