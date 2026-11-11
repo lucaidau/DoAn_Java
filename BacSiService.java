@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.doanjava.entity.BacSi;
 import com.example.doanjava.entity.LichLamViec;
-import com.example.doanjava.repository.BacSiJpa;
-import com.example.doanjava.repository.LichLamViecJpa;
+import com.example.doanjava.repository.BacSiRepository;
+import com.example.doanjava.repository.LichLamViecRepository;
 
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
@@ -25,14 +25,14 @@ import tools.jackson.databind.ObjectMapper;
 @Service
 public class BacSiService {
 
-    private final BacSiJpa bacSiJpa;
-    private final LichLamViecJpa lichLamViecJpa;
+    private final BacSiRepository bacSiRepository;
+    private final LichLamViecRepository lichLamViecRepository;
     private final ObjectMapper lichMapper;
 
-    public BacSiService(BacSiJpa bacSiJpa, LichLamViecJpa lichLamViecJpa, ObjectMapper objectMapper) {
-        this.bacSiJpa = bacSiJpa;
-        this.lichLamViecJpa = lichLamViecJpa;
-        this.lichMapper = objectMapper; // Dùng thẳng ObjectMapper gốc, không cần copy gì hết!
+    public BacSiService(BacSiRepository bacSiRepository, LichLamViecRepository lichLamViecRepository, ObjectMapper objectMapper) {
+        this.bacSiRepository = bacSiRepository;
+        this.lichLamViecRepository = lichLamViecRepository;
+        this.lichMapper = objectMapper;
     }
 
     // Tim kiem, loc va phan trang danh sach bac si
@@ -42,7 +42,6 @@ public class BacSiService {
             LocalDate tuNgay, LocalDate denNgay, List<String> khungGio,
             String sapXep, int trang, int kichThuoc) {
 
-        // Luon them hoTen lam khoa phu de phan trang on dinh
         Sort sapXepDuLieu;
         if ("exp".equalsIgnoreCase(sapXep)) {
             sapXepDuLieu = Sort.by(Sort.Direction.DESC, "soNamKinhNghiem")
@@ -77,14 +76,10 @@ public class BacSiService {
                     dieuKien = dieuKien.and((root, query, cb) -> cb.greaterThan(root.get("soNamKinhNghiem"), 10));
                 case "over15" ->
                     dieuKien = dieuKien.and((root, query, cb) -> cb.greaterThan(root.get("soNamKinhNghiem"), 15));
-                default -> {
-                    // all: khong loc theo kinh nghiem
-                }
+                default -> {}
             }
         }
 
-        // Du lieu hoc_ham_hoc_vi thuc te: "Thac si, Bac si", "Bac si CKI", "PGS.TS, Bac
-        // si"
         if (hocHamHocVi != null && !hocHamHocVi.isEmpty()) {
             List<String> tuKhoaHocVi = new ArrayList<>();
             for (String muc : hocHamHocVi) {
@@ -116,7 +111,6 @@ public class BacSiService {
             });
         }
 
-        // Loc theo ngay va/hoac khung gio: chi giu bac si co lich lam viec phu hop
         boolean locNgay = tuNgay != null || denNgay != null;
         boolean locGio = khungGio != null && !khungGio.isEmpty();
         if (locNgay || locGio) {
@@ -143,13 +137,12 @@ public class BacSiService {
             dieuKien = dieuKien.and((root, query, cb) -> root.get("id").in(danhSachMaBacSi));
         }
 
-        return bacSiJpa.findAll(dieuKien, phanTrang);
+        return bacSiRepository.findAll(dieuKien, phanTrang);
     }
 
-    // Ma cac bac si co lich lam viec trong khoang ngay (va dung khung gio neu co)
     private List<Long> layMaBacSiTheoLich(LocalDate tu, LocalDate den, List<String> khungGio) {
         List<Long> ketQua = new ArrayList<>();
-        for (LichLamViec lich : lichLamViecJpa.findByNgayLamViecBetween(tu, den)) {
+        for (LichLamViec lich : lichLamViecRepository.findByNgayLamViecBetween(tu, den)) {
             if (lich.getBacSi() == null) {
                 continue;
             }
@@ -167,24 +160,13 @@ public class BacSiService {
         return ketQua;
     }
 
-    // Sang (<12h), Chieu (12h-17h), Ngoai gio (>=17h)
     private static boolean khopKhungGio(int gio, List<String> khungGio) {
         for (String muc : khungGio) {
             switch (muc) {
-                case "morning" -> {
-                    if (gio < 12)
-                        return true;
-                }
-                case "afternoon" -> {
-                    if (gio >= 12 && gio < 17)
-                        return true;
-                }
-                case "evening" -> {
-                    if (gio >= 17)
-                        return true;
-                }
-                default -> {
-                }
+                case "morning" -> { if (gio < 12) return true; }
+                case "afternoon" -> { if (gio >= 12 && gio < 17) return true; }
+                case "evening" -> { if (gio >= 17) return true; }
+                default -> {}
             }
         }
         return false;
@@ -205,12 +187,14 @@ public class BacSiService {
     }
 
     private Map<String, Object> chuyenThanhMap(LichLamViec lich) {
-        return lichMapper.convertValue(lich, new TypeReference<Map<String, Object>>() {
-        });
+        Map<String, Object> map = new java.util.HashMap<>();
+        map.put("id", lich.getId());
+        map.put("ngayLamViec", lich.getNgayLamViec());
+        map.put("gioBatDau", lich.getGioBatDau());
+        map.put("gioKetThuc", lich.getGioKetThuc());
+        return map;
     }
 
-    // Lich lam viec sap toi (60 ngay) cua cac bac si: { maBacSi -> [ca1, ca2, ...]
-    // }
     public Map<Long, List<Map<String, Object>>> layLichSapToi(List<Long> danhSachMa) {
         Map<Long, List<Map<String, Object>>> ketQua = new LinkedHashMap<>();
         if (danhSachMa == null || danhSachMa.isEmpty()) {
@@ -218,17 +202,19 @@ public class BacSiService {
         }
 
         LocalDate homNay = LocalDate.now();
-        for (LichLamViec lich : lichLamViecJpa.findByNgayLamViecBetween(homNay, homNay.plusDays(60))) {
+        for (LichLamViec lich : lichLamViecRepository.findByNgayLamViecBetween(homNay, homNay.plusDays(60))) {
             if (lich.getBacSi() == null || !danhSachMa.contains(lich.getBacSi().getId())) {
                 continue;
             }
-            ketQua.computeIfAbsent(lich.getBacSi().getId(), k -> new ArrayList<>())
-                    .add(chuyenThanhMap(lich));
+            ketQua.computeIfAbsent(lich.getBacSi().getId(), k -> new ArrayList<>()).add(chuyenThanhMap(lich));
         }
 
         for (List<Map<String, Object>> danhSach : ketQua.values()) {
-            danhSach.sort((a, b) -> (String.valueOf(a.get("ngayLamViec")) + a.get("gioBatDau"))
-                    .compareTo(String.valueOf(b.get("ngayLamViec")) + b.get("gioBatDau")));
+            danhSach.sort((Map<String, Object> a, Map<String, Object> b) ->
+                (String.valueOf(a.get("ngayLamViec")) + a.get("gioBatDau"))
+                .compareTo(String.valueOf(b.get("ngayLamViec")) + b.get("gioBatDau"))
+            );
+            
             if (danhSach.size() > 4) {
                 danhSach.subList(4, danhSach.size()).clear();
             }
@@ -236,13 +222,11 @@ public class BacSiService {
         return ketQua;
     }
 
-    // Lay chi tiet bac si
     public BacSi layBacSiTheoMa(Long maBacSi) {
-        return bacSiJpa.findById(maBacSi).orElse(null);
+        return bacSiRepository.findById(maBacSi).orElse(null);
     }
 
-    // Lay bac si co so nam kinh nghiem cao
     public List<BacSi> layBacSiNoiBat() {
-        return bacSiJpa.findTop8ByOrderBySoNamKinhNghiemDesc();
+        return bacSiRepository.findTop8ByOrderBySoNamKinhNghiemDesc();
     }
 }
