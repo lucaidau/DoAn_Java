@@ -1,5 +1,6 @@
-package vn.carehealth.controller;
+package com.example.doanjava.controller;
 
+import com.example.doanjava.service.DangKyService;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
@@ -9,9 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import vn.carehealth.dto.ThongTinDangKy;
-import vn.carehealth.service.DangKyService;
-
+import com.example.doanjava.dto.ThongTinDangKy;
 @Controller
 public class DangKyController {
     private final DangKyService dangKyService;
@@ -22,18 +21,18 @@ public class DangKyController {
 
     @GetMapping("/register")
     public String hienThiDangKy() {
-        return "DangKi";
+        return "auth/DangKi";
     }
 
     @PostMapping("/register")
     public String xuLyDangKy(
-            @Valid @ModelAttribute ThongTinDangKy thongTin,
+            @Valid @ModelAttribute com.example.doanjava.dto.ThongTinDangKy thongTin,
             BindingResult ketQua,
             Model model,
             RedirectAttributes redirectAttributes) {
         if (ketQua.hasErrors()) {
             model.addAttribute("registerError", ketQua.getAllErrors().get(0).getDefaultMessage());
-            return "DangKi";
+            return "auth/DangKi";
         }
         try {
             dangKyService.dangKy(thongTin);
@@ -43,7 +42,7 @@ public class DangKyController {
             model.addAttribute("registerError", ex instanceof DataAccessException
                     ? "Không thể lưu dữ liệu. Kiểm tra kết nối SQL Server."
                     : ex.getMessage());
-            return "DangKi";
+            return "auth/DangKi";
         }
     }
 }
