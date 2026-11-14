@@ -208,7 +208,7 @@
                 <i class="fa-solid fa-phone text-blue-600 mr-2 text-xs bg-blue-50 p-2 rounded-full"></i>
                 <span class="text-xs sm:text-sm">1900 6868</span>
             </a>
-            <a href="#" onclick="showToast('Chuyển sang trang Đăng nhập...', 'info')" class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-semibold text-xs shadow-xs hover:bg-blue-600 hover:text-white transition-all duration-200" title="Tài khoản">
+            <a th:href="@{/login}" class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-semibold text-xs shadow-xs hover:bg-blue-600 hover:text-white transition-all duration-200" title="Đăng nhập">
                 <i class="fa-regular fa-user"></i>
             </a>
         </div>
@@ -236,7 +236,9 @@
                 </div>
 
                 <!-- Registration Form -->
-                <form id="register-form" onsubmit="handleRegisterSubmit(event)" class="space-y-4">
+                <p th:if="${registerError}" th:text="${registerError}" role="alert"
+                   class="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-medium text-rose-700"></p>
+                <form id="register-form" th:action="@{/register}" method="post" onsubmit="handleRegisterSubmit(event)" class="space-y-4">
                     
                     <!-- 1. Full Name -->
                     <div class="animate-fade-in-up delay-150">
@@ -247,7 +249,7 @@
                             <div class="input-icon-box absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-600 transition-colors duration-200">
                                 <i class="fa-regular fa-user text-sm"></i>
                             </div>
-                            <input type="text" id="reg-fullname" required 
+                            <input type="text" id="reg-fullname" name="fullName" required 
                                    placeholder="VD: Nguyễn Văn A (theo CCCD/BHYT)"
                                    class="w-full pl-10 pr-3.5 py-2.5 bg-gray-50/70 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all duration-200">
                         </div>
@@ -267,22 +269,23 @@
                             <span class="inline-flex items-center px-3.5 rounded-l-xl border border-r-0 border-gray-200 bg-gray-100/80 text-gray-600 text-xs font-bold select-none">
                                 +84
                             </span>
-                            <input type="tel" id="reg-phone" required pattern="[0-9]{9,10}"
-                                   placeholder="0912 345 678"
+                            <input type="tel" id="reg-phone" required pattern="[0-9]{9}" maxlength="9"
+                                   placeholder="912 345 678"
                                    class="w-full min-w-0 pl-3 pr-3.5 py-2.5 bg-gray-50/70 border border-gray-200 rounded-r-xl text-sm placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all duration-200">
+                            <input type="hidden" id="reg-phone-value" name="phone">
                         </div>
                     </div>
 
-                    <!-- 3. Email Address (Optional) -->
+                    <!-- 3. Email Address -->
                     <div class="animate-fade-in-up delay-250">
                         <label for="reg-email" class="block text-xs font-semibold text-gray-700 mb-1.5">
-                            Địa chỉ Email <span class="text-gray-400 font-normal">(Nhận kết quả khám)</span>
+                            Địa chỉ Email <span class="text-rose-500">*</span>
                         </label>
                         <div class="relative group">
                             <div class="input-icon-box absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-600 transition-colors duration-200">
                                 <i class="fa-regular fa-envelope text-sm"></i>
                             </div>
-                            <input type="email" id="reg-email" 
+                            <input type="email" id="reg-email" name="email" required
                                    placeholder="example@gmail.com"
                                    class="w-full pl-10 pr-3.5 py-2.5 bg-gray-50/70 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all duration-200">
                         </div>
@@ -296,7 +299,7 @@
                                 Ngày sinh <span class="text-rose-500">*</span>
                             </label>
                             <div class="relative group">
-                                <input type="date" id="reg-dob" required 
+                                <input type="date" id="reg-dob" name="birthDate" required 
                                        class="w-full px-3 py-2.5 bg-gray-50/70 border border-gray-200 rounded-xl text-sm text-gray-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all duration-200">
                             </div>
                         </div>
@@ -323,6 +326,7 @@
                                     Khác
                                 </button>
                             </div>
+                            <input type="hidden" id="reg-gender" name="gender" value="Nam">
                         </div>
                     </div>
 
@@ -335,7 +339,7 @@
                             <div class="input-icon-box absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-600 transition-colors duration-200">
                                 <i class="fa-solid fa-lock text-sm"></i>
                             </div>
-                            <input type="password" id="reg-password" required oninput="handlePasswordInput(this.value)"
+                            <input type="password" id="reg-password" name="password" required oninput="handlePasswordInput(this.value)"
                                    placeholder="Tạo mật khẩu an toàn"
                                    class="w-full pl-10 pr-10 py-2.5 bg-gray-50/70 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all duration-200">
                             <button type="button" onclick="togglePasswordVisibility('reg-password', 'reg-eye-icon')" 
@@ -390,7 +394,7 @@
                             <div class="input-icon-box absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-600 transition-colors duration-200">
                                 <i class="fa-solid fa-rotate-left text-sm"></i>
                             </div>
-                            <input type="password" id="reg-confirm-password" required oninput="checkPasswordMatch()"
+                            <input type="password" id="reg-confirm-password" name="confirmPassword" required oninput="checkPasswordMatch()"
                                    placeholder="Nhập lại mật khẩu"
                                    class="w-full pl-10 pr-10 py-2.5 bg-gray-50/70 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all duration-200">
                             
@@ -406,7 +410,7 @@
                     <div class="pt-1 animate-fade-in-up delay-450">
                         <label class="flex items-start space-x-2.5 text-xs text-gray-600 cursor-pointer select-none group">
                             <div class="relative flex items-center mt-0.5">
-                                <input type="checkbox" id="reg-terms" required class="custom-checkbox sr-only">
+                                <input type="checkbox" id="reg-terms" name="terms" value="on" required class="custom-checkbox sr-only">
                                 <div class="checkbox-box w-4 h-4 rounded border border-gray-300 bg-gray-50 flex items-center justify-center transition-all duration-200 group-hover:border-blue-500">
                                     <i class="fa-solid fa-check check-icon text-[10px] text-white opacity-0 scale-50 transition-all duration-150"></i>
                                 </div>
@@ -459,7 +463,7 @@
                 <div class="text-center pt-2">
                     <p class="text-xs text-gray-500">
                         Đã có tài khoản CareHealth? 
-                        <a href="#" onclick="showToast('Chuyển hướng đến màn hình Đăng Nhập...', 'info'); return false;" class="text-blue-600 font-bold hover:underline ml-1">
+                        <a th:href="@{/login}" class="text-blue-600 font-bold hover:underline ml-1">
                             Đăng nhập ngay
                         </a>
                     </p>
@@ -526,6 +530,7 @@
         function setGender(gender, index) {
             selectedGender = gender;
             currentGenderIndex = index;
+            document.getElementById('reg-gender').value = gender;
 
             const highlight = document.getElementById('pill-highlight');
             const btns = [
@@ -682,13 +687,11 @@
 
         // 5. Submit Form Handler with Loading State & Toast
         function handleRegisterSubmit(e) {
-            e.preventDefault();
-
             const pass = document.getElementById('reg-password').value;
             const confirmPass = document.getElementById('reg-confirm-password').value;
-            const name = document.getElementById('reg-fullname').value;
 
             if (pass !== confirmPass) {
+                e.preventDefault();
                 showToast('Mật khẩu xác nhận chưa trùng khớp. Vui lòng kiểm tra lại!', 'error');
                 return;
             }
@@ -697,18 +700,11 @@
             const btnText = document.getElementById('btn-text');
             const btnArrow = document.getElementById('btn-arrow');
 
-            // Spinner Loading state
+            document.getElementById('reg-phone-value').value =
+                `0${document.getElementById('reg-phone').value}`;
             btn.disabled = true;
             btnText.textContent = 'Đang khởi tạo tài khoản...';
             btnArrow.className = 'fa-solid fa-spinner fa-spin text-xs';
-
-            setTimeout(() => {
-                btn.disabled = false;
-                btnText.textContent = 'Đăng Ký Tài Khoản';
-                btnArrow.className = 'fa-solid fa-arrow-right text-xs group-hover:translate-x-1.5 transition-transform duration-200';
-
-                showToast(`Đăng ký thành công tài khoản bệnh nhân: ${name}!`, 'success');
-            }, 1500);
         }
 
         // 6. Interactive Toast Notification System
