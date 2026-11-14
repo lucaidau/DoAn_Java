@@ -120,23 +120,10 @@
                 <div class="col-md-6">
                     <label class="field-label">Phòng khám & khu vực</label>
                     <select name="phongId" class="form-select" required>
-                        <option value="">Chọn phòng khám</option>
-                        <option
-                                th:each="p : ${phongKhams}"
+                        <option th:each="p : ${phongKhams}"
                                 th:value="${p.id}"
-                                th:text="${p.tenPhong + ' - ' + p.khuVuc}">
-                        </option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label class="field-label">Dịch vụ & biểu phí khám</label>
-                    <select name="dichVuId" class="form-select" required>
-                        <option value="">Chọn dịch vụ</option>
-                        <option
-                                th:each="d : ${dichVuKhams}"
-                                th:value="${d.id}"
-                                th:text="${d.tenDichVu + ' - ' + d.giaKham + ' đ'}">
-                        </option>
+                                th:text="${p.tenPhong + ' - ' + p.khuVuc}"
+                                selected>Phòng khám Tim mạch 204</option>
                     </select>
                 </div>
                 <div class="col-12">

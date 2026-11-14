@@ -58,7 +58,7 @@
                             Lịch hẹn
                         </span>
             </a>
-            <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="chi-tiet-lich-hen" href="#" th:href="@{/lichhen}">
+            <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="chi-tiet-lich-hen" href="#" th:href="@{/lichhen/{id}(id=${lich.id})}">
                         <span class="material-symbols-outlined text-[20px]">
                             schedule
                         </span>
@@ -66,7 +66,7 @@
                             Chi tiết lịch hẹn
                         </span>
             </a>
-            <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="thong-tin-ca-kham" href="#" th:href="@{/lichhen}">
+            <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="thong-tin-ca-kham" href="#" th:href="@{/lichhen/{id}/khambenh(id=${lich.id})}">
                         <span class="material-symbols-outlined text-[20px]">
                             clinical_notes
                         </span>
@@ -84,7 +84,7 @@
                             Thống kê
                         </span>
             </a>
-            <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="ho-so-ca-nhan" href="#" th:href="@{/lichhen}">
+            <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="ho-so-ca-nhan" href="#" th:href="@{/doctor/profile}">
                         <span class="material-symbols-outlined text-[20px]">
                             person
                         </span>
@@ -112,14 +112,20 @@
                 </div>
             </div>
         </div>
-        <button class="flex items-center justify-center gap-2 w-full py-space-sm px-space-md rounded-xl text-error font-label-md text-label-md hover:bg-error-container hover:text-on-error-container transition-all">
+        <form method="post" th:action="@{/logout}">
+
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+            <button type="submit" class="flex items-center justify-center gap-2 w-full py-space-sm px-space-md rounded-xl text-error font-label-md text-label-md hover:bg-error-container hover:text-on-error-container transition-all">
                     <span class="material-symbols-outlined text-[18px]">
                         logout
                     </span>
-            <span>
+                <span>
                         Đăng xuất
                     </span>
-        </button>
+            </button>
+
+        </form>
     </div>
 </aside>
 <div class="pl-72">
@@ -199,7 +205,7 @@
                     <span class="text-outline-variant font-normal">
                                 /
                             </span>
-                    <a class="hover:text-primary transition-colors" data-path="chi-tiet-lich-hen" href="#" th:href="@{/lichhen}">
+                    <a class="hover:text-primary transition-colors" data-path="chi-tiet-lich-hen" href="#" th:href="@{/lichhen/{id}(id=${lich.id})}">
                         Chi tiết lịch hẹn
                     </a>
                     <span class="text-outline-variant font-normal">
@@ -327,11 +333,7 @@
                                         Thông tin ca hẹn khám
                                     </h2>
                                 </div>
-                                <div class="flex items-center gap-2">
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-status-confirmed/10 text-status-confirmed font-label-sm text-label-sm font-semibold" th:text="${thanhToan != null and thanhToan.trangThai == 'DA_THANH_TOAN' ? 'Đã thanh toán' : 'Chưa thanh toán'}">
-                                                Chưa thanh toán
-                                            </span>
-                                </div>
+
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md pt-2">
                                 <!-- Metric Block: Thời gian -->
@@ -383,42 +385,14 @@
                                     </div>
                                     <div class="flex flex-col">
                                                 <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
-                                                    Dịch vụ
-                                                    &amp;
                                                     Bác sĩ phụ trách
-                                                </span>
-                                        <span class="font-label-md text-label-md text-on-surface font-semibold mt-0.5" th:text="${lich.dichVuKham != null ? lich.dichVuKham.tenDichVu : 'Khám ' + lich.bacSi.chuyenKhoa.tenChuyenKhoa}">
-                                                    -- dịch vụ --
                                                 </span>
                                         <span class="font-body-sm text-body-sm text-on-surface-variant" th:text="${lich.bacSi.hocHamHocVi + ' ' + lich.bacSi.hoTen + ' • ' + lich.bacSi.chuyenKhoa.tenChuyenKhoa}">
                                                     -- bác sĩ --
                                                 </span>
                                     </div>
                                 </div>
-                                <!-- Metric Block: Biểu phí -->
-                                <div class="p-space-md rounded-xl bg-surface-container-low flex items-start gap-3.5">
-                                    <div class="w-10 h-10 rounded-lg bg-surface-container-highest text-primary flex items-center justify-center shrink-0">
-                                                <span class="material-symbols-outlined text-[22px]">
-                                                    payments
-                                                </span>
-                                    </div>
-                                    <div class="flex flex-col">
-                                                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
-                                                    Biểu phí khám
-                                                </span>
-                                        <div class="flex items-baseline gap-2 mt-0.5">
-                                                    <span class="font-headline-sm text-headline-sm text-primary font-bold" th:text="${lich.dichVuKham != null and lich.dichVuKham.giaKham != null ? #numbers.formatDecimal(lich.dichVuKham.giaKham, 1, 'POINT', 0, 'COMMA') + ' đ' : 'Chưa có biểu phí'}">
-                                                        -- biểu phí --
-                                                    </span>
-                                            <span class="font-label-sm text-label-sm text-status-confirmed font-medium" th:text="${thanhToan != null ? (thanhToan.trangThai == 'DA_THANH_TOAN' ? 'Đã thanh toán • ' + thanhToan.phuongThuc : 'Chưa thanh toán') : 'Chưa ghi nhận thanh toán'}">
-                                                        -- thanh toán --
-                                                    </span>
-                                        </div>
-                                        <span class="font-body-sm text-body-sm text-on-surface-variant" th:text="${thanhToan != null and thanhToan.maGiaoDich != null ? 'Mã GD: ' + thanhToan.maGiaoDich : 'Chưa có mã giao dịch'}">
-                                                    -- mã giao dịch --
-                                                </span>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                         <!-- Card 2: Lý do khám & Triệu chứng người bệnh ghi nhận -->
