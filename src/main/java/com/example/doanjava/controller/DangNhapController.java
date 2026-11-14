@@ -6,9 +6,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class DangNhapController {
-    @GetMapping({"/", "/login"})
+    @GetMapping("/")
+    public String root()
+    {
+        return "auth/DangNhap";
+    }
+    @GetMapping( "/login")
     public String hienThiDangNhap() {
-        return "DangNhap";
+        return "auth/DangNhap";
     }
 
     @GetMapping("/access-denied")

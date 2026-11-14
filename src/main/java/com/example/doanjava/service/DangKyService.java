@@ -1,5 +1,6 @@
 package com.example.doanjava.service;
 
+import com.example.doanjava.dto.ThongTinDangKy;
 import com.example.doanjava.entity.BenhNhan;
 import com.example.doanjava.entity.TaiKhoan;
 import com.example.doanjava.repository.BenhNhanRepository;
@@ -8,7 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vn.carehealth.dto.ThongTinDangKy;
+
 
 
 @Service

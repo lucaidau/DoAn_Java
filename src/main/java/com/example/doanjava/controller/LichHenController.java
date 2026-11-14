@@ -22,7 +22,7 @@ public class LichHenController {
     }
 
     // -- Hiển thị danh sách và xử lý bộ lọc bằng tham số GET --
-    @GetMapping({"/", "/lichhen"})
+    @GetMapping("/lichhen")
     public String danhSach(@RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "ALL") String status, @RequestParam(defaultValue = "ALL") String period, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate tuNgay, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate denNgay, @RequestParam(defaultValue = "1") int page, Model model) {
         LocalDate homNay = LocalDate.now();
         switch (period.toUpperCase(Locale.ROOT)) {
