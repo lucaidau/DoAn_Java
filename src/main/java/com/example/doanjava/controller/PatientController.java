@@ -1,190 +1,163 @@
 package com.example.doanjava.controller;
 
-import com.example.doanjava.dto.ThongTinDatLich;
+import com.example.doanjava.dto.AppointmentForm;
 import com.example.doanjava.entity.BacSi;
 import com.example.doanjava.entity.BenhNhan;
-import com.example.doanjava.entity.ChuyenKhoa;
-import com.example.doanjava.entity.LichHen;
-import com.example.doanjava.entity.LichLamViec;
-import com.example.doanjava.entity.TaiKhoan;
-import com.example.doanjava.repository.BacSiRepository;
-import com.example.doanjava.repository.BenhNhanRepository;
-import com.example.doanjava.repository.ChuyenKhoaRepository;
-import com.example.doanjava.repository.TaiKhoanRepository;
-import com.example.doanjava.service.DatLichKhamService;
-import jakarta.validation.Valid;
+import com.example.doanjava.service.PatientBookingService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class PatientController {
-    private final DatLichKhamService datLichKhamService;
-    private final TaiKhoanRepository taiKhoanRepository;
-    private final BenhNhanRepository benhNhanRepository;
-    private final BacSiRepository bacSiRepository;
-    private final ChuyenKhoaRepository chuyenKhoaRepository;
+    private final PatientBookingService patientBookingService;
 
-    public PatientController(DatLichKhamService datLichKhamService,
-                             TaiKhoanRepository taiKhoanRepository,
-                             BenhNhanRepository benhNhanRepository,
-                             BacSiRepository bacSiRepository,
-                             ChuyenKhoaRepository chuyenKhoaRepository) {
-        this.datLichKhamService = datLichKhamService;
-        this.taiKhoanRepository = taiKhoanRepository;
-        this.benhNhanRepository = benhNhanRepository;
-        this.bacSiRepository = bacSiRepository;
-        this.chuyenKhoaRepository = chuyenKhoaRepository;
-    }
-
-    private BenhNhan layBenhNhanDangDangNhap(Authentication authentication) {
-        if (authentication == null) {
-            throw new IllegalStateException("Vui lòng đăng nhập bằng tài khoản bệnh nhân.");
-        }
-        TaiKhoan taiKhoan = taiKhoanRepository.findByTenDangNhapIgnoreCase(authentication.getName())
-                .orElseThrow(() -> new IllegalStateException("Không tìm thấy tài khoản đang đăng nhập."));
-        return benhNhanRepository.findFirstByTaiKhoanId(taiKhoan.getId())
-                .orElseThrow(() -> new IllegalStateException("Tài khoản chưa có hồ sơ bệnh nhân."));
+    public PatientController(PatientBookingService patientBookingService) {
+        this.patientBookingService = patientBookingService;
     }
 
     @GetMapping("/patient/dashboard")
-    public String trangChuBenhNhan(Authentication authentication, Model model) {
-        model.addAttribute("benhNhan", layBenhNhanDangDangNhap(authentication));
-        return "BenhNhan/TrangChuBenhNhan";
-    }
-
-    @GetMapping("/patient/doctors")
-    public String danhSachBacSi(@RequestParam(required = false) String keyword, Model model) {
-        List<BacSi> danhSach = bacSiRepository.findAllByOrderByHoTenAsc();
-        if (keyword != null && !keyword.isBlank()) {
-            String tuKhoa = keyword.trim().toLowerCase(java.util.Locale.ROOT);
-            danhSach = danhSach.stream()
-                    .filter(bacSi -> bacSi.getHoTen().toLowerCase(java.util.Locale.ROOT).contains(tuKhoa)
-                            || (bacSi.getChuyenKhoa() != null
-                            && bacSi.getChuyenKhoa().getTenChuyenKhoa().toLowerCase(java.util.Locale.ROOT).contains(tuKhoa)))
-                    .toList();
-        }
-        model.addAttribute("danhSachBacSi", danhSach);
-        model.addAttribute("keyword", keyword == null ? "" : keyword);
-        return "BenhNhan/DanhSachBacsi";
-    }
-
-    @GetMapping("/bac-si/tim-kiem")
-    public String timKiemBacSi(@RequestParam(required = false) String keyword) {
-        return "redirect:/patient/doctors?keyword=" + (keyword == null ? "" : java.net.URLEncoder.encode(keyword, java.nio.charset.StandardCharsets.UTF_8));
-    }
-
-    @GetMapping("/patient/booking")
-    public String moTrangDatLich() {
+    public String dashboard() {
         return "redirect:/patient/doctors";
     }
 
-    @GetMapping("/patient/lich-hen")
-    public String danhSachLichHen(Authentication authentication, Model model) {
-        BenhNhan benhNhan = layBenhNhanDangDangNhap(authentication);
-        model.addAttribute("danhSachLichHen", datLichKhamService.layDanhSachLichHenCuaBenhNhan(benhNhan.getId()));
-        model.addAttribute("benhNhan", benhNhan);
-        return "BenhNhan/DanhSachLichHenBenhNhan";
+    @GetMapping("/patient/booking")
+    public String bookingShortcut() {
+        return "redirect:/patient/doctors";
     }
 
     @GetMapping("/patient/specialties")
-    public String danhSachChuyenKhoa(Model model) {
-        List<ChuyenKhoa> danhSach = chuyenKhoaRepository.findAllByOrderByTenChuyenKhoaAsc();
-        model.addAttribute("danhSachChuyenKhoa", danhSach);
-        return "BenhNhan/DanhSachChuyenKhoa";
+    public String specialtiesShortcut() {
+        return "redirect:/patient/doctors";
+    }
+
+    @GetMapping("/patient/doctors")
+    public String danhSachBacSi(
+            @RequestParam(defaultValue = "") String keyword,
+            Authentication authentication,
+            Model model) {
+        BenhNhan benhNhan = patientBookingService.layBenhNhanDangNhap(authentication);
+        model.addAttribute("benhNhan", benhNhan);
+        model.addAttribute("bacSis", patientBookingService.timBacSi(keyword));
+        model.addAttribute("keyword", keyword);
+        return "BenhNhan/DanhSachBacsi";
     }
 
     @GetMapping("/ho-so-bac-si/{id}")
-    public String chiTietBacSi(@PathVariable Long id, Model model) {
-        BacSi bacSi = datLichKhamService.layBacSi(id);
-        if (bacSi == null) {
-            return "redirect:/patient/doctors";
-        }
+    public String chiTietBacSi(
+            @PathVariable Long id,
+            Authentication authentication,
+            Model model) {
+        BacSi bacSi = patientBookingService.layBacSi(id);
         model.addAttribute("bacSi", bacSi);
-        model.addAttribute("danhSachLichLamViec", datLichKhamService.layDanhSachCa(id));
+        model.addAttribute("doctor", patientBookingService.thongTinBacSi(bacSi));
+        var schedules = patientBookingService.lichSapToi(bacSi.getId());
+        model.addAttribute("schedules", schedules);
+        model.addAttribute("firstSchedule", schedules.isEmpty() ? null : schedules.get(0));
+        model.addAttribute("firstSlots", schedules.isEmpty()
+                ? java.util.List.of()
+                : patientBookingService.khungGioConTrong(
+                        patientBookingService.layCaKham(bacSi.getId(), (Long) schedules.get(0).get("scheduleId"))));
+        model.addAttribute("benhNhan", patientBookingService.layBenhNhanDangNhap(authentication));
         return "BenhNhan/ChiTietBacSi";
     }
 
     @GetMapping("/dat-lich-kham")
-    public String hienThiDatLich(@RequestParam Long bacSiId,
-                                 @RequestParam Long lichLamViecId,
-                                 Authentication authentication,
-                                 Model model) {
-        BenhNhan benhNhan = layBenhNhanDangDangNhap(authentication);
-        BacSi bacSi = datLichKhamService.layBacSi(bacSiId);
-        LichLamViec ca = datLichKhamService.layCaLamViec(lichLamViecId);
-        if (bacSi == null || ca == null || ca.getBacSi() == null
-                || !ca.getBacSi().getId().equals(bacSiId)) {
-            return "redirect:/patient/doctors";
+    public String hienThiDatLich(
+            @RequestParam Long bacSiId,
+            @RequestParam Long lichLamViecId,
+            @RequestParam(required = false) String khungGio,
+            Authentication authentication,
+            Model model) {
+        BenhNhan benhNhan = patientBookingService.layBenhNhanDangNhap(authentication);
+        BacSi bacSi = patientBookingService.layBacSi(bacSiId);
+        var lichLamViec = patientBookingService.layCaKham(bacSiId, lichLamViecId);
+        var form = new AppointmentForm();
+        form.setDoctorId(bacSiId);
+        form.setScheduleId(lichLamViecId);
+        form.setAppointmentDate(lichLamViec.getNgayLamViec());
+        var availableSlots = patientBookingService.khungGioConTrong(lichLamViec);
+        if (khungGio != null && availableSlots.contains(khungGio)) {
+            form.setTimeSlot(khungGio);
         }
-        ThongTinDatLich thongTin = new ThongTinDatLich();
-        thongTin.setBacSiId(bacSiId);
-        thongTin.setLichLamViecId(lichLamViecId);
-        thongTin.setNgayKham(ca.getNgayLamViec());
-        napDuLieuTrangDatLich(model, bacSi, ca, benhNhan, thongTin);
+
+        model.addAttribute("doctor", patientBookingService.thongTinBacSi(bacSi));
+        model.addAttribute("schedule", patientBookingService.thongTinCaKham(lichLamViec));
+        model.addAttribute("patient", patientBookingService.thongTinBenhNhan(benhNhan));
+        model.addAttribute("form", form);
+        model.addAttribute("availableSlots", availableSlots);
         return "BenhNhan/DatLichKham";
     }
 
     @PostMapping("/dat-lich-kham")
-    public String taoLichHen(@Valid @ModelAttribute("thongTinDatLich") ThongTinDatLich thongTin,
-                             BindingResult ketQua,
-                             Authentication authentication,
-                             Model model) {
-        BenhNhan benhNhan = layBenhNhanDangDangNhap(authentication);
-        if (thongTin.getBacSiId() == null || thongTin.getLichLamViecId() == null) {
-            return "redirect:/patient/doctors";
-        }
-        BacSi bacSi = datLichKhamService.layBacSi(thongTin.getBacSiId());
-        LichLamViec ca = datLichKhamService.layCaLamViec(thongTin.getLichLamViecId());
-
-        if (bacSi == null || ca == null || ca.getBacSi() == null
-                || !ca.getBacSi().getId().equals(thongTin.getBacSiId())) {
-            return "redirect:/patient/doctors";
-        }
-
-        if (ketQua.hasErrors()) {
-            model.addAttribute("error", ketQua.getAllErrors().get(0).getDefaultMessage());
-            napDuLieuTrangDatLich(model, bacSi, ca, benhNhan, thongTin);
-            return "BenhNhan/DatLichKham";
-        }
-
+    public String taoDatLich(
+            @ModelAttribute("form") AppointmentForm form,
+            Authentication authentication,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        BenhNhan benhNhan = patientBookingService.layBenhNhanDangNhap(authentication);
         try {
-            Long maLichHen = datLichKhamService.taoLichHen(benhNhan.getId(), thongTin);
-            return "redirect:/dat-lich-kham/thanh-cong/" + maLichHen;
+            Long appointmentId = patientBookingService.taoLichHen(benhNhan, form);
+            return "redirect:/dat-lich-kham/thanh-cong/" + appointmentId;
         } catch (IllegalArgumentException ex) {
-            model.addAttribute("error", ex.getMessage());
-            napDuLieuTrangDatLich(model, bacSi, ca, benhNhan, thongTin);
-            return "BenhNhan/DatLichKham";
+            if (form.getDoctorId() == null || form.getScheduleId() == null) {
+                redirectAttributes.addFlashAttribute("loi", ex.getMessage());
+                return "redirect:/patient/doctors";
+            }
+            try {
+                BacSi bacSi = patientBookingService.layBacSi(form.getDoctorId());
+                var lichLamViec = patientBookingService.layCaKham(form.getDoctorId(), form.getScheduleId());
+                model.addAttribute("doctor", patientBookingService.thongTinBacSi(bacSi));
+                model.addAttribute("schedule", patientBookingService.thongTinCaKham(lichLamViec));
+                model.addAttribute("patient", patientBookingService.thongTinBenhNhan(benhNhan));
+                model.addAttribute("availableSlots", patientBookingService.khungGioConTrong(lichLamViec));
+                model.addAttribute("error", ex.getMessage());
+                model.addAttribute("form", form);
+                return "BenhNhan/DatLichKham";
+            } catch (IllegalArgumentException invalidSchedule) {
+                redirectAttributes.addFlashAttribute("loi", invalidSchedule.getMessage());
+                return "redirect:/patient/doctors";
+            }
         }
     }
 
     @GetMapping("/dat-lich-kham/thanh-cong/{id}")
-    public String datLichThanhCong(@PathVariable Long id,
-                                   Authentication authentication,
-                                   Model model) {
-        BenhNhan benhNhan = layBenhNhanDangDangNhap(authentication);
-        LichHen lichHen = datLichKhamService.layLichHenCuaBenhNhan(id, benhNhan.getId());
-        if (lichHen == null) {
-            return "redirect:/patient/dashboard";
-        }
-        model.addAttribute("lichHen", lichHen);
+    public String datLichThanhCong(
+            @PathVariable Long id,
+            Authentication authentication,
+            Model model) {
+        BenhNhan benhNhan = patientBookingService.layBenhNhanDangNhap(authentication);
+        model.addAttribute("appointment", patientBookingService.thongTinLichHen(id, benhNhan.getId()));
+        model.addAttribute("benhNhan", benhNhan);
         return "BenhNhan/DatLichKhamThanhCong";
     }
 
-    private void napDuLieuTrangDatLich(Model model, BacSi bacSi, LichLamViec ca,
-                                       BenhNhan benhNhan, ThongTinDatLich thongTin) {
-        model.addAttribute("bacSi", bacSi);
-        model.addAttribute("lichLamViec", ca);
+    @GetMapping("/patient/appointments")
+    public String lichHenCuaToi(Authentication authentication, Model model) {
+        BenhNhan benhNhan = patientBookingService.layBenhNhanDangNhap(authentication);
         model.addAttribute("benhNhan", benhNhan);
-        model.addAttribute("thongTinDatLich", thongTin);
-        model.addAttribute("khungGioConTrong", datLichKhamService.layKhungGioConTrong(ca.getId()));
+        model.addAttribute("appointments", patientBookingService.lichHenCuaBenhNhan(benhNhan.getId()));
+        return "BenhNhan/LichHenCuaToi";
+    }
+
+    @PostMapping("/patient/appointments/{id}/cancel")
+    public String huyLichHen(
+            @PathVariable Long id,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes) {
+        BenhNhan benhNhan = patientBookingService.layBenhNhanDangNhap(authentication);
+        try {
+            patientBookingService.huyLichHen(id, benhNhan.getId());
+            redirectAttributes.addFlashAttribute("thanhCong", "Đã gửi yêu cầu hủy lịch khám.");
+        } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("loi", ex.getMessage());
+        }
+        return "redirect:/patient/appointments";
     }
 }
