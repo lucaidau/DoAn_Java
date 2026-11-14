@@ -25,109 +25,7 @@
                         Giám sát luồng đặt khám trực tuyến, điều phối ca tiếp nhận và giải quyết xung đột lịch giữa bệnh nhân và các phòng khám chuyên khoa.
                     </p>
                 </div>
-                <div class="flex items-center flex-wrap gap-space-sm">
-                    <button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all shadow-sm">
-                        <span class="material-symbols-outlined text-[18px]">tune</span>
-                        <span>Bộ lọc nâng cao</span>
-                    </button>
-                    <button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all shadow-sm">
-                        <span class="material-symbols-outlined text-[18px]">download</span>
-                        <span>Xuất báo cáo ca khám (PDF/Excel)</span>
-                    </button>
-                    <button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md shadow-sm transition-all">
-                        <span class="material-symbols-outlined text-[18px]">add_circle</span>
-                        <span>+ Tiếp nhận đặt hẹn thủ công</span>
-                    </button>
-                </div>
-            </div>
-        </div>
 
-        <!-- KPI & Workflow Overview Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md mb-space-lg">
-            <!-- KPI 1 -->
-            <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group">
-                <div class="flex items-start justify-between">
-                    <div class="flex flex-col">
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Lịch hẹn hôm nay</span>
-                        <div class="flex items-baseline gap-space-xs mt-1">
-                            <span class="font-headline-lg text-headline-lg text-on-surface font-bold">184</span>
-                            <span class="font-label-sm text-label-sm text-outline">ca khám</span>
-                        </div>
-                    </div>
-                    <div class="w-11 h-11 rounded-xl bg-primary-fixed flex items-center justify-center text-primary">
-                        <span class="material-symbols-outlined text-[24px]">calendar_today</span>
-                    </div>
-                </div>
-                <div class="mt-space-md pt-space-xs flex items-center justify-between text-on-surface-variant">
-                        <span class="inline-flex items-center gap-1 font-label-sm text-label-sm bg-surface-container px-space-xs py-0.5 rounded-lg text-primary">
-                            <span class="material-symbols-outlined text-[14px]">storefront</span>
-                            +18 ca tại quầy Kiosk
-                        </span>
-                    <span class="font-body-sm text-body-sm text-outline">Tổng lượt tiếp đón</span>
-                </div>
-            </div>
-
-            <!-- KPI 2 -->
-            <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group">
-                <div class="flex items-start justify-between">
-                    <div class="flex flex-col">
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Chờ xác nhận &amp; Điều phối</span>
-                        <div class="flex items-baseline gap-space-xs mt-1">
-                            <span class="font-headline-lg text-headline-lg text-status-pending font-bold">12</span>
-                            <span class="font-label-sm text-label-sm text-outline">ca cần xử lý</span>
-                        </div>
-                    </div>
-                    <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center text-status-pending">
-                        <span class="material-symbols-outlined text-[24px]">pending_actions</span>
-                    </div>
-                </div>
-                <div class="mt-space-md pt-space-xs flex items-center justify-between">
-                        <span class="inline-flex items-center gap-1 font-label-sm text-label-sm bg-surface-container-high px-space-xs py-0.5 rounded-lg text-status-pending">
-                            <span class="material-symbols-outlined text-[14px]">warning</span>
-                            Cần phân bổ bác sĩ trực
-                        </span>
-                    <span class="font-body-sm text-body-sm text-outline">&lt; 15 phút</span>
-                </div>
-            </div>
-
-            <!-- KPI 3 -->
-            <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group">
-                <div class="flex items-start justify-between">
-                    <div class="flex flex-col">
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Đã hoàn thành khám</span>
-                        <div class="flex items-baseline gap-space-xs mt-1">
-                            <span class="font-headline-lg text-headline-lg text-status-confirmed font-bold">128</span>
-                            <span class="font-label-sm text-label-sm text-outline">ca xong</span>
-                        </div>
-                    </div>
-                    <div class="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center text-status-confirmed">
-                        <span class="material-symbols-outlined text-[24px]">verified</span>
-                    </div>
-                </div>
-                <div class="mt-space-md pt-space-xs flex items-center justify-between">
-                    <span class="font-label-sm text-label-sm text-on-surface">Tạm thu: <span class="text-status-confirmed font-semibold">38.400.000 đ</span></span>
-                    <span class="font-body-sm text-body-sm text-outline">Tỉ lệ 69.5%</span>
-                </div>
-            </div>
-
-            <!-- KPI 4 -->
-            <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group">
-                <div class="flex items-start justify-between">
-                    <div class="flex flex-col">
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Ca hủy / Đổi lịch</span>
-                        <div class="flex items-baseline gap-space-xs mt-1">
-                            <span class="font-headline-lg text-headline-lg text-status-cancelled font-bold">6</span>
-                            <span class="font-label-sm text-label-sm text-outline">ca phát sinh</span>
-                        </div>
-                    </div>
-                    <div class="w-11 h-11 rounded-xl bg-error-container flex items-center justify-center text-status-cancelled">
-                        <span class="material-symbols-outlined text-[24px]">event_busy</span>
-                    </div>
-                </div>
-                <div class="mt-space-md pt-space-xs flex items-center justify-between">
-
-                    <span class="font-body-sm text-body-sm text-outline">3.2% tổng ca</span>
-                </div>
             </div>
         </div>
 
@@ -188,7 +86,7 @@
                 <!-- Filter Chuyên khoa -->
                 <div class="lg:col-span-2.5">
                     <select class="w-full bg-surface-container-low px-space-md py-space-xs rounded-xl font-body-md text-body-md text-on-surface outline-none cursor-pointer">
-                        <option value="all">Khoa: Tất cả chuyên khoa</option>
+                        <option value="all">Tất cả chuyên khoa</option>
                         <option value="tim-mach">Tim Mạch</option>
                         <option value="nha-khoa">Nha Khoa</option>
                         <option value="mat">Mắt</option>
@@ -200,7 +98,7 @@
                 <!-- Filter Bác sĩ phụ trách -->
                 <div class="lg:col-span-2.5">
                     <select class="w-full bg-surface-container-low px-space-md py-space-xs rounded-xl font-body-md text-body-md text-on-surface outline-none cursor-pointer">
-                        <option value="all">Bác sĩ: Tất cả bác sĩ</option>
+                        <option value="all">Tất cả bác sĩ</option>
                         <option value="bs-a">BS. CKII Nguyễn Văn A</option>
                         <option value="bs-b">BS. CKI Trần Thị Mai</option>
                         <option value="bs-c">ThS. BS Lê Hoàng Nam</option>
@@ -618,82 +516,6 @@
                     </button>
                     <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container text-on-surface transition-colors">
                         <span class="material-symbols-outlined text-[18px]">last_page</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bottom Real-time Dispatch Assist Card (Split View) -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-space-md">
-            <!-- Phân Bổ Tải Phòng Khám -->
-            <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm lg:col-span-2">
-                <div class="flex items-center justify-between mb-space-sm">
-                    <div class="flex items-center gap-space-xs">
-                        <span class="material-symbols-outlined text-primary text-[20px]">equalizer</span>
-                        <h2 class="font-headline-sm text-headline-sm text-on-surface">Mật Độ &amp; Tải Trọng Phòng Khám Buổi Sáng</h2>
-                    </div>
-                    <span class="font-label-sm text-label-sm text-status-confirmed flex items-center gap-1">
-                            <span class="w-2 h-2 rounded-full bg-status-confirmed"></span> Cập nhật tức thời (Live)
-                        </span>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm">
-                    <div class="bg-surface-container-low p-space-sm rounded-xl flex flex-col justify-between">
-                        <div class="flex justify-between items-start">
-                            <span class="font-label-md text-label-md text-on-surface font-medium">Khoa Tim Mạch</span>
-                            <span class="font-label-sm text-label-sm text-status-cancelled font-semibold">92% Tải</span>
-                        </div>
-                        <div class="w-full bg-surface-container-highest rounded-full h-1.5 my-space-xs overflow-hidden">
-                            <div class="bg-status-cancelled h-1.5 rounded-full" style="width: 92%"></div>
-                        </div>
-                        <div class="flex justify-between text-body-sm font-body-sm text-on-surface-variant">
-                            <span>Đang chờ: <strong>14 BN</strong></span>
-                            <span>4 Bác sĩ trực</span>
-                        </div>
-                    </div>
-                    <div class="bg-surface-container-low p-space-sm rounded-xl flex flex-col justify-between">
-                        <div class="flex justify-between items-start">
-                            <span class="font-label-md text-label-md text-on-surface font-medium">Khoa Thần Kinh</span>
-                            <span class="font-label-sm text-label-sm text-status-pending font-semibold">68% Tải</span>
-                        </div>
-                        <div class="w-full bg-surface-container-highest rounded-full h-1.5 my-space-xs overflow-hidden">
-                            <div class="bg-status-pending h-1.5 rounded-full" style="width: 68%"></div>
-                        </div>
-                        <div class="flex justify-between text-body-sm font-body-sm text-on-surface-variant">
-                            <span>Đang chờ: <strong>6 BN</strong></span>
-                            <span>3 Bác sĩ trực</span>
-                        </div>
-                    </div>
-                    <div class="bg-surface-container-low p-space-sm rounded-xl flex flex-col justify-between">
-                        <div class="flex justify-between items-start">
-                            <span class="font-label-md text-label-md text-on-surface font-medium">Khoa Nha Khoa</span>
-                            <span class="font-label-sm text-label-sm text-status-confirmed font-semibold">45% Tải</span>
-                        </div>
-                        <div class="w-full bg-surface-container-highest rounded-full h-1.5 my-space-xs overflow-hidden">
-                            <div class="bg-status-confirmed h-1.5 rounded-full" style="width: 45%"></div>
-                        </div>
-                        <div class="flex justify-between text-body-sm font-body-sm text-on-surface-variant">
-                            <span>Đang chờ: <strong>2 BN</strong></span>
-                            <span>3 Bác sĩ trực</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Emergency Routing Note -->
-            <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center gap-space-xs text-error mb-space-xs">
-                        <span class="material-symbols-outlined text-[20px]">crisis_alert</span>
-                        <h2 class="font-headline-sm text-headline-sm text-on-surface">Kênh Hỗ Trợ Khẩn Cấp</h2>
-                    </div>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant">
-                        Khi phát hiện dấu hiệu đau thắt ngực cấp, đột quỵ hoặc suy hô hấp từ mô tả ca hẹn, chuyển tiếp ngay sang chế độ Điều Phối Luồng Đỏ (Cấp Cứu Viện Phí Sau).
-                    </p>
-                </div>
-                <div class="pt-space-sm flex items-center justify-between">
-                    <button class="w-full py-space-xs px-space-md rounded-xl bg-error hover:bg-error-container hover:text-error text-on-error font-label-md text-label-md flex items-center justify-center gap-space-xs transition-colors">
-                        <span class="material-symbols-outlined text-[18px]">forward</span>
-                        <span>Chuyển Luồng Cấp Cứu Khoa Tiếp Nhận</span>
                     </button>
                 </div>
             </div>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/LayoutAdmin :: layout(~{::contentFragment})}">
+<head>
+    <title>Quản Lý Danh Sách Tài Khoản - CareHealth</title>
+</head>
+<body>
+<div th:fragment="contentFragment" class="w-full pt-16 bg-surface min-h-screen px-space-lg py-space-lg">
+    <div class="flex flex-col w-full">
+
+        <!-- Breadcrumb & Header Action Bar -->
+        <div class="flex flex-col gap-space-sm mb-space-lg">
+            <div class="flex items-center gap-space-xs font-label-sm text-label-sm text-outline">
+                <span>Hệ thống</span>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span>Quản trị người dùng</span>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span class="text-primary font-medium">Quản lý danh sách tài khoản</span>
+            </div>
+
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+                <div>
+                    <h1 class="font-headline-md text-headline-md text-on-surface tracking-tight">Quản Lý Danh Sách Tài Khoản &amp; Tổng Quan Người Dùng</h1>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">
+                        Theo dõi, kiểm duyệt định danh và phân quyền tài khoản cho Bác sĩ, Bệnh nhân và Nhân viên hỗ trợ trên toàn hệ thống CareHealth.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+        <!-- Search & Filter Toolbar -->
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md mb-space-md flex flex-col lg:flex-row items-center justify-between gap-space-sm">
+            <!-- Search Input -->
+            <div class="w-full lg:w-96 relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">search</span>
+                <input class="w-full pl-9 pr-space-md py-space-xs bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface placeholder:text-outline outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all"
+                       placeholder="Tìm kiếm theo Họ tên, Email, SĐT, Mã định danh..."
+                       type="text">
+            </div>
+
+            <!-- Dropdowns & Time Quick Filters -->
+            <div class="flex flex-wrap items-center gap-space-sm w-full lg:w-auto justify-end">
+                <select class="bg-surface-container-low px-space-md py-space-xs rounded-xl font-body-md text-body-md text-on-surface outline-none cursor-pointer">
+                    <option value="all">Tất cả vai trò</option>
+                    <option value="doctor">Bác sĩ chuyên khoa</option>
+                    <option value="patient">Bệnh nhân</option>
+                </select>
+
+                <select class="bg-surface-container-low px-space-md py-space-xs rounded-xl font-body-md text-body-md text-on-surface outline-none cursor-pointer">
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="active">Đang hoạt động</option>
+                    <option value="locked">Tạm khóa</option>
+                </select>
+
+                <!-- Segmented Date Pills -->
+                <div class="flex items-center bg-surface-container-low p-1 rounded-xl">
+                    <button class="px-space-sm py-1 rounded-lg bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm font-medium">Hôm nay</button>
+                    <button class="px-space-sm py-1 rounded-lg text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors">7 ngày qua</button>
+                    <button class="px-space-sm py-1 rounded-lg text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors">Tháng này</button>
+                </div>
+
+                <button class="p-space-xs rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant transition-colors" title="Bộ lọc nâng cao">
+                    <span class="material-symbols-outlined text-[20px]">filter_alt</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main User List Table Card -->
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden mb-space-md">
+            <!-- Table Card Header -->
+            <div class="px-space-md py-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm border-b border-surface-container-low">
+                <div class="flex items-center gap-space-xs">
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface">Danh Sách Người Dùng</h2>
+                    <span class="px-2 py-0.5 rounded-full bg-primary-fixed text-primary font-label-sm text-label-sm font-semibold">14,820</span>
+                </div>
+                <div class="flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+                    <span>Hiển thị mỗi trang:</span>
+                    <select class="bg-surface-container-low px-space-sm py-1 rounded-lg text-body-sm text-on-surface outline-none cursor-pointer font-medium">
+                        <option selected>10 dòng</option>
+                        <option>20 dòng</option>
+                        <option>50 dòng</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Table Content -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                    <tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+                        <th class="py-space-md px-space-md">NGƯỜI DÙNG</th>
+                        <th class="py-space-md px-space-md text-center">VAI TRÒ</th>
+                        <th class="py-space-md px-space-md">EMAIL &amp; ĐIỆN THOẠI</th>
+
+                        <th class="py-space-md px-space-md">NGÀY THAM GIA</th>
+                        <th class="py-space-md px-space-md text-center">TRẠNG THÁI</th>
+                        <th class="py-space-md px-space-md text-right">THAO TÁC</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-surface-container-low font-body-md text-body-md text-on-surface">
+                    <!-- Row 1: Bác sĩ Nguyễn Văn A -->
+                    <tr class="hover:bg-surface-container-low/50 transition-colors">
+                        <td class="py-space-md px-space-md">
+                            <div class="flex items-center gap-space-sm">
+                                <div class="w-10 h-10 rounded-full bg-primary-fixed text-primary flex items-center justify-center font-label-md font-bold shrink-0">
+                                    <span class="material-symbols-outlined text-[20px]">medical_information</span>
+                                </div>
+                                <div class="flex flex-col min-w-0">
+                                    <span class="font-label-md text-label-md font-semibold text-on-surface">BS. CKII Nguyễn Văn A</span>
+                                    <span class="font-body-sm text-body-sm text-outline">UID-00812 • Tim mạch</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-space-md px-space-md text-center">
+                            <span class="inline-flex flex-col items-center justify-center px-3 py-1 rounded-2xl bg-primary-fixed text-primary font-label-sm text-label-sm leading-tight font-medium">
+                                Bác sĩ<br>chuyên khoa
+                            </span>
+                        </td>
+                        <td class="py-space-md px-space-md">
+                            <div class="flex flex-col">
+                                <span class="font-body-md text-body-md text-on-surface">a.nguyen@carehealth.vn</span>
+                                <span class="font-body-sm text-body-sm text-outline">0912.345.678</span>
+                            </div>
+                        </td>
+
+                        <td class="py-space-md px-space-md text-on-surface-variant">12/03/2024</td>
+                        <td class="py-space-md px-space-md text-center">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-confirmed/15 text-status-confirmed font-label-sm text-label-sm font-medium">
+                                <span class="w-1.5 h-1.5 rounded-full bg-status-confirmed"></span>
+                                Đang hoạt động
+                            </span>
+                        </td>
+                        <td class="py-space-md px-space-md text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant transition-colors" title="Chỉnh sửa">
+                                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                                </button>
+                                <button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant transition-colors" title="Phân quyền">
+                                    <span class="material-symbols-outlined text-[18px]">key</span>
+                                </button>
+                                <button class="p-1.5 rounded-lg hover:bg-error-container text-error transition-colors" title="Khóa tài khoản">
+                                    <span class="material-symbols-outlined text-[18px]">lock</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 2: ThS. BS Trần Thị B (Chờ duyệt CCHN) -->
+                    <tr class="hover:bg-surface-container-low/50 transition-colors">
+                        <td class="py-space-md px-space-md">
+                            <div class="flex items-center gap-space-sm">
+                                <div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-md font-bold shrink-0">
+                                    <span class="material-symbols-outlined text-[20px]">stethoscope</span>
+                                </div>
+                                <div class="flex flex-col min-w-0">
+                                    <span class="font-label-md text-label-md font-semibold text-on-surface">ThS. BS Trần Thị B</span>
+                                    <span class="font-body-sm text-body-sm text-outline">UID-00915 • Nhi khoa</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-space-md px-space-md text-center">
+                            <span class="inline-flex flex-col items-center justify-center px-3 py-1 rounded-2xl bg-primary-fixed text-primary font-label-sm text-label-sm leading-tight font-medium">
+                                Bác sĩ<br>chuyên khoa
+                            </span>
+                        </td>
+                        <td class="py-space-md px-space-md">
+                            <div class="flex flex-col">
+                                <span class="font-body-md text-body-md text-on-surface">b.tran@carehealth.vn</span>
+                                <span class="font-body-sm text-body-sm text-outline">0988.765.432</span>
+                            </div>
+                        </td>
+
+                        <td class="py-space-md px-space-md text-on-surface-variant">08/04/2024</td>
+                        <td class="py-space-md px-space-md text-center">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-pending/15 text-status-pending font-label-sm text-label-sm font-medium">
+                                <span class="w-1.5 h-1.5 rounded-full bg-status-pending"></span>
+                                Chờ duyệt
+                            </span>
+                        </td>
+                        <td class="py-space-md px-space-md text-right">
+                            <div class="flex items-center justify-end gap-1.5">
+                                <button class="px-3 py-1 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-sm text-label-sm font-medium shadow-sm transition-colors">
+                                    Duyệt hồ sơ
+                                </button>
+                                <button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant transition-colors" title="Xem chi tiết">
+                                    <span class="material-symbols-outlined text-[18px]">visibility</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 3: Lê Văn Bình (Bệnh nhân VIP) -->
+                    <tr class="hover:bg-surface-container-low/50 transition-colors">
+                        <td class="py-space-md px-space-md">
+                            <div class="flex items-center gap-space-sm">
+                                <div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-md font-bold shrink-0">
+                                    LB
+                                </div>
+                                <div class="flex flex-col min-w-0">
+                                    <span class="font-label-md text-label-md font-semibold text-on-surface">Lê Văn Bình</span>
+                                    <span class="font-body-sm text-body-sm text-outline">UID-10943 • BHYT Doanh nghiệp</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-space-md px-space-md text-center">
+                            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-2xl bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">
+                                <span class="material-symbols-outlined text-[14px]">stars</span>
+                                Bệnh nhân
+                            </span>
+                        </td>
+                        <td class="py-space-md px-space-md">
+                            <div class="flex flex-col">
+                                <span class="font-body-md text-body-md text-on-surface">binh.le@gmail.com</span>
+                                <span class="font-body-sm text-body-sm text-outline">0903.112.233</span>
+                            </div>
+                        </td>
+
+                        <td class="py-space-md px-space-md text-on-surface-variant">15/01/2024</td>
+                        <td class="py-space-md px-space-md text-center">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-confirmed/15 text-status-confirmed font-label-sm text-label-sm font-medium">
+                                <span class="w-1.5 h-1.5 rounded-full bg-status-confirmed"></span>
+                                Đang hoạt động
+                            </span>
+                        </td>
+                        <td class="py-space-md px-space-md text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant transition-colors" title="Chỉnh sửa">
+                                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                                </button>
+                                <button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant transition-colors" title="Lịch sử khám">
+                                    <span class="material-symbols-outlined text-[18px]">event_note</span>
+                                </button>
+                                <button class="p-1.5 rounded-lg hover:bg-error-container text-error transition-colors" title="Khóa tài khoản">
+                                    <span class="material-symbols-outlined text-[18px]">lock</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 4: Phạm Thị Hằng -->
+                    <tr class="hover:bg-surface-container-low/50 transition-colors">
+                        <td class="py-space-md px-space-md">
+                            <div class="flex items-center gap-space-sm">
+                                <div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-label-md font-bold shrink-0">
+                                    PH
+                                </div>
+                                <div class="flex flex-col min-w-0">
+                                    <span class="font-label-md text-label-md font-semibold text-on-surface">Phạm Thị Hằng</span>
+                                    <span class="font-body-sm text-body-sm text-outline">UID-11204 • Khách vãng lai</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-space-md px-space-md text-center">
+                            <span class="inline-flex flex-col items-center justify-center px-3 py-1 rounded-2xl bg-surface-container text-on-surface-variant font-label-sm text-label-sm leading-tight font-medium">
+                                Bệnh nhân
+                            </span>
+                        </td>
+                        <td class="py-space-md px-space-md">
+                            <div class="flex flex-col">
+                                <span class="font-body-md text-body-md text-on-surface">hang.pham92@outlook.com</span>
+                                <span class="font-body-sm text-body-sm text-outline">0977.554.321</span>
+                            </div>
+                        </td>
+
+                        <td class="py-space-md px-space-md text-on-surface-variant">02/05/2024</td>
+                        <td class="py-space-md px-space-md text-center">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-confirmed/15 text-status-confirmed font-label-sm text-label-sm font-medium">
+                                <span class="w-1.5 h-1.5 rounded-full bg-status-confirmed"></span>
+                                Đang hoạt động
+                            </span>
+                        </td>
+                        <td class="py-space-md px-space-md text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant transition-colors" title="Chỉnh sửa">
+                                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                                </button>
+                                <button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant transition-colors" title="Lịch sử khám">
+                                    <span class="material-symbols-outlined text-[18px]">event_note</span>
+                                </button>
+                                <button class="p-1.5 rounded-lg hover:bg-error-container text-error transition-colors" title="Khóa tài khoản">
+                                    <span class="material-symbols-outlined text-[18px]">lock</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 5: Hoàng Văn Đức (Tạm khóa) -->
+                    <tr class="hover:bg-surface-container-low/50 transition-colors">
+                        <td class="py-space-md px-space-md">
+                            <div class="flex items-center gap-space-sm">
+                                <div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-label-md font-bold shrink-0">
+                                    HĐ
+                                </div>
+                                <div class="flex flex-col min-w-0">
+                                    <span class="font-label-md text-label-md font-semibold text-on-surface">Hoàng Văn Đức</span>
+                                    <span class="font-body-sm text-body-sm text-outline">UID-13491 • Vi phạm chính sách hủy lịch</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-space-md px-space-md text-center">
+                            <span class="inline-flex flex-col items-center justify-center px-3 py-1 rounded-2xl bg-surface-container text-on-surface-variant font-label-sm text-label-sm leading-tight font-medium">
+                                Bệnh nhân
+                            </span>
+                        </td>
+                        <td class="py-space-md px-space-md">
+                            <div class="flex flex-col">
+                                <span class="font-body-md text-body-md text-on-surface">duc.hoang98@gmail.com</span>
+                                <span class="font-body-sm text-body-sm text-outline">0991.223.344</span>
+                            </div>
+                        </td>
+
+                        <td class="py-space-md px-space-md text-on-surface-variant">01/05/2024</td>
+                        <td class="py-space-md px-space-md text-center">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error-container text-status-cancelled font-label-sm text-label-sm font-medium">
+                                <span class="w-1.5 h-1.5 rounded-full bg-status-cancelled"></span>
+                                Tạm khóa
+                            </span>
+                        </td>
+                        <td class="py-space-md px-space-md text-right">
+                            <div class="flex items-center justify-end gap-1.5">
+                                <button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm font-medium transition-colors">
+                                    <span class="material-symbols-outlined text-[15px]">lock_open</span>
+                                    Mở khóa
+                                </button>
+                                <button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant transition-colors" title="Xem chi tiết">
+                                    <span class="material-symbols-outlined text-[18px]">visibility</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination Footer -->
+            <div class="px-space-md py-space-sm bg-surface-container-low/50 border-t border-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant">
+                <div class="font-body-sm text-body-sm">
+                    Hiển thị <strong class="text-on-surface">1 - 5</strong> trên tổng số <strong class="text-on-surface">14,820</strong> tài khoản
+                </div>
+                <div class="flex items-center gap-1">
+                    <button class="px-space-sm py-1 rounded-lg bg-surface-container-lowest border border-outline-variant/40 text-outline font-label-sm text-label-sm flex items-center gap-1 hover:bg-surface-container transition-colors" disabled>
+                        <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+                        <span>Trước</span>
+                    </button>
+                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-primary text-on-primary font-label-sm text-label-sm font-semibold shadow-sm">1</button>
+                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container border border-outline-variant/40 font-label-sm text-label-sm text-on-surface transition-colors">2</button>
+                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container border border-outline-variant/40 font-label-sm text-label-sm text-on-surface transition-colors">3</button>
+                    <span class="px-1 text-outline">...</span>
+                    <button class="px-2 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container border border-outline-variant/40 font-label-sm text-label-sm text-on-surface transition-colors">1482</button>
+                    <button class="px-space-sm py-1 rounded-lg bg-surface-container-lowest border border-outline-variant/40 text-on-surface font-label-sm text-label-sm flex items-center gap-1 hover:bg-surface-container transition-colors">
+                        <span>Tiếp theo</span>
+                        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+</html>

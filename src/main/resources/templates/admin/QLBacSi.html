@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/LayoutAdmin :: layout(~{::contentFragment})}">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản Lý Bác Sĩ - CareHealth</title>
+</head>
+<body>
+
+<div th:fragment="contentFragment" class="flex flex-col gap-space-lg">
+
+  <!-- 1. Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+    <div>
+      <h1 class="font-headline-md text-headline-md text-on-surface tracking-tight">Quản lý Danh sách Bác sĩ</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Điều phối nhân sự chuyên môn, thẩm định chứng chỉ hành nghề và lịch trực khám bệnh</p>
+    </div>
+    <div class="flex items-center gap-space-sm">
+      <button type="button" class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-md text-label-md border border-outline-variant/50 transition-colors shadow-sm">
+        <span class="material-symbols-outlined text-[18px]">download</span>
+        <span>Xuất danh sách</span>
+      </button>
+      <button type="button" onclick="openDoctorModal()" class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md shadow-md transition-all">
+        <span class="material-symbols-outlined text-[18px]">person_add</span>
+        <span>Thêm Bác sĩ Mới</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. Filter & Search Card -->
+  <div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_1px_8px_rgba(0,0,0,0.03)] border border-surface-container flex flex-col gap-space-md">
+    <!-- Top Filter Row -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-space-sm items-center">
+      <!-- Search Input -->
+      <div class="md:col-span-5 relative flex items-center bg-surface-container-low rounded-xl px-space-md py-2.5 border border-transparent focus-within:border-primary/40 focus-within:bg-surface-container-lowest transition-all">
+        <span class="material-symbols-outlined text-outline text-[20px] mr-space-sm">search</span>
+        <input id="doctorSearchInput" type="text"
+               class="w-full bg-transparent border-0 outline-none font-body-md text-body-md text-on-surface placeholder:text-outline"
+               placeholder="Tìm kiếm bác sĩ theo tên, mã CCHN...">
+      </div>
+
+      <!-- Specialty Select -->
+      <div class="md:col-span-2">
+        <select class="w-full px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none border border-transparent focus:border-primary/40 cursor-pointer">
+          <option value="">Tất cả chuyên khoa</option>
+          <option value="tim-mach">Khoa Tim Mạch</option>
+          <option value="nhi">Khoa Nhi</option>
+          <option value="mat">Khoa Mắt & Nhãn Khoa</option>
+          <option value="rhm">Khoa Răng Hàm Mặt</option>
+          <option value="da-lieu">Khoa Da Liễu & Thẩm Mỹ</option>
+          <option value="ngoai">Khoa Ngoại Tổng Quát</option>
+          <option value="than-kinh">Khoa Thần Kinh</option>
+        </select>
+      </div>
+
+      <!-- Degree Select -->
+      <div class="md:col-span-2">
+        <select class="w-full px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none border border-transparent focus:border-primary/40 cursor-pointer">
+          <option value="">Tất cả học vị</option>
+          <option value="gs-ts">GS. TS</option>
+          <option value="pgs-ts">PGS. TS</option>
+          <option value="ckii">BS. CKII</option>
+          <option value="cki">BS. CKI</option>
+          <option value="ths">ThS. BS</option>
+        </select>
+      </div>
+
+      <!-- Status Select -->
+      <div class="md:col-span-2">
+        <select class="w-full px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none border border-transparent focus:border-primary/40 cursor-pointer">
+          <option value="">Tất cả trạng thái</option>
+          <option value="active">Đang nhận lịch</option>
+          <option value="full">Đầy lịch hôm nay</option>
+          <option value="leave">Tạm nghỉ phép</option>
+        </select>
+      </div>
+
+      <!-- Advanced Filter Button -->
+      <div class="md:col-span-1 flex justify-end">
+        <button type="button" title="Bộ lọc nâng cao"
+                class="w-full md:w-11 h-11 flex items-center justify-center rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant transition-colors">
+          <span class="material-symbols-outlined text-[20px]">filter_alt</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Filter Pills Row -->
+    <div class="flex flex-wrap items-center justify-between gap-space-sm pt-2 border-t border-surface-container-low">
+      <div class="flex flex-wrap items-center gap-space-xs">
+        <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider mr-1">BỘ LỌC NHANH:</span>
+
+        <button type="button" onclick="toggleQuickFilter(this)"
+                class="quick-filter-btn active inline-flex items-center gap-1 px-3 py-1 rounded-full text-label-sm font-label-sm bg-primary-fixed text-primary border border-primary/20 transition-all">
+          <span>Có lịch trực hôm nay (42)</span>
+          <span class="material-symbols-outlined text-[14px]">check</span>
+        </button>
+
+        <button type="button" onclick="toggleQuickFilter(this)"
+                class="quick-filter-btn inline-flex items-center gap-1 px-3 py-1 rounded-full text-label-sm font-label-sm bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-all">
+          <span>Chuyên gia đầu ngành (18)</span>
+        </button>
+
+        <button type="button" onclick="toggleQuickFilter(this)"
+                class="quick-filter-btn inline-flex items-center gap-1 px-3 py-1 rounded-full text-label-sm font-label-sm bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-all">
+          <span>Có áp dụng BHYT (95)</span>
+        </button>
+
+        <button type="button" onclick="toggleQuickFilter(this)"
+                class="quick-filter-btn inline-flex items-center gap-1 px-3 py-1 rounded-full text-label-sm font-label-sm bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-all">
+          <span>Đánh giá cao ≥ 4.8★</span>
+        </button>
+      </div>
+
+      <div class="font-body-sm text-body-sm text-on-surface-variant">
+        Đang hiển thị kết quả: <strong class="text-on-surface font-semibold">128 hồ sơ</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Doctors Data Table Card -->
+  <div class="bg-surface-container-lowest rounded-2xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] border border-surface-container overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+        <tr class="bg-surface-container-low/70 border-b border-surface-container text-outline font-label-sm text-label-sm uppercase tracking-wider">
+          <th class="py-3.5 px-4 w-10">
+            <input type="checkbox" class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer">
+          </th>
+          <th class="py-3.5 px-3 min-w-[230px]">BÁC SĨ &amp; HỌC HÀM</th>
+          <th class="py-3.5 px-3 min-w-[175px]">CHUYÊN KHOA &amp; PHÒNG KHÁM</th>
+          <th class="py-3.5 px-3 min-w-[135px]">CHỨNG CHỈ CCHN</th>
+          <th class="py-3.5 px-3 min-w-[130px]">GIÁ KHÁM NIÊM YẾT</th>
+          <th class="py-3.5 px-3 min-w-[135px]">LỊCH TRỰC TUẦN</th>
+          <th class="py-3.5 px-3 min-w-[115px]">ĐÁNH GIÁ &amp; LƯỢT KHÁM</th>
+          <th class="py-3.5 px-3 min-w-[125px]">TRẠNG THÁI</th>
+          <th class="py-3.5 px-4 text-right min-w-[110px]">THAO TÁC</th>
+        </tr>
+        </thead>
+
+        <tbody class="divide-y divide-surface-container-low font-body-md text-body-md">
+
+        <!-- Row 1 -->
+        <tr class="hover:bg-surface-container-low/50 transition-colors">
+          <td class="py-4 px-4">
+            <input type="checkbox" class="w-4 h-4 rounded border-outline-variant text-primary cursor-pointer">
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex items-center gap-3">
+              <img src="https://ui-avatars.com/api/?name=Nguyen+Minh&background=dbe1ff&color=004ac6&bold=true" alt="Avatar" class="w-10 h-10 rounded-full object-cover shrink-0 ring-2 ring-surface-container">
+              <div class="flex flex-col min-w-0">
+                <div class="flex items-center gap-1">
+                  <span class="font-label-md text-label-md text-on-surface font-semibold truncate">BS. CKII Nguyễn Minh Quân</span>
+                  <span class="material-symbols-outlined text-primary text-[16px] shrink-0" title="Đã xác thực">verified</span>
+                </div>
+                <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                  <span class="text-label-sm font-semibold text-primary">#BS-00812</span>
+                  <span class="text-outline">•</span>
+                  <span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px] font-medium">BS. CKII</span>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-md text-on-surface font-semibold">Khoa Tim Mạch</span>
+              <div class="flex items-start gap-1 text-body-sm text-on-surface-variant mt-0.5">
+                <span class="material-symbols-outlined text-[14px] text-outline mt-0.5 shrink-0">location_on</span>
+                <span>Phòng khám 204 • Tầng 2 Khu A</span>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col gap-1.5 items-start">
+              <span class="text-body-sm font-mono text-on-surface-variant">002931/BYT-CCHN</span>
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/70">
+                                <span class="material-symbols-outlined text-[13px]">check_circle</span>
+                                Đã thẩm định
+                            </span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-md font-bold text-primary">350.000 đ</span>
+              <span class="inline-flex items-center gap-1 text-[11px] text-secondary font-medium mt-0.5">
+                                <span class="material-symbols-outlined text-[13px]">health_and_safety</span>
+                                Áp dụng BHYT
+                            </span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-sm font-semibold text-on-surface">Thứ 2 - Thứ 6</span>
+              <span class="text-body-sm text-on-surface-variant">Ca sáng (07:30 - 11:30)</span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <div class="flex items-center gap-1 text-amber-500 font-bold text-label-md">
+                <span>4.9</span>
+                <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+              </div>
+              <span class="text-body-sm text-on-surface-variant">1.240 lượt khám</span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-medium bg-emerald-50 text-emerald-700">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            Đang nhận lịch
+                        </span>
+          </td>
+          <td class="py-4 px-4 text-right">
+            <div class="flex items-center justify-end gap-1 text-on-surface-variant">
+              <button type="button" title="Chỉnh sửa hồ sơ" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">edit_note</span>
+              </button>
+              <button type="button" title="Xem lịch trực" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+              </button>
+              <button type="button" title="Thao tác khác" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined text-[18px]">more_vert</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 2 -->
+        <tr class="hover:bg-surface-container-low/50 transition-colors">
+          <td class="py-4 px-4">
+            <input type="checkbox" class="w-4 h-4 rounded border-outline-variant text-primary cursor-pointer">
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex items-center gap-3">
+              <img src="https://ui-avatars.com/api/?name=Tran+Mai+Chi&background=ffdbcd&color=943700&bold=true" alt="Avatar" class="w-10 h-10 rounded-full object-cover shrink-0 ring-2 ring-surface-container">
+              <div class="flex flex-col min-w-0">
+                <div class="flex items-center gap-1">
+                  <span class="font-label-md text-label-md text-on-surface font-semibold truncate">ThS. BS Trần Mai Chi</span>
+                </div>
+                <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                  <span class="text-label-sm font-semibold text-primary">#BS-00431</span>
+                  <span class="text-outline">•</span>
+                  <span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px] font-medium">ThS. Nhi Khoa</span>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-md text-on-surface font-semibold">Khoa Nhi</span>
+              <div class="flex items-start gap-1 text-body-sm text-on-surface-variant mt-0.5">
+                <span class="material-symbols-outlined text-[14px] text-outline mt-0.5 shrink-0">location_on</span>
+                <span>Phòng khám 102 • Tầng 1 Khu B (Nhi)</span>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col gap-1.5 items-start">
+              <span class="text-body-sm font-mono text-on-surface-variant">007342/HCM-CCHN</span>
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/70">
+                                <span class="material-symbols-outlined text-[13px]">check_circle</span>
+                                Đã thẩm định
+                            </span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-md font-bold text-primary">300.000 đ</span>
+              <span class="inline-flex items-center gap-1 text-[11px] text-secondary font-medium mt-0.5">
+                                <span class="material-symbols-outlined text-[13px]">health_and_safety</span>
+                                Áp dụng BHYT
+                            </span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-sm font-semibold text-on-surface">Thứ 3, 5, 7</span>
+              <span class="text-body-sm text-on-surface-variant">Cả ngày (08:00 - 17:00)</span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <div class="flex items-center gap-1 text-amber-500 font-bold text-label-md">
+                <span>4.95</span>
+                <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+              </div>
+              <span class="text-body-sm text-on-surface-variant">2.180 lượt khám</span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-medium bg-amber-50 text-amber-700">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                            Đầy lịch hôm nay
+                        </span>
+          </td>
+          <td class="py-4 px-4 text-right">
+            <div class="flex items-center justify-end gap-1 text-on-surface-variant">
+              <button type="button" title="Chỉnh sửa hồ sơ" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">edit_note</span>
+              </button>
+              <button type="button" title="Xem lịch trực" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+              </button>
+              <button type="button" title="Thao tác khác" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined text-[18px]">more_vert</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 3 -->
+        <tr class="hover:bg-surface-container-low/50 transition-colors">
+          <td class="py-4 px-4">
+            <input type="checkbox" class="w-4 h-4 rounded border-outline-variant text-primary cursor-pointer">
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex items-center gap-3">
+              <img src="https://ui-avatars.com/api/?name=Le+Hoang+Nam&background=89f5e7&color=005049&bold=true" alt="Avatar" class="w-10 h-10 rounded-full object-cover shrink-0 ring-2 ring-surface-container">
+              <div class="flex flex-col min-w-0">
+                <div class="flex items-center gap-1">
+                  <span class="font-label-md text-label-md text-on-surface font-semibold truncate">PGS. TS Lê Hoàng Nam</span>
+                  <span class="material-symbols-outlined text-amber-500 text-[16px] shrink-0" title="Chuyên gia đầu ngành">workspace_premium</span>
+                </div>
+                <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                  <span class="text-label-sm font-semibold text-primary">#BS-00109</span>
+                  <span class="text-outline">•</span>
+                  <span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px] font-medium">PGS. TS Nhãn Khoa</span>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-md text-on-surface font-semibold">Khoa Mắt &amp; Nhãn Khoa</span>
+              <div class="flex items-start gap-1 text-body-sm text-on-surface-variant mt-0.5">
+                <span class="material-symbols-outlined text-[14px] text-outline mt-0.5 shrink-0">location_on</span>
+                <span>Phòng Chuyên Gia 401 • Lầu 4 Khu Kỹ Thuật Cao</span>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col gap-1.5 items-start">
+              <span class="text-body-sm font-mono text-on-surface-variant">000518/BYT-CCHN</span>
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/70">
+                                <span class="material-symbols-outlined text-[13px]">check_circle</span>
+                                Đã thẩm định
+                            </span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-md font-bold text-primary">500.000 đ</span>
+              <span class="inline-flex items-center gap-1 text-[11px] text-on-surface-variant font-medium mt-0.5">
+                                <span class="material-symbols-outlined text-[13px]">diamond</span>
+                                Khám Chuyên Gia VIP
+                            </span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-sm font-semibold text-on-surface">Thứ 3 &amp; Thứ 6</span>
+              <span class="text-body-sm text-on-surface-variant">Ca sáng (08:30 - 12:00)</span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <div class="flex items-center gap-1 text-amber-500 font-bold text-label-md">
+                <span>5.0</span>
+                <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+              </div>
+              <span class="text-body-sm text-on-surface-variant">980 lượt khám</span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-medium bg-emerald-50 text-emerald-700">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            Đang nhận lịch
+                        </span>
+          </td>
+          <td class="py-4 px-4 text-right">
+            <div class="flex items-center justify-end gap-1 text-on-surface-variant">
+              <button type="button" title="Chỉnh sửa hồ sơ" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">edit_note</span>
+              </button>
+              <button type="button" title="Xem lịch trực" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+              </button>
+              <button type="button" title="Thao tác khác" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined text-[18px]">more_vert</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 4 -->
+        <tr class="hover:bg-surface-container-low/50 transition-colors">
+          <td class="py-4 px-4">
+            <input type="checkbox" class="w-4 h-4 rounded border-outline-variant text-primary cursor-pointer">
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex items-center gap-3">
+              <img src="https://ui-avatars.com/api/?name=Pham+Thu+Ha&background=dbe1ff&color=004ac6&bold=true" alt="Avatar" class="w-10 h-10 rounded-full object-cover shrink-0 ring-2 ring-surface-container">
+              <div class="flex flex-col min-w-0">
+                <div class="flex items-center gap-1">
+                  <span class="font-label-md text-label-md text-on-surface font-semibold truncate">BS. CKI Phạm Thu Hà</span>
+                </div>
+                <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                  <span class="text-label-sm font-semibold text-primary">#BS-00954</span>
+                  <span class="text-outline">•</span>
+                  <span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px] font-medium">BS. CKI Nha Khoa</span>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-md text-on-surface font-semibold">Khoa Răng Hàm Mặt</span>
+              <div class="flex items-start gap-1 text-body-sm text-on-surface-variant mt-0.5">
+                <span class="material-symbols-outlined text-[14px] text-outline mt-0.5 shrink-0">location_on</span>
+                <span>Phòng khám 305 • Tầng 3 Khu A</span>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col gap-1.5 items-start">
+              <span class="text-body-sm font-mono text-on-surface-variant">012490/HCM-CCHN</span>
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/70">
+                                <span class="material-symbols-outlined text-[13px]">check_circle</span>
+                                Đã thẩm định
+                            </span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-md font-bold text-primary">250.000 đ</span>
+              <span class="inline-flex items-center gap-1 text-[11px] text-secondary font-medium mt-0.5">
+                                <span class="material-symbols-outlined text-[13px]">health_and_safety</span>
+                                Áp dụng BHYT
+                            </span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-sm font-semibold text-on-surface">Thứ 2 - Thứ 7</span>
+              <span class="text-body-sm text-on-surface-variant">Ca chiều (13:30 - 17:30)</span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <div class="flex items-center gap-1 text-amber-500 font-bold text-label-md">
+                <span>4.85</span>
+                <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+              </div>
+              <span class="text-body-sm text-on-surface-variant">870 lượt khám</span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-medium bg-emerald-50 text-emerald-700">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            Đang nhận lịch
+                        </span>
+          </td>
+          <td class="py-4 px-4 text-right">
+            <div class="flex items-center justify-end gap-1 text-on-surface-variant">
+              <button type="button" title="Chỉnh sửa hồ sơ" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">edit_note</span>
+              </button>
+              <button type="button" title="Xem lịch trực" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+              </button>
+              <button type="button" title="Thao tác khác" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined text-[18px]">more_vert</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 5 -->
+        <tr class="hover:bg-surface-container-low/50 transition-colors">
+          <td class="py-4 px-4">
+            <input type="checkbox" class="w-4 h-4 rounded border-outline-variant text-primary cursor-pointer">
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex items-center gap-3">
+              <img src="https://ui-avatars.com/api/?name=Dang+Minh+Tuan&background=e1e3e4&color=434655&bold=true" alt="Avatar" class="w-10 h-10 rounded-full object-cover shrink-0 ring-2 ring-surface-container">
+              <div class="flex flex-col min-w-0">
+                <div class="flex items-center gap-1">
+                  <span class="font-label-md text-label-md text-on-surface font-semibold truncate">BS. CKII Đặng Minh Tuấn</span>
+                </div>
+                <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                  <span class="text-label-sm font-semibold text-primary">#BS-00623</span>
+                  <span class="text-outline">•</span>
+                  <span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px] font-medium">BS. CKII Da Liễu</span>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-md text-on-surface font-semibold">Khoa Da Liễu &amp; Thẩm Mỹ</span>
+              <div class="flex items-start gap-1 text-body-sm text-on-surface-variant mt-0.5">
+                <span class="material-symbols-outlined text-[14px] text-outline mt-0.5 shrink-0">location_on</span>
+                <span>Phòng khám 215 • Tầng 2 Khu B</span>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col gap-1.5 items-start">
+              <span class="text-body-sm font-mono text-on-surface-variant">008215/BYT-CCHN</span>
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200/70">
+                                <span class="material-symbols-outlined text-[13px]">schedule</span>
+                                Chờ gia hạn CCHN
+                            </span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-md font-bold text-primary">300.000 đ</span>
+              <span class="inline-flex items-center gap-1 text-[11px] text-on-surface-variant font-medium mt-0.5">
+                                <span class="material-symbols-outlined text-[13px]">payments</span>
+                                Khám Dịch Vụ
+                            </span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-sm font-semibold text-on-surface">Thứ 4, Thứ 6</span>
+              <span class="text-body-sm text-on-surface-variant">Ca sáng (08:00 - 12:00)</span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <div class="flex items-center gap-1 text-amber-500 font-bold text-label-md">
+                <span>4.78</span>
+                <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+              </div>
+              <span class="text-body-sm text-on-surface-variant">645 lượt khám</span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-medium bg-surface-container text-on-surface-variant">
+                            <span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+                            Tạm nghỉ phép
+                        </span>
+          </td>
+          <td class="py-4 px-4 text-right">
+            <div class="flex items-center justify-end gap-1 text-on-surface-variant">
+              <button type="button" title="Chỉnh sửa hồ sơ" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">edit_note</span>
+              </button>
+              <button type="button" title="Xem lịch trực" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+              </button>
+              <button type="button" title="Thao tác khác" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined text-[18px]">more_vert</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 6 -->
+        <tr class="hover:bg-surface-container-low/50 transition-colors">
+          <td class="py-4 px-4">
+            <input type="checkbox" class="w-4 h-4 rounded border-outline-variant text-primary cursor-pointer">
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex items-center gap-3">
+              <img src="https://ui-avatars.com/api/?name=Vu+Dinh+Khoa&background=dbe1ff&color=004ac6&bold=true" alt="Avatar" class="w-10 h-10 rounded-full object-cover shrink-0 ring-2 ring-surface-container">
+              <div class="flex flex-col min-w-0">
+                <div class="flex items-center gap-1">
+                  <span class="font-label-md text-label-md text-on-surface font-semibold truncate">GS. TS Vũ Đình Khoa</span>
+                  <span class="material-symbols-outlined text-amber-500 text-[16px] shrink-0" title="Chuyên gia đầu ngành">workspace_premium</span>
+                </div>
+                <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                  <span class="text-label-sm font-semibold text-primary">#BS-00045</span>
+                  <span class="text-outline">•</span>
+                  <span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px] font-medium">GS. TS Ngoại TQ</span>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-md text-on-surface font-semibold">Khoa Ngoại Tổng Quát</span>
+              <div class="flex items-start gap-1 text-body-sm text-on-surface-variant mt-0.5">
+                <span class="material-symbols-outlined text-[14px] text-outline mt-0.5 shrink-0">location_on</span>
+                <span>Phòng Phẫu Thuật 501 • Lầu 5 Khu Ngoại</span>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col gap-1.5 items-start">
+              <span class="text-body-sm font-mono text-on-surface-variant">000104/BYT-CCHN</span>
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/70">
+                                <span class="material-symbols-outlined text-[13px]">check_circle</span>
+                                Đã thẩm định
+                            </span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-md font-bold text-primary">600.000 đ</span>
+              <span class="inline-flex items-center gap-1 text-[11px] text-secondary font-medium mt-0.5">
+                                <span class="material-symbols-outlined text-[13px]">health_and_safety</span>
+                                Áp dụng BHYT &amp; VIP
+                            </span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-sm font-semibold text-on-surface">Thứ 2 &amp; Thứ 5</span>
+              <span class="text-body-sm text-on-surface-variant">Ca phẫu thuật &amp; hội chẩn</span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <div class="flex items-center gap-1 text-amber-500 font-bold text-label-md">
+                <span>5.0</span>
+                <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+              </div>
+              <span class="text-body-sm text-on-surface-variant">3.420 lượt khám</span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-medium bg-emerald-50 text-emerald-700">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            Đang nhận lịch
+                        </span>
+          </td>
+          <td class="py-4 px-4 text-right">
+            <div class="flex items-center justify-end gap-1 text-on-surface-variant">
+              <button type="button" title="Chỉnh sửa hồ sơ" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">edit_note</span>
+              </button>
+              <button type="button" title="Xem lịch trực" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+              </button>
+              <button type="button" title="Thao tác khác" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined text-[18px]">more_vert</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 7 -->
+        <tr class="hover:bg-surface-container-low/50 transition-colors">
+          <td class="py-4 px-4">
+            <input type="checkbox" class="w-4 h-4 rounded border-outline-variant text-primary cursor-pointer">
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex items-center gap-3">
+              <img src="https://ui-avatars.com/api/?name=Hoang+Van+Huy&background=89f5e7&color=005049&bold=true" alt="Avatar" class="w-10 h-10 rounded-full object-cover shrink-0 ring-2 ring-surface-container">
+              <div class="flex flex-col min-w-0">
+                <div class="flex items-center gap-1">
+                  <span class="font-label-md text-label-md text-on-surface font-semibold truncate">ThS. BS Hoàng Văn Huy</span>
+                </div>
+                <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                  <span class="text-label-sm font-semibold text-primary">#BS-00518</span>
+                  <span class="text-outline">•</span>
+                  <span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px] font-medium">ThS. Thần Kinh</span>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-md text-on-surface font-semibold">Khoa Thần Kinh</span>
+              <div class="flex items-start gap-1 text-body-sm text-on-surface-variant mt-0.5">
+                <span class="material-symbols-outlined text-[14px] text-outline mt-0.5 shrink-0">location_on</span>
+                <span>Phòng khám 308 • Tầng 3 Khu A</span>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col gap-1.5 items-start">
+              <span class="text-body-sm font-mono text-on-surface-variant">009941/HN-CCHN</span>
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/70">
+                                <span class="material-symbols-outlined text-[13px]">check_circle</span>
+                                Đã thẩm định
+                            </span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-md font-bold text-primary">320.000 đ</span>
+              <span class="inline-flex items-center gap-1 text-[11px] text-secondary font-medium mt-0.5">
+                                <span class="material-symbols-outlined text-[13px]">health_and_safety</span>
+                                Áp dụng BHYT
+                            </span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <span class="font-label-sm font-semibold text-on-surface">Thứ 3, Thứ 5, CN</span>
+              <span class="text-body-sm text-on-surface-variant">Ca sáng (07:30 - 11:30)</span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+            <div class="flex flex-col">
+              <div class="flex items-center gap-1 text-amber-500 font-bold text-label-md">
+                <span>4.91</span>
+                <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+              </div>
+              <span class="text-body-sm text-on-surface-variant">1.510 lượt khám</span>
+            </div>
+          </td>
+          <td class="py-4 px-3">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-medium bg-emerald-50 text-emerald-700">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            Đang nhận lịch
+                        </span>
+          </td>
+          <td class="py-4 px-4 text-right">
+            <div class="flex items-center justify-end gap-1 text-on-surface-variant">
+              <button type="button" title="Chỉnh sửa hồ sơ" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">edit_note</span>
+              </button>
+              <button type="button" title="Xem lịch trực" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+              </button>
+              <button type="button" title="Thao tác khác" class="p-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined text-[18px]">more_vert</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 4. Table Pagination Footer -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-space-md px-space-lg py-space-md border-t border-surface-container-low bg-surface-container-lowest">
+      <div class="flex items-center gap-space-sm font-body-sm text-body-sm text-on-surface-variant">
+        <span>Hiển thị</span>
+        <select class="px-2.5 py-1.5 bg-surface-container-low rounded-lg font-label-sm text-on-surface outline-none border border-outline-variant/40 cursor-pointer">
+          <option value="10" selected>10 dòng / trang</option>
+          <option value="20">20 dòng / trang</option>
+          <option value="50">50 dòng / trang</option>
+        </select>
+        <span>trên tổng số <strong class="text-on-surface font-semibold">128</strong> bác sĩ</span>
+      </div>
+
+      <div class="flex items-center gap-1">
+        <button type="button" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-label-sm font-medium text-outline hover:bg-surface-container transition-colors">
+          <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+          <span>Trước</span>
+        </button>
+        <button type="button" class="w-8 h-8 rounded-lg text-label-sm font-semibold bg-primary text-on-primary shadow-sm">1</button>
+        <button type="button" class="w-8 h-8 rounded-lg text-label-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors">2</button>
+        <button type="button" class="w-8 h-8 rounded-lg text-label-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors">3</button>
+        <span class="px-1.5 text-outline">...</span>
+        <button type="button" class="w-8 h-8 rounded-lg text-label-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors">13</button>
+        <button type="button" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-label-sm font-medium text-on-surface hover:bg-surface-container transition-colors">
+          <span>Sau</span>
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script tương tác nhẹ cho Bộ lọc nhanh -->
+  <script>
+    function toggleQuickFilter(btn) {
+      const isActive = btn.classList.contains('active');
+      if (isActive) {
+        btn.classList.remove('active', 'bg-primary-fixed', 'text-primary', 'border', 'border-primary/20');
+        btn.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+        const checkIcon = btn.querySelector('.material-symbols-outlined');
+        if (checkIcon) checkIcon.remove();
+      } else {
+        btn.classList.add('active', 'bg-primary-fixed', 'text-primary', 'border', 'border-primary/20');
+        btn.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+        const icon = document.createElement('span');
+        icon.className = 'material-symbols-outlined text-[14px]';
+        icon.textContent = 'check';
+        btn.appendChild(icon);
+      }
+    }
+  </script>
+
+</div>
+</body>
+</html>
