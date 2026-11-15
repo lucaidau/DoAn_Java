@@ -66,7 +66,7 @@
             class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
             data-path="bac-si" href="#">Bác sĩ</a><a
             class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
-            data-path="lich-hen-cua-toi" href="#">Lịch hẹn của tôi</a></nav>
+            data-path="lich-hen-cua-toi" href="/patient/appointments" th:href="@{/patient/appointments}">Lịch hẹn của tôi</a></nav>
       </div>
       <div class="flex items-center gap-space-md">
         <div class="hidden xl:flex items-center relative w-72"><span
@@ -138,16 +138,6 @@
                 <div class="flex flex-col">
                   <span class="font-label-sm text-label-sm text-on-surface font-semibold">100% Bộ Y Tế</span>
                   <span class="font-body-sm text-[11px] text-on-surface-variant">Chứng chỉ hành nghề</span>
-                </div>
-              </div>
-              <div class="h-6 w-px bg-surface-variant"></div>
-              <div class="flex items-center gap-2 px-space-sm py-1">
-                <div class="w-8 h-8 rounded-lg bg-secondary-fixed/40 flex items-center justify-center text-secondary">
-                  <span class="material-symbols-outlined text-[18px]">health_and_safety</span>
-                </div>
-                <div class="flex flex-col">
-                  <span class="font-label-sm text-label-sm text-on-surface font-semibold">BHYT 100%</span>
-                  <span class="font-body-sm text-[11px] text-on-surface-variant">Áp dụng đúng tuyến</span>
                 </div>
               </div>
             </div>
@@ -300,34 +290,6 @@
                   </div>
                 </div>
                 <div class="h-px bg-surface-variant"></div>
-                <!-- Chi phí khám -->
-                <div class="space-y-space-xs">
-                  <div class="flex items-center justify-between">
-                    <label class="font-label-md text-label-md text-on-surface font-semibold">Khoảng giá khám</label>
-                    <span class="font-label-sm text-label-sm text-primary font-bold" id="priceDisplay">500.000 đ</span>
-                  </div>
-                  <input class="w-full accent-primary h-1.5 bg-surface-container rounded-lg cursor-pointer"
-                    id="priceRange" max="600000" min="200000" step="50000" type="range" value="500000">
-                  <div class="flex justify-between font-label-sm text-[11px] text-outline">
-                    <span>200.000 đ</span>
-                    <span>400.000 đ</span>
-                    <span>600.000 đ</span>
-                  </div>
-                </div>
-                <div class="h-px bg-surface-variant"></div>
-                <!-- Hỗ trợ BHYT Switch -->
-                <div class="flex items-center justify-between py-1">
-                  <div>
-                    <p class="font-label-md text-label-md text-on-surface font-semibold">Hỗ trợ BHYT</p>
-                    <p class="font-body-sm text-[11px] text-on-surface-variant">Thanh toán bảo hiểm nhà nước</p>
-                  </div>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input checked="" class="sr-only peer" id="bhytToggle" type="checkbox">
-                    <div
-                      class="w-11 h-6 bg-surface-container peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-surface-container-lowest after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:border-surface-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary">
-                    </div>
-                  </label>
-                </div>
                 <!-- Buttons Action -->
                 <div class="pt-space-xs space-y-2">
                   <button
@@ -486,10 +448,20 @@
   </footer>
 
 
-  <script>
+  <script th:inline="javascript">
+    window.doctorPageData = {
+      bacSis: /*[[${bacSis}]]*/ [],
+      lichSapToi: /*[[${lichSapToi}]]*/ {},
+      chuyenKhoas: /*[[${chuyenKhoas}]]*/ [],
+      thongKeChuyenKhoa: /*[[${thongKeChuyenKhoa}]]*/ {}
+    };
+  </script>
+  <script th:inline="none">
       (() => {
-        // Neu mo bang file:// hoac Live Server (port khac), dat window.API_BASE = "http://localhost:8080" truoc script nay.
-        const API_BASE = window.API_BASE ?? (location.protocol === "file:" ? "http://localhost:8080" : "");
+        const doctors = window.doctorPageData.bacSis;
+        const schedules = window.doctorPageData.lichSapToi;
+        const specialties = window.doctorPageData.chuyenKhoas;
+        const specialtyStats = window.doctorPageData.thongKeChuyenKhoa;
         const $ = (s, p = document) => p.querySelector(s);
         const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
         const fmt = (n) => Number(n ?? 0).toLocaleString("vi-VN");
@@ -497,29 +469,24 @@
         const pick = (o, ...keys) => { for (const k of keys) if (o?.[k] != null && o[k] !== "") return o[k]; return ""; };
         const noMark = (s) => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").toLowerCase();
         const fullName = (d) => [d?.hocHamHocVi, d?.hoTen].filter(Boolean).join(" ");
-        const ROUTES = { "trang-chu": "/TrangChuBenhNhan.html", "chuyen-khoa": "/DanhSachChuyenKhoa.html", "bac-si": "/DanhSachBacSi.html", "dat-lich-kham": "/DanhSachBacSi.html" };
-
+        const ROUTES = {
+          "trang-chu": "/patient/dashboard",
+          "chuyen-khoa": "/patient/specialties",
+          "bac-si": "/patient/doctors",
+          "dat-lich-kham": "/lichhen/tao",
+          "lich-hen-cua-toi": "/patient/appointments"
+        };
         document.querySelectorAll("[data-path]").forEach(a => a.setAttribute("href", ROUTES[a.dataset.path] || "#"));
         $("header input[type=text]")?.addEventListener("keydown", e => {
           if (e.key === "Enter" && e.target.value.trim()) location.href = ROUTES["bac-si"] + "?keyword=" + encodeURIComponent(e.target.value.trim());
         });
 
-        async function getJson(path) {
-          const res = await fetch(API_BASE + path);
-          if (!res.ok) throw new Error("HTTP " + res.status + " khi goi " + path);
-          return res.json();
-        }
-
-        const errorBox = (msg) => `<div class="col-span-full p-space-lg rounded-xl bg-error-container text-on-error-container font-body-md">
-      Không tải được dữ liệu từ máy chủ. Hãy kiểm tra Spring Boot đang chạy và kết nối SQL Server.<br>
-      <span class="font-body-sm opacity-80">${esc(msg)}</span></div>`;
         const emptyBox = (msg, extra = "") => `<div class="col-span-full p-space-lg rounded-xl bg-surface-container-lowest text-on-surface-variant text-center font-body-md">${esc(msg)}${extra}</div>`;
-        const loadingBox = `<div class="col-span-full p-space-lg text-center text-on-surface-variant font-body-md">Đang tải dữ liệu...</div>`;
 
         // Bieu tuong theo ten chuyen khoa (giu dung bo icon cua thiet ke goc)
         function iconFor(name) {
           const n = noMark(name);
-          const map = [["tim mach", "cardiology"], ["rang", "dentistry"], ["mat", "visibility"], ["tai mui", "hearing"], ["nhi", "child_care"],
+          const map = [ ["tim mach", "cardiology"], ["rang", "dentistry"], ["mat", "visibility"], ["tai mui", "hearing"], ["nhi", "child_care"],
           ["xuong", "personal_injury"], ["da lieu", "spa"], ["than kinh", "psychology"], ["noi", "stethoscope"], ["san", "pregnant_woman"],
           ["ung buou", "oncology"], ["tieu hoa", "gastroenterology"], ["phoi", "pulmonology"], ["hinh anh", "radiology"]];
           return (map.find(([k]) => n.includes(k)) || [0, "medical_services"])[1];
@@ -538,7 +505,7 @@
 
 
         // Trang dat lich chua co: doi sang duong dan that khi co, vi du "/DatLichKham.html?doctorId="
-        const BOOKING_URL = "";
+        const BOOKING_URL = "/lichhen/tao?bacSiId=";
         const SIZE = 8;
         const state = { page: 0, dateFrom: "", dateTo: "", seq: 0 };
         const el = {
@@ -580,22 +547,21 @@
       <button type="button" data-clear-date aria-label="Bỏ lọc ngày" class="material-symbols-outlined text-[16px]">close</button></span>`;
         }
 
-        async function initHero() {
-          try {
-            if (specialtyId) {
-              const [s, stats] = await Promise.all([getJson("/api/specialties/" + encodeURIComponent(specialtyId)), getJson("/api/specialties/summary")]);
-              el.title.textContent = "Bác Sĩ Chuyên Khoa " + s.tenChuyenKhoa.replace(/^Khoa\s+/i, "");
-              el.crumb.textContent = s.tenChuyenKhoa;
-              el.desc.textContent = s.moTa || "";
-              el.badge.textContent = `${fmt(stats[specialtyId]?.soBacSi || 0)} Bác sĩ đang hoạt động`;
-            } else {
-              const d = await getJson("/api/doctors?page=0&size=1");
-              el.title.textContent = "Danh sách bác sĩ";
-              el.crumb.textContent = "Tất cả bác sĩ";
-              el.desc.textContent = "Tìm bác sĩ theo tên, học hàm – học vị, kinh nghiệm và lịch làm việc.";
-              el.badge.textContent = `${fmt(d.totalElements ?? 0)} Bác sĩ đang hoạt động`;
+        function initHero() {
+          if (specialtyId) {
+            const specialty = specialties.find(item => String(item.id) === specialtyId);
+            if (specialty) {
+              el.title.textContent = "Bác Sĩ Chuyên Khoa " + specialty.tenChuyenKhoa.replace(/^Khoa\s+/i, "");
+              el.crumb.textContent = specialty.tenChuyenKhoa;
+              el.desc.textContent = specialty.moTa || "";
+              el.badge.textContent = `${fmt(specialtyStats[specialtyId]?.soBacSi || 0)} Bác sĩ đang hoạt động`;
+              return;
             }
-          } catch (e) { console.error("Không tải được thông tin hero:", e); }
+          }
+          el.title.textContent = "Danh sách bác sĩ";
+          el.crumb.textContent = "Tất cả bác sĩ";
+          el.desc.textContent = "Tìm bác sĩ theo tên, học hàm – học vị, kinh nghiệm và lịch làm việc.";
+          el.badge.textContent = `${fmt(doctors.length)} Bác sĩ đang hoạt động`;
         }
 
         function card(d, lich) {
@@ -680,39 +646,57 @@
       </div>`;
         }
 
-        async function load() {
-          const my = ++state.seq;
-          const p = new URLSearchParams();
-          const keyword = el.search.value.trim();
-          if (keyword) p.set("keyword", keyword);
-          if (specialtyId) p.set("specialtyId", specialtyId);
-          document.querySelectorAll('input[name="academic"]:checked').forEach(x => p.append("academic", x.value));
-          document.querySelectorAll('input[name="slot"]:checked').forEach(x => p.append("slot", x.value));
-          const exp = $('input[name="exp"]:checked')?.value;
-          if (exp && exp !== "all") p.set("exp", exp);
-          if (state.dateFrom) { p.set("dateFrom", state.dateFrom); p.set("dateTo", state.dateTo); }
-          p.set("maxPrice", document.getElementById("priceRange").value);
-          if (document.getElementById("bhytToggle").checked) {
-            p.set("bhyt", "true");
-          }
-          p.set("sort", el.sort.value); p.set("page", state.page); p.set("size", SIZE);
-          el.feed.innerHTML = loadingBox;
-          try {
-            const data = await getJson("/api/doctors?" + p);
-            if (my !== state.seq) return;
-            const items = listOf(data), total = data.totalElements ?? items.length;
-            let lich = {};
-            if (items.length) { try { lich = await getJson("/api/doctors/schedules?ids=" + items.map(d => d.id).join(",")); } catch (e) { console.error("Không tải được lịch:", e); } }
-            if (my !== state.seq) return;
-            el.feed.innerHTML = items.length ? items.map(d => card(d, lich[d.id])).join("")
-              : emptyBox("Không tìm thấy bác sĩ phù hợp.", state.dateFrom ? ` <button type="button" data-clear-date class="text-primary underline ml-1">Bỏ lọc ngày</button>` : "");
-            el.shown.textContent = items.length; el.total.textContent = fmt(total);
-            renderPager(data.number ?? 0, data.totalPages ?? 1, total);
-          } catch (e) {
-            if (my !== state.seq) return;
-            console.error("Không tải được danh sách bác sĩ:", e);
-            el.feed.innerHTML = errorBox(e.message); el.pager.innerHTML = "";
-          }
+        function load() {
+          const keyword = noMark(el.search.value.trim());
+          const academic = [...document.querySelectorAll('input[name="academic"]:checked')].map(input => input.value);
+          const slots = [...document.querySelectorAll('input[name="slot"]:checked')].map(input => input.value);
+          const experience = $('input[name="exp"]:checked')?.value || "all";
+          const filtered = doctors.filter(doctor => {
+            if (specialtyId && String(doctor.chuyenKhoa?.id) !== specialtyId) return false;
+            if (keyword && !noMark(fullName(doctor)).includes(keyword)) return false;
+
+            const hocVi = noMark(doctor.hocHamHocVi || "");
+            if (academic.length && !academic.some(value => {
+              if (value === "gs-pgs") return hocVi.includes("gs") || hocVi.includes("giao su");
+              if (value === "ts") return hocVi.includes("ts") || hocVi.includes("tien si");
+              return hocVi.includes("ths") || hocVi.includes("thac si") || hocVi.includes("ck");
+            })) return false;
+
+            const years = Number(doctor.soNamKinhNghiem || 0);
+            if (experience === "under5" && years >= 5) return false;
+            if (experience === "5-10" && (years < 5 || years > 10)) return false;
+            if (experience === "over10" && years <= 10) return false;
+            if (experience === "over15" && years <= 15) return false;
+
+            const shifts = schedules[doctor.id] || [];
+            if (state.dateFrom || slots.length) {
+              return shifts.some(shift => {
+                const date = isoDate(shift.ngayLamViec);
+                if (state.dateFrom && (date < state.dateFrom || date > state.dateTo)) return false;
+                if (!slots.length) return true;
+                const hour = Number(hhmm(shift.gioBatDau).slice(0, 2));
+                return slots.some(slot => slot === "morning" ? hour < 12
+                  : slot === "afternoon" ? hour >= 12 && hour < 17
+                    : slot === "evening" && hour >= 17);
+              });
+            }
+            return true;
+          });
+
+          filtered.sort((a, b) => el.sort.value === "exp"
+            ? Number(b.soNamKinhNghiem || 0) - Number(a.soNamKinhNghiem || 0)
+              || String(a.hoTen || "").localeCompare(String(b.hoTen || ""), "vi")
+            : String(a.hoTen || "").localeCompare(String(b.hoTen || ""), "vi"));
+
+          const total = filtered.length;
+          const pages = Math.max(1, Math.ceil(total / SIZE));
+          state.page = Math.min(state.page, pages - 1);
+          const items = filtered.slice(state.page * SIZE, (state.page + 1) * SIZE);
+          el.feed.innerHTML = items.length ? items.map(doctor => card(doctor, schedules[doctor.id])).join("")
+            : emptyBox("Không tìm thấy bác sĩ phù hợp.", state.dateFrom ? ` <button type="button" data-clear-date class="text-primary underline ml-1">Bỏ lọc ngày</button>` : "");
+          el.shown.textContent = items.length;
+          el.total.textContent = fmt(total);
+          renderPager(state.page, pages, total);
         }
         const reload = () => { state.page = 0; load(); };
         const clearDate = () => { state.dateFrom = state.dateTo = ""; setQuickActive(""); renderChip(); reload(); };
@@ -733,7 +717,9 @@
         });
         document.querySelectorAll(".filter-date-btn").forEach(b => b.addEventListener("click", () => {
           const already = state.dateFrom && b.classList.contains("bg-primary");
-          [state.dateFrom, state.dateTo] = already ? ["", ""] : rangeFor(b.dataset.range);
+          const range = already ? ["", ""] : rangeFor(b.dataset.range);
+          state.dateFrom = range[0];
+          state.dateTo = range[1];
           setQuickActive(already ? "" : b.dataset.range); renderChip(); reload();
         }));
         $("#resetFilterBtn").addEventListener("click", () => {
@@ -745,10 +731,6 @@
         const date = urlParams.get("date");
         if (/^\d{4}-\d{2}-\d{2}$/.test(date || "")) { state.dateFrom = state.dateTo = date; renderChip(); }
         setQuickActive("");
-        // Lắng nghe sự kiện kéo thanh giá để cập nhật con số hiển thị lập tức
-        document.getElementById("priceRange").addEventListener("input", function () {
-          document.getElementById("priceDisplay").textContent = fmt(this.value) + " đ";
-        });
         initHero();
         load();
       })();
