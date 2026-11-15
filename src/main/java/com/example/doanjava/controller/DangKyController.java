@@ -1,5 +1,6 @@
 package com.example.doanjava.controller;
 
+import com.example.doanjava.dto.ThongTinDangKy;
 import com.example.doanjava.service.DangKyService;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
@@ -26,7 +27,7 @@ public class DangKyController {
 
     @PostMapping("/register")
     public String xuLyDangKy(
-            @Valid @ModelAttribute vn.carehealth.dto.ThongTinDangKy thongTin,
+            @Valid @ModelAttribute ThongTinDangKy thongTin,
             BindingResult ketQua,
             Model model,
             RedirectAttributes redirectAttributes) {
