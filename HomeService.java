@@ -1,96 +1,83 @@
 package com.example.doanjava.service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+import com.example.doanjava.entity.BacSi;
+import com.example.doanjava.entity.ChuyenKhoa;
+import com.example.doanjava.repository.BacSiRepository;
+import com.example.doanjava.repository.BenhNhanRepository;
+import com.example.doanjava.repository.ChuyenKhoaRepository;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-
-import com.example.doanjava.entity.BacSi;
-import com.example.doanjava.entity.LichLamViec;
-import com.example.doanjava.repository.BacSiJpa;
-import com.example.doanjava.repository.BenhNhanJpa;
-import com.example.doanjava.repository.ChuyenKhoaJpa;
-import com.example.doanjava.repository.LichLamViecJpa;
-
-
 
 @Service
 public class HomeService {
+    private final BacSiRepository bacSiRepository;
+    private final BenhNhanRepository benhNhanRepository;
+    private final ChuyenKhoaRepository chuyenKhoaRepository;
 
-    private final ChuyenKhoaJpa chuyenKhoaJpa;
-    private final BacSiJpa bacSiJpa;
-    private final BenhNhanJpa benhNhanJpa;
-    private final LichLamViecJpa lichLamViecJpa;
-    private final ChuyenKhoaService chuyenKhoaService;
-
-    public HomeService(ChuyenKhoaJpa chuyenKhoaJpa,
-                       BacSiJpa bacSiJpa,
-                       BenhNhanJpa benhNhanJpa,
-                       LichLamViecJpa lichLamViecJpa,
-                       ChuyenKhoaService chuyenKhoaService) {
-        this.chuyenKhoaJpa = chuyenKhoaJpa;
-        this.bacSiJpa = bacSiJpa;
-        this.benhNhanJpa = benhNhanJpa;
-        this.lichLamViecJpa = lichLamViecJpa;
-        this.chuyenKhoaService = chuyenKhoaService;
+    public HomeService(BacSiRepository bacSiRepository,
+                       BenhNhanRepository benhNhanRepository,
+                       ChuyenKhoaRepository chuyenKhoaRepository) {
+        this.bacSiRepository = bacSiRepository;
+        this.benhNhanRepository = benhNhanRepository;
+        this.chuyenKhoaRepository = chuyenKhoaRepository;
     }
 
-    // Lay du lieu hien thi tren trang chu (toan bo lay tu database)
-    public Map<String, Object> layDuLieuTrangChu() {
-        Map<String, Object> duLieu = new LinkedHashMap<>();
-
-        Map<String, Object> thongKe = new LinkedHashMap<>();
-        thongKe.put("soBacSi", bacSiJpa.count());
-        thongKe.put("soChuyenKhoa", chuyenKhoaJpa.count());
-        thongKe.put("soBenhNhan", benhNhanJpa.count());
-
-        duLieu.put("thongKe", thongKe);
-        duLieu.put("chuyenKhoa", chuyenKhoaJpa.findAll());
-        duLieu.put("thongKeChuyenKhoa", chuyenKhoaService.thongKeTheoChuyenKhoa());
-        duLieu.put("bacSiNoiBat", bacSiJpa.findTop8ByOrderBySoNamKinhNghiemDesc());
-
-        return duLieu;
-    }
-
-    // Tim bac si tu trang chu theo tu khoa, chuyen khoa va ngay kham
-    public Map<String, Object> timKiemTrangChu(
-            String tuKhoa, Long maChuyenKhoa, LocalDate ngayKham) {
-
-        List<BacSi> danhSachBacSi;
-
-        if (ngayKham != null) {
-            List<LichLamViec> lichLamViec = lichLamViecJpa.findByNgayLamViec(ngayKham);
-            List<Long> danhSachMaBacSi = lichLamViec.stream()
-                    .map(lich -> lich.getBacSi().getId())
-                    .distinct()
-                    .collect(Collectors.toList());
-
-            danhSachBacSi = danhSachMaBacSi.isEmpty()
-                    ? new ArrayList<>()
-                    : bacSiJpa.findByIdIn(danhSachMaBacSi);
-        } else {
-            danhSachBacSi = bacSiJpa.findAll();
-        }
-
-        final String tuKhoaTim = tuKhoa == null ? "" : tuKhoa.trim().toLowerCase();
-
-        danhSachBacSi = danhSachBacSi.stream()
-                .filter(bacSi -> tuKhoaTim.isEmpty()
-                        || (bacSi.getHoTen() != null
-                            && bacSi.getHoTen().toLowerCase().contains(tuKhoaTim)))
-                .filter(bacSi -> maChuyenKhoa == null
-                        || (bacSi.getChuyenKhoa() != null
-                            && maChuyenKhoa.equals(bacSi.getChuyenKhoa().getId())))
-                .toList();
-
-        Map<String, Object> ketQua = new LinkedHashMap<>();
-        ketQua.put("bacSi", danhSachBacSi);
-        ketQua.put("chuyenKhoa", chuyenKhoaJpa.findAll());
-
+    public Map<String, Long> layThongKe() {
+        Map<String, Long> ketQua = new LinkedHashMap<>();
+        ketQua.put("soBacSi", bacSiRepository.count());
+        ketQua.put("soBenhNhan", benhNhanRepository.count());
+        ketQua.put("soChuyenKhoa", chuyenKhoaRepository.count());
         return ketQua;
+    }
+
+    public List<Map<String, Object>> layChuyenKhoaNoiBat() {
+        return chuyenKhoaRepository.findAll(Sort.by(Sort.Direction.ASC, "tenChuyenKhoa"))
+                .stream().map(this::chuyenKhoaThanhMap).toList();
+    }
+
+    public List<Map<String, Object>> layBacSiNoiBat() {
+        return bacSiRepository.findTop8ByOrderBySoNamKinhNghiemDesc()
+                .stream().map(this::bacSiThanhMap).toList();
+    }
+
+    public Map<Long, Map<String, Object>> layThongKeChuyenKhoa() {
+        Map<Long, Map<String, Object>> ketQua = new LinkedHashMap<>();
+        List<BacSi> tatCaBacSi = bacSiRepository.findAll();
+        for (ChuyenKhoa chuyenKhoa : chuyenKhoaRepository.findAll()) {
+            List<BacSi> bacSis = tatCaBacSi.stream()
+                    .filter(bs -> bs.getChuyenKhoa() != null
+                            && chuyenKhoa.getId().equals(bs.getChuyenKhoa().getId())).toList();
+            Map<String, Object> thongKe = new LinkedHashMap<>();
+            thongKe.put("soBacSi", bacSis.size());
+            BacSi bacSiDaiDien = bacSis.stream()
+                    .max((a, b) -> Integer.compare(a.getSoNamKinhNghiem() == null ? 0 : a.getSoNamKinhNghiem(),
+                            b.getSoNamKinhNghiem() == null ? 0 : b.getSoNamKinhNghiem())).orElse(null);
+            thongKe.put("bacSiPhuTrach", bacSiDaiDien == null ? null : bacSiThanhMap(bacSiDaiDien));
+            ketQua.put(chuyenKhoa.getId(), thongKe);
+        }
+        return ketQua;
+    }
+
+    public Map<String, Object> chuyenKhoaThanhMap(ChuyenKhoa ck) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("id", ck.getId());
+        map.put("tenChuyenKhoa", ck.getTenChuyenKhoa());
+        map.put("moTa", ck.getMoTa());
+        return map;
+    }
+
+    public Map<String, Object> bacSiThanhMap(BacSi bs) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("id", bs.getId());
+        map.put("hoTen", bs.getHoTen());
+        map.put("hocHamHocVi", bs.getHocHamHocVi());
+        map.put("soNamKinhNghiem", bs.getSoNamKinhNghiem());
+        map.put("gioiThieu", bs.getGioiThieu());
+        map.put("chuyenKhoa", bs.getChuyenKhoa() == null ? null : chuyenKhoaThanhMap(bs.getChuyenKhoa()));
+        return map;
     }
 }
