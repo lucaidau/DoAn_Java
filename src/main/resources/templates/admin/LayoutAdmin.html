@@ -154,14 +154,16 @@
 
         <!-- Menu Links -->
         <nav id="sidebar-menu" class="px-space-md py-space-xs flex flex-col gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-label-md rounded-xl shadow-sm">
-            <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="dashboard" th:href="@{/admin/taiKhoan}">
-                <span class="material-symbols-outlined text-[20px]">grid_view</span>
-                <span>Dashboard &amp; Tài khoản</span>
-            </a>
             <a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-label-md rounded-xl shadow-sm" data-path="appointments" th:href="@{/admin/dashboard}">
                 <span class="material-symbols-outlined text-[20px]">calendar_month</span>
                 <span>Quản lý Lịch hẹn</span>
             </a>
+
+            <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="dashboard" th:href="@{/admin/taiKhoan}">
+                <span class="material-symbols-outlined text-[20px]">grid_view</span>
+                <span>Dashboard &amp; Tài khoản</span>
+            </a>
+
             <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="doctors" th:href="@{/admin/bacSi}">
                 <span class="material-symbols-outlined text-[20px]">stethoscope</span>
                 <span>Quản lý Bác sĩ</span>
@@ -195,10 +197,12 @@
                 <span class="font-label-sm text-label-sm text-primary font-semibold">Super Admin</span>
             </div>
         </div>
-        <button class="w-full flex items-center justify-center gap-space-xs py-space-xs px-space-sm rounded-lg bg-surface-container text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-colors font-label-sm text-label-sm">
-            <span class="material-symbols-outlined text-[16px]">logout</span>
-            <span>Đăng xuất</span>
-        </button>
+        <form th:action="@{/logout}" method="post" class="w-full">
+            <button type="submit" class="w-full flex items-center justify-center gap-space-xs py-space-xs px-space-sm rounded-lg bg-surface-container text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-colors font-label-sm text-label-sm">
+                <span class="material-symbols-outlined text-[16px]">logout</span>
+                <span>Đăng xuất</span>
+            </button>
+        </form>
     </div>
 </aside>
 
