@@ -348,10 +348,19 @@
   </footer>
 
 
-  <script>
+  <script th:inline="javascript">
+    window.specialtyPageData = {
+      chuyenKhoas: /*[[${chuyenKhoas}]]*/ [],
+      thongKeChuyenKhoa: /*[[${thongKeChuyenKhoa}]]*/ {},
+      soBacSiHocHam: /*[[${soBacSiHocHam}]]*/ 0
+    };
+  </script>
+  <script th:inline="none">
     (() => {
-      // Neu mo bang file:// hoac Live Server (port khac), dat window.API_BASE = "http://localhost:8080" truoc script nay.
-      const API_BASE = window.API_BASE ?? (location.protocol === "file:" ? "http://localhost:8080" : "");
+      const pageData = window.specialtyPageData;
+      const specialties = pageData.chuyenKhoas;
+      const stats = pageData.thongKeChuyenKhoa;
+      const academicCount = pageData.soBacSiHocHam;
       const $ = (s, p = document) => p.querySelector(s);
       const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
       const fmt = (n) => Number(n ?? 0).toLocaleString("vi-VN");
@@ -359,29 +368,24 @@
       const pick = (o, ...keys) => { for (const k of keys) if (o?.[k] != null && o[k] !== "") return o[k]; return ""; };
       const noMark = (s) => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").toLowerCase();
       const fullName = (d) => [d?.hocHamHocVi, d?.hoTen].filter(Boolean).join(" ");
-      const ROUTES = { "trang-chu": "/TrangChuBenhNhan.html", "chuyen-khoa": "/DanhSachChuyenKhoa.html", "bac-si": "/DanhSachBacSi.html", "dat-lich-kham": "/DanhSachBacSi.html" };
-
+      const ROUTES = {
+        "trang-chu": "/patient/dashboard",
+        "chuyen-khoa": "/patient/specialties",
+        "bac-si": "/patient/doctors",
+        "dat-lich-kham": "/lichhen/tao",
+        "lich-hen-cua-toi": "/patient/appointments"
+      };
       document.querySelectorAll("[data-path]").forEach(a => a.setAttribute("href", ROUTES[a.dataset.path] || "#"));
       $("header input[type=text]")?.addEventListener("keydown", e => {
         if (e.key === "Enter" && e.target.value.trim()) location.href = ROUTES["bac-si"] + "?keyword=" + encodeURIComponent(e.target.value.trim());
       });
 
-      async function getJson(path) {
-        const res = await fetch(API_BASE + path);
-        if (!res.ok) throw new Error("HTTP " + res.status + " khi goi " + path);
-        return res.json();
-      }
-
-      const errorBox = (msg) => `<div class="col-span-full p-space-lg rounded-xl bg-error-container text-on-error-container font-body-md">
-      Không tải được dữ liệu từ máy chủ. Hãy kiểm tra Spring Boot đang chạy và kết nối SQL Server.<br>
-      <span class="font-body-sm opacity-80">${esc(msg)}</span></div>`;
       const emptyBox = (msg, extra = "") => `<div class="col-span-full p-space-lg rounded-xl bg-surface-container-lowest text-on-surface-variant text-center font-body-md">${esc(msg)}${extra}</div>`;
-      const loadingBox = `<div class="col-span-full p-space-lg text-center text-on-surface-variant font-body-md">Đang tải dữ liệu...</div>`;
 
       // Bieu tuong theo ten chuyen khoa (giu dung bo icon cua thiet ke goc)
       function iconFor(name) {
         const n = noMark(name);
-        const map = [["tim mach", "cardiology"], ["rang", "dentistry"], ["mat", "visibility"], ["tai mui", "hearing"], ["nhi", "child_care"],
+        const map = [ ["tim mach", "cardiology"], ["rang", "dentistry"], ["mat", "visibility"], ["tai mui", "hearing"], ["nhi", "child_care"],
         ["xuong", "personal_injury"], ["da lieu", "spa"], ["than kinh", "psychology"], ["noi", "stethoscope"], ["san", "pregnant_woman"],
         ["ung buou", "oncology"], ["tieu hoa", "gastroenterology"], ["phoi", "pulmonology"], ["hinh anh", "radiology"]];
         return (map.find(([k]) => n.includes(k)) || [0, "medical_services"])[1];
@@ -400,7 +404,7 @@
 
 
       const SIZE = 8;
-      const state = { page: 0, seq: 0 };
+      const state = { page: 0 };
       const el = {
         grid: $("#specialtyGrid"), pager: $("#specialtyPagination"), search: $("#specialtySearchInput"), sort: $("#specialtySort"),
         clear: $("#clearSearchBtn"), shown: $("#shownCount"), total: $("#totalCount"), totalSpec: $("#totalSpecialties"), pillAll: $("#pillAll"), academics: $("#totalAcademics")
@@ -411,74 +415,44 @@
         ["bg-primary-fixed/40", "bg-primary-fixed text-on-primary-fixed"], ["bg-tertiary-fixed/40", "bg-tertiary-fixed text-on-tertiary-fixed"],
         ["bg-secondary-fixed/50", "bg-secondary-fixed text-on-secondary-fixed-variant"], ["bg-primary-fixed-dim/40", "bg-primary-fixed-dim text-on-primary-fixed-variant"],
         ["bg-secondary-container/30", "bg-secondary-container text-on-secondary-container"], ["bg-tertiary-container/20", "bg-tertiary-fixed-dim text-on-tertiary-fixed"]];
-      let stats = {}, timer;
+      let timer;
 
-      // Xử lý sự kiện click cho các nút Nhóm khoa
-      document.querySelectorAll('.filter-pill').forEach(btn => {
-        btn.disabled = false; // Đảm bảo nút bấm được
-        btn.classList.remove("opacity-50", "cursor-not-allowed");
+      function loadFilterButtons() {
+        const container = document.getElementById("filterPillContainer");
 
-        btn.addEventListener('click', function () {
-          // 1. Đổi màu nút (UX)
-          document.querySelectorAll('.filter-pill').forEach(b => {
-            b.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm', 'active');
-            b.classList.add('bg-surface-container-low', 'text-on-surface-variant');
-          });
-          this.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
-          this.classList.add('bg-primary', 'text-on-primary', 'shadow-sm', 'active');
+        // Duyệt qua từng khoa trong DB để tạo nút
+        specialties.forEach(khoa => {
+          const btn = document.createElement("button");
+          btn.className = "filter-pill px-space-md py-space-xs rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all";
+          btn.textContent = khoa.tenChuyenKhoa; // Lấy tên khoa từ DB (VD: Khoa Tim Mạch)
+          btn.dataset.keyword = khoa.tenChuyenKhoa; // Lưu tên khoa làm từ khóa tìm kiếm
 
-
-          // 3. Đưa từ khóa vào ô Search ngầm và gọi API tải lại dữ liệu
-          el.search.value = searchKeyword;
-          state.page = 0; // Đưa về trang đầu tiên
-          load(); // Gọi lại hàm load() đã có sẵn để gọi Backend
+          container.appendChild(btn);
         });
-      });
-      async function loadFilterButtons() {
-        try {
-          // Gọi API lấy danh sách chuyên khoa từ Database (Lấy tối đa 20 khoa làm nút)
-          const data = await getJson("/api/specialties?page=0&size=20");
-          const specialties = listOf(data);
-          const container = document.getElementById("filterPillContainer");
 
-          // Duyệt qua từng khoa trong DB để tạo nút
-          specialties.forEach(khoa => {
-            const btn = document.createElement("button");
-            btn.className = "filter-pill px-space-md py-space-xs rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all";
-            btn.textContent = khoa.tenChuyenKhoa; // Lấy tên khoa từ DB (VD: Khoa Tim Mạch)
-            btn.dataset.keyword = khoa.tenChuyenKhoa; // Lưu tên khoa làm từ khóa tìm kiếm
-
-            container.appendChild(btn);
-          });
-
-          // Gắn sự kiện Click cho TẤT CẢ các nút vừa được tạo
-          document.querySelectorAll("#filterPillContainer .filter-pill").forEach(btn => {
-            btn.addEventListener("click", function () {
-              // 1. Hiệu ứng đổi màu nút
-              document.querySelectorAll("#filterPillContainer .filter-pill").forEach(b => {
-                b.classList.remove("bg-primary", "text-on-primary", "shadow-sm", "active");
-                b.classList.add("bg-surface-container-low", "text-on-surface-variant");
-              });
-              this.classList.remove("bg-surface-container-low", "text-on-surface-variant");
-              this.classList.add("bg-primary", "text-on-primary", "shadow-sm", "active");
-
-              // 2. Tự động điền từ khóa vào ô tìm kiếm ẩn và đẩy xuống API
-              el.search.value = this.dataset.keyword;
-              state.page = 0; // Trả về trang 1
-              load(); // Cập nhật lại giao diện danh sách
+        // Gắn sự kiện Click cho TẤT CẢ các nút vừa được tạo
+        document.querySelectorAll("#filterPillContainer .filter-pill").forEach(btn => {
+          btn.addEventListener("click", function () {
+            // 1. Hiệu ứng đổi màu nút
+            document.querySelectorAll("#filterPillContainer .filter-pill").forEach(b => {
+              b.classList.remove("bg-primary", "text-on-primary", "shadow-sm", "active");
+              b.classList.add("bg-surface-container-low", "text-on-surface-variant");
             });
-          });
+            this.classList.remove("bg-surface-container-low", "text-on-surface-variant");
+            this.classList.add("bg-primary", "text-on-primary", "shadow-sm", "active");
 
-        } catch (e) {
-          console.error("Lỗi tải danh sách nút lọc:", e);
-        }
+            el.search.value = this.dataset.keyword;
+            state.page = 0;
+            load();
+          });
+        });
       }
 
-      
-      function card(s) {
-        const [blob, box] = COLORS[(Number(s.id) - 1 + 8) % 8] || COLORS[0];
-        const st = stats[s.id], lead = st?.bacSiPhuTrach;
-        return `
+    function card(s) {
+      const colors = COLORS[(Number(s.id) - 1 + 8) % 8] || COLORS[0];
+      const blob = colors[0], box = colors[1];
+      const st = stats[s.id], lead = st?.bacSiPhuTrach;
+      return `
             <article class="group bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
               <div class="absolute -right-6 -top-6 w-24 h-24 ${blob} rounded-full blur-xl group-hover:scale-125 transition-transform pointer-events-none"></div>
               <div class="flex flex-col">
@@ -514,67 +488,62 @@
                 </a>
               </div>
             </article>`;
-      }
+    }
 
-      function renderPager(cur, pages) {
-        if (pages <= 1) { el.pager.innerHTML = ""; return; }
-        const num = (p) => p === cur
-          ? `<button type="button" data-page="${p}" class="w-10 h-10 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold flex items-center justify-center shadow-sm">${p + 1}</button>`
-          : `<button type="button" data-page="${p}" class="w-10 h-10 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center transition-colors">${p + 1}</button>`;
-        const show = [...new Set([0, pages - 1, cur - 1, cur, cur + 1].filter(p => p >= 0 && p < pages))].sort((a, b) => a - b);
-        let nums = "";
-        show.forEach((p, i) => { if (i && p - show[i - 1] > 1) nums += `<span class="w-8 text-center text-outline font-label-sm">...</span>`; nums += num(p); });
-        const prevOff = cur === 0, nextOff = cur >= pages - 1;
-        el.pager.innerHTML = `
+    function renderPager(cur, pages) {
+      if (pages <= 1) { el.pager.innerHTML = ""; return; }
+      const num = (p) => p === cur
+        ? `<button type="button" data-page="${p}" class="w-10 h-10 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold flex items-center justify-center shadow-sm">${p + 1}</button>`
+        : `<button type="button" data-page="${p}" class="w-10 h-10 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center transition-colors">${p + 1}</button>`;
+      const show = [...new Set([0, pages - 1, cur - 1, cur, cur + 1].filter(p => p >= 0 && p < pages))].sort((a, b) => a - b);
+      let nums = "";
+      show.forEach((p, i) => { if (i && p - show[i - 1] > 1) nums += `<span class="w-8 text-center text-outline font-label-sm">...</span>`; nums += num(p); });
+      const prevOff = cur === 0, nextOff = cur >= pages - 1;
+      el.pager.innerHTML = `
       <button type="button" data-page="${cur - 1}" ${prevOff ? "disabled" : ""} class="px-space-md py-space-sm rounded-lg ${prevOff ? "bg-surface-container-low text-outline font-label-md text-label-md cursor-not-allowed opacity-60" : "bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors"} flex items-center gap-1">
         <span class="material-symbols-outlined text-[18px]">arrow_back</span><span>Trước</span></button>
       <div class="flex items-center gap-1">${nums}</div>
       <button type="button" data-page="${cur + 1}" ${nextOff ? "disabled" : ""} class="px-space-md py-space-sm rounded-lg ${nextOff ? "bg-surface-container-low text-outline font-label-md text-label-md cursor-not-allowed opacity-60" : "bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors"} flex items-center gap-1">
         <span>Tiếp theo</span><span class="material-symbols-outlined text-[18px]">arrow_forward</span></button>`;
-      }
+    }
 
-      async function load() {
-        const my = ++state.seq;
-        const p = new URLSearchParams({ page: state.page, size: SIZE, sort: el.sort.value });
-        const keyword = el.search.value.trim();
-        if (keyword) p.set("keyword", keyword);
-        el.grid.innerHTML = loadingBox;
-        try {
-          const data = await getJson("/api/specialties?" + p);
-          if (my !== state.seq) return;
-          const items = listOf(data), total = data.totalElements ?? items.length;
-          el.grid.innerHTML = items.length ? items.map(card).join("") : emptyBox("Không tìm thấy chuyên khoa phù hợp.");
-          el.shown.textContent = items.length; el.total.textContent = fmt(total);
-          if (!keyword) { el.totalSpec.textContent = fmt(total); el.pillAll.textContent = fmt(total); }
-          renderPager(data.number ?? 0, data.totalPages ?? 1);
-        } catch (e) {
-          if (my !== state.seq) return;
-          console.error("Không tải được chuyên khoa:", e);
-          el.grid.innerHTML = errorBox(e.message); el.pager.innerHTML = "";
-        }
-      }
-      const reload = () => { state.page = 0; load(); };
-
-      el.search.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(reload, 300); });
-      el.sort.addEventListener("change", reload);
-      el.clear.addEventListener("click", () => setTimeout(reload, 0));
-      el.pager.addEventListener("click", e => {
-        const b = e.target.closest("button[data-page]");
-        if (!b || b.disabled) return;
-        state.page = Number(b.dataset.page); load(); el.grid.scrollIntoView({ behavior: "smooth", block: "start" });
+    function load() {
+      const keyword = noMark(el.search.value.trim());
+      const filtered = specialties.filter(specialty =>
+        !keyword || noMark(specialty.tenChuyenKhoa).includes(keyword));
+      filtered.sort((a, b) => {
+        const order = String(a.tenChuyenKhoa).localeCompare(String(b.tenChuyenKhoa), "vi");
+        return el.sort.value === "alpha-desc" ? -order : order;
       });
 
-      async function init() {
-        getJson("/api/doctors?academic=gs-pgs&academic=ts&page=0&size=1")
-          .then(d => { el.academics.textContent = fmt(d.totalElements ?? 0); })
-          .catch(() => { el.academics.textContent = "–"; });
-        try { stats = await getJson("/api/specialties/summary"); } catch (e) { console.error("Không tải được thống kê chuyên khoa:", e); }
-        
-        await loadFilterButtons();
-        load();
+      const total = filtered.length;
+      const pages = Math.max(1, Math.ceil(total / SIZE));
+      state.page = Math.min(state.page, pages - 1);
+      const items = filtered.slice(state.page * SIZE, (state.page + 1) * SIZE);
+      el.grid.innerHTML = items.length ? items.map(card).join("") : emptyBox("Không tìm thấy chuyên khoa phù hợp.");
+      el.shown.textContent = items.length;
+      el.total.textContent = fmt(total);
+      if (!keyword) {
+        el.totalSpec.textContent = fmt(specialties.length);
+        el.pillAll.textContent = fmt(specialties.length);
       }
-      init();
-    })();
+      renderPager(state.page, pages);
+    }
+    const reload = () => { state.page = 0; load(); };
+
+    el.search.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(reload, 300); });
+    el.sort.addEventListener("change", reload);
+    el.clear.addEventListener("click", () => setTimeout(reload, 0));
+    el.pager.addEventListener("click", e => {
+      const b = e.target.closest("button[data-page]");
+      if (!b || b.disabled) return;
+      state.page = Number(b.dataset.page); load(); el.grid.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    el.academics.textContent = fmt(academicCount);
+    loadFilterButtons();
+    load();
+    }) ();
 
   </script>
 
