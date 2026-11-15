@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CareHealth - Tạo lịch hẹn</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg sticky-top mb-4 no-print">
+    <div class="container-fluid px-4 d-flex flex-wrap gap-3">
+        <a class="navbar-brand brand-mark" th:href="@{/lichhen}">
+            ✚ CareHealth
+        </a>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-primary btn-sm" th:href="@{/lichhen}">
+                Lịch hẹn
+            </a>
+            <a class="btn btn-outline-primary btn-sm" th:href="@{/lichhen/tao}">
+                Tiếp nhận
+            </a>
+            <a class="btn btn-outline-primary btn-sm" th:href="@{/catruc}">
+                Ca trực
+            </a>
+            <a class="btn btn-outline-primary btn-sm" th:href="@{/thongbao}">
+                Thông báo
+            </a>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid px-4 pb-5">
+    <div th:if="${thanhCong}" class="alert alert-success" th:text="${thanhCong}"></div>
+    <div th:if="${loi}" class="alert alert-danger" th:text="${loi}"></div>
+    <h2 class="page-title mb-4">
+        Tiếp nhận bệnh nhân - Tạo lịch hẹn
+    </h2>
+    <div class="card">
+        <div class="card-body">
+            <!-- -- Form chọn bác sĩ để lọc ca khám -- -->
+            <form method="get" th:action="@{/lichhen/tao}" class="row g-3 mb-3">
+                <div class="col-md-8">
+                    <label class="field-label">
+                        Chọn bác sĩ để lọc ca khám
+                    </label>
+                    <select name="bacSiId" class="form-select" required>
+                        <option value="">Chọn bác sĩ</option>
+                        <option
+                                th:each="bs : ${bacSis}"
+                                th:value="${bs.id}"
+                                th:text="${bs.hoTen + ' - ' + bs.chuyenKhoa.tenChuyenKhoa}"
+                                th:selected="${bacSiId != null and bacSiId == bs.id}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button class="btn btn-outline-primary w-100" type="submit">
+                        Hiển thị ca khám của bác sĩ
+                    </button>
+                </div>
+            </form>
+            <!-- -- Form nhập thông tin lịch hẹn -- -->
+            <form method="post" th:action="@{/lichhen/tao}" class="row g-3">
+                <div class="col-md-6">
+                    <label class="field-label">Bệnh nhân</label>
+                    <select name="benhNhanId" class="form-select" required>
+                        <option value="">Chọn bệnh nhân</option>
+                        <option
+                                th:each="bn : ${benhNhans}"
+                                th:value="${bn.id}"
+                                th:text="${bn.hoTen}">
+                        </option>
+                    </select>
+                </div>
+                <input type="hidden" name="bacSiId" th:value="${bacSiId}">
+                <div class="col-md-6">
+                    <label class="field-label">Bác sĩ đã chọn</label>
+                    <input
+                            class="form-control"
+                            readonly
+                            th:value="${tenBacSiDaChon}">
+                </div>
+                <div class="col-md-6">
+                    <label class="field-label">Ca làm việc</label>
+                    <select name="caId" class="form-select" required>
+                        <option value="">
+                            Chọn ca phù hợp với bác sĩ và ngày khám
+                        </option>
+                        <option
+                                th:each="ca : ${caKhams}"
+                                th:value="${ca.id}"
+                                th:text="${ca.id + ' - ' + ca.bacSi.hoTen + ' - ' + ca.ngayLamViec + ' - ' + ca.tenCa}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="field-label">Ngày khám</label>
+                    <input
+                            type="date"
+                            name="ngay"
+                            class="form-control"
+                            required>
+                </div>
+                <div class="col-md-3">
+                    <label class="field-label">Khung giờ</label>
+                    <input
+                            name="gio"
+                            class="form-control"
+                            placeholder="08:00 - 08:30"
+                            required>
+                </div>
+                <div class="col-12">
+                    <label class="field-label">Triệu chứng</label>
+                    <textarea
+                            name="trieuChung"
+                            class="form-control"
+                            rows="3"></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label class="field-label">Phòng khám & khu vực</label>
+                    <select name="phongId" class="form-select" required>
+                        <option value="">Chọn phòng khám</option>
+                        <option
+                                th:each="p : ${phongKhams}"
+                                th:value="${p.id}"
+                                th:text="${p.tenPhong + ' - ' + p.khuVuc}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="field-label">Dịch vụ & biểu phí khám</label>
+                    <select name="dichVuId" class="form-select" required>
+                        <option value="">Chọn dịch vụ</option>
+                        <option
+                                th:each="d : ${dichVuKhams}"
+                                th:value="${d.id}"
+                                th:text="${d.tenDichVu + ' - ' + d.giaKham + ' đ'}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label class="field-label">Ghi chú tiếp nhận</label>
+                    <textarea
+                            name="ghiChu"
+                            class="form-control"
+                            rows="2"></textarea>
+                </div>
+                <!-- -- Nhập sinh hiệu tại bàn tiếp đón -- -->
+                <div class="col-12">
+                    <h5>Sinh hiệu tại bàn tiếp đón</h5>
+                </div>
+                <div class="col-md-2">
+                    <label class="field-label">Huyết áp tâm thu</label>
+                    <input
+                            name="tamThu"
+                            type="number"
+                            min="1"
+                            class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label class="field-label">Huyết áp tâm trương</label>
+                    <input
+                            name="tamTruong"
+                            type="number"
+                            min="1"
+                            class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label class="field-label">Nhịp tim</label>
+                    <input
+                            name="nhipTim"
+                            type="number"
+                            min="1"
+                            class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label class="field-label">SpO2 (%)</label>
+                    <input
+                            name="spo2"
+                            type="number"
+                            min="0"
+                            max="100"
+                            class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label class="field-label">Cân nặng (kg)</label>
+                    <input
+                            name="canNang"
+                            type="number"
+                            step="0.01"
+                            min="0.01"
+                            class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label class="field-label">Chiều cao (cm)</label>
+                    <input
+                            name="chieuCao"
+                            type="number"
+                            step="0.01"
+                            min="0.01"
+                            class="form-control">
+                </div>
+                <!-- -- Nhập thông tin tiền sử của bệnh nhân -- -->
+                <div class="col-md-4">
+                    <label class="field-label">Tiền sử bệnh</label>
+                    <textarea
+                            name="tienSu"
+                            class="form-control"
+                            rows="2"></textarea>
+                </div>
+                <div class="col-md-4">
+                    <label class="field-label">Tiền sử gia đình</label>
+                    <textarea
+                            name="giaDinh"
+                            class="form-control"
+                            rows="2"></textarea>
+                </div>
+                <div class="col-md-4">
+                    <label class="field-label">Thói quen sinh hoạt</label>
+                    <textarea
+                            name="thoiQuen"
+                            class="form-control"
+                            rows="2"></textarea>
+                </div>
+                <!-- -- Nút lưu lịch hẹn và hủy -- -->
+                <div class="col-12">
+                    <button
+                            class="btn btn-primary"
+                            th:disabled="${bacSiId == null or #lists.isEmpty(caKhams)}">
+                        Lưu lịch hẹn
+                    </button>
+                    <a
+                            class="btn btn-outline-secondary ms-2"
+                            th:href="@{/lichhen}">
+                        Hủy
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

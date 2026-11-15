@@ -1,5 +1,6 @@
-package vn.carehealth.config;
+package com.example.doanjava.config;
 
+import com.example.doanjava.service.TaiKhoanDangNhapService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -9,18 +10,20 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import vn.carehealth.service.TaiKhoanDangNhapService;
+
 
 @Configuration
 public class CauHinhBaoMat {
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
+//        return new BCryptPasswordEncoder(12);
+        return NoOpPasswordEncoder.getInstance();
     }
 
     @Bean

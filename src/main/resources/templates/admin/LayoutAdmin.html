@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="shell-type" content="web_dashboard">
+    <title>Quản Trị Hệ Thống - CareHealth</title>
+
+    <!-- Google Fonts & Material Symbols -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap">
+
+    <style>
+        @layer base {
+            html, body {
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                overscroll-behavior: none;
+            }
+            main > :first-child {
+                margin-top: 0 !important;
+            }
+            main > :last-child {
+                margin-bottom: 0 !important;
+            }
+        }
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+
+    <!-- Tailwind CSS & Custom Config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-fixed": "#dbe1ff",
+                        "surface-container-lowest": "#ffffff",
+                        "status-cancelled": "#F43F5E",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-tertiary-container": "#ffede6",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "on-secondary-fixed": "#00201d",
+                        "surface-tint": "#0053db",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#eeefff",
+                        "on-tertiary-fixed": "#360f00",
+                        "on-primary-fixed": "#00174b",
+                        "inverse-on-surface": "#f0f1f2",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "tertiary-container": "#bc4800",
+                        "status-completed": "#2563EB",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#89f5e7",
+                        "surface-container-high": "#e7e8e9",
+                        "tertiary": "#943700",
+                        "background": "#f8f9fa",
+                        "surface-bright": "#f8f9fa",
+                        "surface": "#f8f9fa",
+                        "on-surface": "#191c1d",
+                        "status-confirmed": "#10B981",
+                        "surface-container-low": "#f3f4f5",
+                        "inverse-primary": "#b4c5ff",
+                        "outline-variant": "#c3c6d7",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "surface-container-highest": "#e1e3e4",
+                        "secondary-container": "#86f2e4",
+                        "secondary": "#006a61",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#2e3132",
+                        "primary": "#004ac6",
+                        "status-pending": "#F59E0B",
+                        "tertiary-fixed": "#ffdbcd",
+                        "on-background": "#191c1d",
+                        "surface-container": "#edeeef",
+                        "on-secondary-container": "#006f66",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "outline": "#737686",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d9dadb",
+                        "surface-variant": "#e1e3e4",
+                        "error": "#ba1a1a",
+                        "on-surface-variant": "#434655",
+                        "primary-container": "#2563eb"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "gutter": "1.5rem",
+                        "space-sm": "0.5rem",
+                        "space-md": "1rem",
+                        "space-lg": "1.5rem",
+                        "space-xl": "2.5rem",
+                        "margin": "2rem",
+                        "space-xs": "0.25rem"
+                    },
+                    fontFamily: {
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    fontSize: {
+                        "label-md": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+                        "body-sm": ["12px", { lineHeight: "16px", fontWeight: "400" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "700" }],
+                        "headline-sm": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between">
+    <div class="flex flex-col">
+        <!-- Brand Header -->
+        <div class="p-space-lg flex items-center gap-space-sm bg-surface-container-lowest">
+            <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-sm">
+                <span class="material-symbols-outlined text-[24px]">local_hospital</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="font-headline-sm text-headline-sm text-primary tracking-tight">CareHealth</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">Cổng Quản Trị Hệ Thống</span>
+            </div>
+        </div>
+
+        <!-- Section Label -->
+        <div class="px-space-md py-space-xs">
+            <span class="px-space-sm font-label-sm text-label-sm text-outline uppercase tracking-wider">Quản trị hệ thống</span>
+        </div>
+
+        <!-- Menu Links -->
+        <nav id="sidebar-menu" class="px-space-md py-space-xs flex flex-col gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-label-md rounded-xl shadow-sm">
+            <a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-label-md rounded-xl shadow-sm" data-path="appointments" th:href="@{/admin/dashboard}">
+                <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                <span>Quản lý Lịch hẹn</span>
+            </a>
+
+            <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="dashboard" th:href="@{/admin/taiKhoan}">
+                <span class="material-symbols-outlined text-[20px]">grid_view</span>
+                <span>Dashboard &amp; Tài khoản</span>
+            </a>
+
+            <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="doctors" th:href="@{/admin/bacSi}">
+                <span class="material-symbols-outlined text-[20px]">stethoscope</span>
+                <span>Quản lý Bác sĩ</span>
+            </a>
+            <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="specialties" th:href="@{/admin/chuyenKhoa}">
+                <span class="material-symbols-outlined text-[20px]">medical_services</span>
+                <span>Quản lý Chuyên khoa</span>
+            </a>
+<!--            <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="reports" href="#">-->
+<!--                <span class="material-symbols-outlined text-[20px]">bar_chart</span>-->
+<!--                <span>Báo cáo &amp; Thống kê</span>-->
+<!--            </a>-->
+            <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="settings" href="#">
+                <span class="material-symbols-outlined text-[20px]">settings</span>
+                <span>Cài đặt Hệ thống</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- User Profile & Logout Footer -->
+    <div class="p-space-md m-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-sm">
+        <div class="flex items-center gap-space-sm">
+            <div class="relative">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-on-primary text-[20px]">person</span>
+                </div>
+                <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-status-confirmed rounded-full ring-2 ring-surface-container-lowest"></span>
+            </div>
+            <div class="flex flex-col min-w-0 flex-1">
+                <span class="font-label-md text-label-md text-on-surface truncate">Nguyễn Trọng Trí</span>
+                <span class="font-label-sm text-label-sm text-primary font-semibold">Super Admin</span>
+            </div>
+        </div>
+        <form th:action="@{/logout}" method="post" class="w-full">
+            <button type="submit" class="w-full flex items-center justify-center gap-space-xs py-space-xs px-space-sm rounded-lg bg-surface-container text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-colors font-label-sm text-label-sm">
+                <span class="material-symbols-outlined text-[16px]">logout</span>
+                <span>Đăng xuất</span>
+            </button>
+        </form>
+    </div>
+</aside>
+
+<!-- Main Layout Wrapper -->
+<div class="pl-72">
+    <!-- Top Header -->
+    <header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg">
+        <!-- Global Search -->
+        <div class="flex items-center w-full max-w-lg">
+            <div class="relative w-full flex items-center bg-surface-container-low rounded-xl px-space-md py-space-xs">
+                <span class="material-symbols-outlined text-outline text-[20px] mr-space-sm">search</span>
+                <input class="w-full bg-transparent border-0 outline-none font-body-md text-body-md text-on-surface placeholder:text-outline"
+                       placeholder="Tìm kiếm tài khoản, bác sĩ, bệnh nhân, mã lịch hẹn..."
+                       type="text">
+            </div>
+        </div>
+
+        <!-- Right Header Controls -->
+        <div class="flex items-center gap-space-md">
+            <button class="relative p-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined text-[22px]">notifications</span>
+                <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full ring-2 ring-surface-container-lowest"></span>
+            </button>
+
+
+        </div>
+    </header>
+
+    <main class="w-full pt-16 bg-surface min-h-screen px-space-lg py-space-lg">
+        <div th:replace="${content}"></div>
+    </main>
+
+</div>
+
+<!-- Modal Overlay (Làm mờ nền phía sau) -->
+<div id="addDoctorModal" style="display: none" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 overflow-y-auto">
+
+    <!-- Modal Container -->
+    <div class="bg-surface-container-lowest w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-8 max-h-[90vh]">
+
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between px-space-lg py-space-md border-b border-surface-container-low shrink-0 bg-surface-container-lowest">
+            <div class="flex items-center gap-space-sm">
+                <div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center text-primary shrink-0">
+                    <span class="material-symbols-outlined text-[22px]">person_add</span>
+                </div>
+                <div>
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface">Thêm Mới Bác Sĩ Vào Hệ Thống</h2>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Nhập thông tin chuyên môn, chứng chỉ hành nghề và tài khoản đăng nhập cho bác sĩ</p>
+                </div>
+            </div>
+            <button onclick="closeDoctorModal()" class="p-2 rounded-xl text-outline hover:bg-surface-container hover:text-on-surface transition-colors" title="Đóng">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+        </div>
+
+        <!-- Modal Body (Có thanh cuộn dọc) -->
+        <div class="p-space-lg overflow-y-auto flex-1 flex flex-col gap-space-lg">
+
+            <!-- SECTION 1: Thông tin định danh & Cá nhân -->
+            <div class="flex flex-col gap-space-md">
+                <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-full bg-primary-fixed text-primary font-label-sm flex items-center justify-center font-bold">1</span>
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface text-base">Thông tin định danh &amp; Cá nhân</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-space-md">
+                    <!-- Tải ảnh đại diện (Col span 4) -->
+                    <div class="md:col-span-4 flex flex-col items-center justify-center p-space-md bg-surface-container-low rounded-xl border border-dashed border-outline-variant/60">
+                        <div class="w-20 h-20 rounded-full bg-surface-container-highest flex items-center justify-center text-outline mb-space-xs relative overflow-hidden group">
+                            <span class="material-symbols-outlined text-[32px]">add_a_photo</span>
+                            <!-- Overlay khi hover -->
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs font-medium cursor-pointer">Đổi ảnh</div>
+                        </div>
+                        <span class="font-label-sm text-label-sm text-on-surface font-semibold mb-0.5">Tải ảnh đại diện</span>
+                        <span class="font-body-sm text-body-sm text-outline text-center text-[11px]">Chuẩn 500x500px, PNG hoặc JPG tối đa 5MB</span>
+                        <button type="button" class="mt-space-xs px-3 py-1 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-label-sm border border-outline-variant/40 transition-colors shadow-sm">
+                            Chọn tập từ máy
+                        </button>
+                    </div>
+
+                    <!-- Các ô input thông tin cá nhân (Col span 8) -->
+                    <div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+                        <!-- Họ và tên -->
+                        <div class="sm:col-span-2 flex flex-col gap-1">
+                            <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Họ và tên bác sĩ <span class="text-error">*</span></label>
+                            <input type="text" class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Nhập họ và tên bác sĩ" value="">
+                        </div>
+
+                        <!-- Học hàm / Học vị -->
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Học hàm / Học vị <span class="text-error">*</span></label>
+                            <select class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none cursor-pointer">
+                                <option>Bác sĩ CKI</option>
+                                <option selected>Bác sĩ CKII</option>
+                                <option>Thạc sĩ - Bác sĩ</option>
+                                <option>Tiến sĩ - Bác sĩ</option>
+                                <option>PGS.TS - Bác sĩ</option>
+                            </select>
+                        </div>
+
+                        <!-- Số CCCD / Hộ chiếu -->
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Số CCCD / Hộ chiếu <span class="text-error">*</span></label>
+                            <input type="text" class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Nhập CCCD bác sĩ" value="">
+                        </div>
+
+                        <!-- Số điện thoại -->
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Số điện thoại di động <span class="text-error">*</span></label>
+                            <input type="text" class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Nhập số điện thoại bác sĩ" value="">
+                        </div>
+
+                        <!-- Email công vụ -->
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Email công vụ (@carehealth.vn) <span class="text-error">*</span></label>
+                            <input type="email" class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="ten.ho@carehealth.vn" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-surface-container-low">
+
+            <!-- SECTION 2: Thông tin chuyên môn & Công tác -->
+            <div class="flex flex-col gap-space-md">
+                <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-full bg-primary-fixed text-primary font-label-sm flex items-center justify-center font-bold">2</span>
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface text-base">Thông tin chuyên môn &amp; Công tác</h3>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                    <!-- Chuyên khoa trực thuộc -->
+                    <div class="flex flex-col gap-1">
+                        <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Chuyên khoa trực thuộc <span class="text-error">*</span></label>
+                        <select class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none cursor-pointer">
+                            <option selected>Khoa Tim Mạch</option>
+                            <option>Khoa Thần Kinh</option>
+                            <option>Khoa Nhi</option>
+                            <option>Khoa Nha Khoa</option>
+                            <option>Khoa Mắt</option>
+                        </select>
+                    </div>
+
+                    <!-- Số CCHN -->
+                    <div class="flex flex-col gap-1">
+                        <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Số Chứng chỉ hành nghề (CCHN) <span class="text-error">*</span></label>
+                        <input type="text" class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary transition-all" value="002931/BYT-CCHN">
+                    </div>
+
+                    <!-- Phòng khám cố định -->
+                    <div class="flex flex-col gap-1">
+                        <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Phòng khám cố định <span class="text-error">*</span></label>
+                        <input type="text" class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary transition-all" value="Phòng khám 204, Lầu 2, Khu B Chuyên khoa Tim mạch">
+                    </div>
+
+
+
+                    <!-- Lĩnh vực chuyên sâu -->
+                    <div class="sm:col-span-2 flex flex-col gap-1">
+                        <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Lĩnh vực chuyên sâu &amp; Thủ thuật thế mạnh</label>
+                        <div class="flex flex-wrap items-center gap-2 p-2 bg-surface-container-low rounded-xl border border-outline-variant/30">
+                            <!-- Tag 1 -->
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm border border-outline-variant/40">
+                                Can thiệp mạch vành
+                                <button type="button" class="text-outline hover:text-error"><span class="material-symbols-outlined text-[14px]">close</span></button>
+                            </span>
+                            <!-- Tag 2 -->
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm border border-outline-variant/40">
+                                Đặt stent
+                                <button type="button" class="text-outline hover:text-error"><span class="material-symbols-outlined text-[14px]">close</span></button>
+                            </span>
+                            <!-- Tag 3 -->
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm border border-outline-variant/40">
+                                Siêu âm tim Doppler
+                                <button type="button" class="text-outline hover:text-error"><span class="material-symbols-outlined text-[14px]">close</span></button>
+                            </span>
+                            <!-- Input thêm từ khóa -->
+                            <input type="text" placeholder="+ Thêm từ khóa..." class="bg-transparent border-0 outline-none text-body-md text-on-surface placeholder:text-outline px-2 py-1 flex-1 min-w-[140px]">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-surface-container-low">
+
+            <!-- SECTION 3: Cấp tài khoản & Quyền truy cập -->
+            <div class="flex flex-col gap-space-md">
+                <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-full bg-primary-fixed text-primary font-label-sm flex items-center justify-center font-bold">3</span>
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface text-base">Cấp tài khoản &amp; Quyền truy cập</h3>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                    <!-- Tên đăng nhập hệ thống -->
+                    <div class="flex flex-col gap-1">
+                        <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Tên đăng nhập hệ thống</label>
+                        <div class="relative flex items-center">
+                            <input type="text" readonly class="w-full pl-3 pr-9 py-2.5 bg-surface-container rounded-xl font-body-md text-body-md text-on-surface-variant outline-none cursor-not-allowed" placeholder="Email công vụ" value="">
+                            <span class="absolute right-3 material-symbols-outlined text-status-confirmed text-[20px]">check_circle</span>
+                        </div>
+                    </div>
+
+                    <!-- Mật khẩu khởi tạo tạm thời -->
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center justify-between">
+                            <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Mật khẩu khởi tạo tạm thời <span class="text-error">*</span></label>
+                            <button type="button" class="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary hover:underline">
+                                <span class="material-symbols-outlined text-[14px]">auto_fix_high</span> Tạo mật khẩu mạnh
+                            </button>
+                        </div>
+                        <div class="relative flex items-center">
+                            <input type="text" class="w-full pl-3 pr-10 py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary font-mono tracking-wide" value="CareHealth@2026!Med">
+                            <button type="button" class="absolute right-3 text-outline hover:text-on-surface" title="Sao chép mật khẩu">
+                                <span class="material-symbols-outlined text-[18px]">content_copy</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="flex items-center justify-between px-space-lg py-space-md bg-surface-container-low border-t border-surface-container-low shrink-0">
+            <button type="button" onclick="closeDoctorModal()" class="px-space-md py-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-md text-label-md border border-outline-variant/40 transition-colors shadow-sm">
+                Hủy bỏ
+            </button>
+            <div class="flex items-center gap-space-sm">
+                <button type="button" class="px-space-md py-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-md text-label-md border border-outline-variant/40 transition-colors shadow-sm">
+                    Lưu nháp hồ sơ
+                </button>
+                <button type="button" onclick="alert('Đã tạo và cấp tài khoản bác sĩ thành công!'); closeDoctorModal();" class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md shadow-md transition-all">
+                    <span class="material-symbols-outlined text-[18px]">done_all</span>
+                    <span>Xác nhận &amp; Cấp tài khoản Bác sĩ</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ================= MODAL THÊM CHUYÊN KHOA MỚI ================= -->
+<div id="addChuyenKhoaModal" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 overflow-y-auto">
+    <div class="bg-surface-container-lowest w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-8 max-h-[90vh]">
+
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between px-space-lg py-space-md border-b border-surface-container-low shrink-0 bg-surface-container-lowest">
+            <div class="flex items-center gap-space-sm">
+                <div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center text-primary shrink-0">
+                    <span class="material-symbols-outlined text-[22px]">medical_services</span>
+                </div>
+                <div>
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface">Thêm Chuyên Khoa Mới</h2>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Khởi tạo thông tin danh mục chuyên khoa mới</p>
+                </div>
+            </div>
+            <button type="button" onclick="closeChuyenKhoaModal()" class="p-2 rounded-xl text-outline hover:bg-surface-container hover:text-on-surface transition-colors" title="Đóng">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-space-lg overflow-y-auto flex-1 flex flex-col gap-space-md">
+
+            <!-- Row 1: Mã chuyên khoa & Khối chuyên môn -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                <div class="flex flex-col gap-1">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Khối chuyên môn <span class="text-error">*</span></label>
+                    <select class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none cursor-pointer">
+                        <option selected>Khối Ngoại &amp; Phục Hồi Chức Năng</option>
+                        <option>Khối Nội Tổng Quát</option>
+                        <option>Khối Cận Lâm Sàng &amp; Xét Nghiệm</option>
+                        <option>Khối Chuyên Sâu &amp; Kỹ Thuật Cao</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Tên chuyên khoa <span class="text-error">*</span></label>
+                    <input type="text" class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary transition-all" value="Khoa Cơ Xương Khớp &amp; Phục Hồi Chức Năng">
+                </div>
+            </div>
+
+
+            <!-- Row 2: Biểu tượng & Màu nhận diện khoa -->
+            <div class="flex flex-col gap-1">
+                <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Biểu tượng &amp; Màu nhận diện khoa</label>
+                <div class="flex items-center justify-between p-3 bg-surface-container-low rounded-xl border border-outline-variant/30">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-[22px]">accessibility_new</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-label-md text-label-md text-on-surface font-semibold">accessibility_new (Cơ xương khớp)</span>
+                            <span class="font-body-sm text-body-sm text-outline">Định dạng icon Google Material Symbols Y tế</span>
+                        </div>
+                    </div>
+                    <button type="button" class="px-3 py-1.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-label-sm border border-outline-variant/40 transition-colors shadow-sm">
+                        Đổi kiểu tượng
+                    </button>
+                </div>
+            </div>
+
+            <!-- Row 3: Trưởng khoa phụ trách -->
+            <div class="flex flex-col gap-1">
+                <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Trưởng khoa phụ trách</label>
+                <select class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none cursor-pointer">
+                    <option selected>PGS. TS. BS. Nguyễn Tuấn Kiệt</option>
+                    <option>GS. TS. BS. Vũ Đình Khoa</option>
+                    <option>BS. CKII. Nguyễn Minh Quân</option>
+                </select>
+            </div>
+
+            <!-- Row 4: Số phòng khám & Khung giá khám -->
+
+                <div class="flex flex-col gap-1">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Số phòng khám phân bổ ban đầu</label>
+                    <input type="number" class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none" value="6">
+                </div>
+
+            <!-- Mô tả chức năng & nhiệm vụ chuyên môn -->
+            <div class="flex flex-col gap-1">
+                <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Mô tả chức năng &amp; nhiệm vụ chuyên môn</label>
+                <textarea rows="2" class="p-space-md bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none resize-none">Khám, tầm soát và điều trị chuyên sâu các bệnh lý về thoái hóa xương khớp, cột sống, chấn thương thể thao và phục hồi chức năng vận động toàn diện.</textarea>
+            </div>
+
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="flex items-center justify-between px-space-lg py-space-md bg-surface-container-low border-t border-surface-container-low shrink-0">
+            <button onclick="closeChuyenKhoaModal()" type="button" class="px-space-md py-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-md text-label-md border border-outline-variant/40 transition-colors shadow-sm">
+                Hủy bỏ
+            </button>
+            <div class="flex items-center gap-space-sm">
+                <button type="button" class="px-space-md py-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-md text-label-md border border-outline-variant/40 transition-colors shadow-sm">
+                    Lưu bản nháp
+                </button>
+                <button type="button" onclick="alert('Đã khởi tạo chuyên khoa mới thành công!'); closeSpecialtyModal();" class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md shadow-md transition-all">
+                    <span class="material-symbols-outlined text-[18px]">done_all</span>
+                    <span>Lưu &amp; Khởi Tạo Chuyên Khoa</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // 1. Hàm mở/đóng Modal
+    function openDoctorModal() {
+        const modal = document.getElementById('addDoctorModal');
+        if (modal) modal.style.display = 'flex';
+    }
+
+    function closeDoctorModal() {
+        const modal = document.getElementById('addDoctorModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    // 2. Tự động chuyển nền xanh (Active) cho Sidebar dựa theo URL hiện tại
+    document.addEventListener("DOMContentLoaded", function () {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll("#sidebar-menu a");
+
+        navLinks.forEach(link => {
+            const href = link.getAttribute("href");
+            // Kiểm tra nếu đường dẫn trong href khớp với URL hiện tại của trang
+            if (href && currentPath.includes(href)) {
+                // Xóa style mặc định không active
+                link.className = "flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-label-md rounded-xl shadow-sm";
+            } else {
+                // Style cho các tab không được chọn
+                link.className = "flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all";
+            }
+        });
+    });
+
+    function openChuyenKhoaModal() {
+        const modal = document.getElementById('addChuyenKhoaModal');
+        if (modal) modal.style.display = 'flex';
+    }
+
+    function closeChuyenKhoaModal() {
+        const modal = document.getElementById('addChuyenKhoaModal');
+        if (modal) modal.style.display = 'none';
+    }
+</script>
+</body>
+</html>
