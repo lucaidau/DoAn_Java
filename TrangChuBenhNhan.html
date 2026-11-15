@@ -51,7 +51,8 @@
           data-path="trang-chu" href="#">
           <div
             class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary shadow-sm">
-            <span class="material-symbols-outlined text-[24px]">local_hospital</span></div>
+            <span class="material-symbols-outlined text-[24px]">local_hospital</span>
+          </div>
           <div class="flex flex-col"><span
               class="font-headline-sm text-headline-sm text-primary tracking-tight">CareHealth</span><span
               class="font-label-sm text-label-sm text-secondary -mt-1">Y tế thông minh</span></div>
@@ -108,21 +109,25 @@
                 chóng &amp; tiện lợi</span>
             </h1>
             <p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mb-space-xl leading-relaxed">
-              Kết nối trực tiếp <strong data-stat="soBacSi">–</strong> bác sĩ đầu ngành và bệnh viện tuyến trung ương. Đặt lịch chỉ với vài thao tác,
+              Kết nối trực tiếp <strong data-stat="soBacSi">–</strong> bác sĩ đầu ngành và bệnh viện tuyến trung ương.
+              Đặt lịch chỉ với vài thao tác,
               giảm 100% thời gian chờ đợi tại cơ sở khám bệnh.
             </p>
             <!-- Trust Badges Metrics Bento -->
             <div class="grid grid-cols-3 gap-space-md w-full max-w-lg mb-space-xl">
               <div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm">
-                <span class="font-headline-md text-headline-md text-primary font-bold block" data-stat="soBenhNhan">–</span>
+                <span class="font-headline-md text-headline-md text-primary font-bold block"
+                  data-stat="soBenhNhan">–</span>
                 <span class="font-body-sm text-body-sm text-on-surface-variant">Bệnh nhân tin chọn</span>
               </div>
               <div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm">
-                <span class="font-headline-md text-headline-md text-secondary font-bold block" data-stat="soBacSi">–</span>
+                <span class="font-headline-md text-headline-md text-secondary font-bold block"
+                  data-stat="soBacSi">–</span>
                 <span class="font-body-sm text-body-sm text-on-surface-variant">Bác sĩ uy tín</span>
               </div>
               <div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm">
-                <span class="font-headline-md text-headline-md text-tertiary-container font-bold block" data-stat="soChuyenKhoa">–</span>
+                <span class="font-headline-md text-headline-md text-tertiary-container font-bold block"
+                  data-stat="soChuyenKhoa">–</span>
                 <span class="font-body-sm text-body-sm text-on-surface-variant">Chuyên khoa</span>
               </div>
             </div>
@@ -237,7 +242,7 @@
               class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
           </a>
         </div>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-lg" id="featured-specialties"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-lg" id="featured-specialties"></div>
       </section>
       <!-- Featured Doctors Section -->
       <section class="w-full bg-surface-container-low py-space-xl lg:py-24">
@@ -260,7 +265,7 @@
                 class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </a>
           </div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg" id="featured-doctors"></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg" id="featured-doctors"></div>
         </div>
       </section>
       <!-- Why Choose Us Section -->
@@ -488,71 +493,72 @@
   </footer>
 
 
-<script>
-(() => {
-  // Neu mo bang file:// hoac Live Server (port khac), dat window.API_BASE = "http://localhost:8080" truoc script nay.
-  const API_BASE = window.API_BASE ?? (location.protocol === "file:" ? "http://localhost:8080" : "");
-  const $ = (s, p = document) => p.querySelector(s);
-  const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const fmt = (n) => Number(n ?? 0).toLocaleString("vi-VN");
-  const listOf = (d) => Array.isArray(d) ? d : (d?.content || []);
-  const pick = (o, ...keys) => { for (const k of keys) if (o?.[k] != null && o[k] !== "") return o[k]; return ""; };
-  const noMark = (s) => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").toLowerCase();
-  const fullName = (d) => [d?.hocHamHocVi, d?.hoTen].filter(Boolean).join(" ");
-  const ROUTES = { "trang-chu": "/TrangChuBenhNhan.html", "chuyen-khoa": "/DanhSachChuyenKhoa.html", "bac-si": "/DanhSachBacSi.html", "dat-lich-kham": "/DanhSachBacSi.html" };
+  <script th:inline="javascript">
+    window.homePageData = {
+      thongKe: /*[[${thongKe}]]*/ {},
+      chuyenKhoa: /*[[${chuyenKhoa}]]*/ [],
+      thongKeChuyenKhoa: /*[[${thongKeChuyenKhoa}]]*/ {},
+      bacSiNoiBat: /*[[${bacSiNoiBat}]]*/ []
+    };
+  </script>
+  <script th:inline="none">
+    (() => {
+      const data = window.homePageData;
+      const $ = (s, p = document) => p.querySelector(s);
+      const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+      const fmt = (n) => Number(n ?? 0).toLocaleString("vi-VN");
+      const listOf = (d) => Array.isArray(d) ? d : (d?.content || []);
+      const pick = (o, ...keys) => { for (const k of keys) if (o?.[k] != null && o[k] !== "") return o[k]; return ""; };
+      const noMark = (s) => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").toLowerCase();
+      const fullName = (d) => [d?.hocHamHocVi, d?.hoTen].filter(Boolean).join(" ");
+      const ROUTES = {
+        "trang-chu": "/patient/dashboard",
+        "chuyen-khoa": "/patient/specialties",
+        "bac-si": "/patient/doctors",
+        "dat-lich-kham": "/lichhen/tao",
+        "lich-hen-cua-toi": "/patient/appointments"
+      };
+      document.querySelectorAll("[data-path]").forEach(a => a.setAttribute("href", ROUTES[a.dataset.path] || "#"));
+      $("header input[type=text]")?.addEventListener("keydown", e => {
+        if (e.key === "Enter" && e.target.value.trim()) location.href = ROUTES["bac-si"] + "?keyword=" + encodeURIComponent(e.target.value.trim());
+      });
 
-  document.querySelectorAll("[data-path]").forEach(a => a.setAttribute("href", ROUTES[a.dataset.path] || "#"));
-  $("header input[type=text]")?.addEventListener("keydown", e => {
-    if (e.key === "Enter" && e.target.value.trim()) location.href = ROUTES["bac-si"] + "?keyword=" + encodeURIComponent(e.target.value.trim());
-  });
+      const emptyBox = (msg, extra = "") => `<div class="col-span-full p-space-lg rounded-xl bg-surface-container-lowest text-on-surface-variant text-center font-body-md">${esc(msg)}${extra}</div>`;
 
-  async function getJson(path) {
-    const res = await fetch(API_BASE + path);
-    if (!res.ok) throw new Error("HTTP " + res.status + " khi goi " + path);
-    return res.json();
-  }
+      // Bieu tuong theo ten chuyen khoa (giu dung bo icon cua thiet ke goc)
+      function iconFor(name) {
+        const n = noMark(name);
+        const map = [ ["tim mach", "cardiology"], ["rang", "dentistry"], ["mat", "visibility"], ["tai mui", "hearing"], ["nhi", "child_care"],
+        ["xuong", "personal_injury"], ["da lieu", "spa"], ["than kinh", "psychology"], ["noi", "stethoscope"], ["san", "pregnant_woman"],
+        ["ung buou", "oncology"], ["tieu hoa", "gastroenterology"], ["phoi", "pulmonology"], ["hinh anh", "radiology"]];
+        return (map.find(([k]) => n.includes(k)) || [0, "medical_services"])[1];
+      }
 
-  const errorBox = (msg) => `<div class="col-span-full p-space-lg rounded-xl bg-error-container text-on-error-container font-body-md">
-      Không tải được dữ liệu từ máy chủ. Hãy kiểm tra Spring Boot đang chạy và kết nối SQL Server.<br>
-      <span class="font-body-sm opacity-80">${esc(msg)}</span></div>`;
-  const emptyBox = (msg, extra = "") => `<div class="col-span-full p-space-lg rounded-xl bg-surface-container-lowest text-on-surface-variant text-center font-body-md">${esc(msg)}${extra}</div>`;
-  const loadingBox = `<div class="col-span-full p-space-lg text-center text-on-surface-variant font-body-md">Đang tải dữ liệu...</div>`;
-
-  // Bieu tuong theo ten chuyen khoa (giu dung bo icon cua thiet ke goc)
-  function iconFor(name) {
-    const n = noMark(name);
-    const map = [["tim mach", "cardiology"], ["rang", "dentistry"], ["mat", "visibility"], ["tai mui", "hearing"], ["nhi", "child_care"],
-      ["xuong", "personal_injury"], ["da lieu", "spa"], ["than kinh", "psychology"], ["noi", "stethoscope"], ["san", "pregnant_woman"],
-      ["ung buou", "oncology"], ["tieu hoa", "gastroenterology"], ["phoi", "pulmonology"], ["hinh anh", "radiology"]];
-    return (map.find(([k]) => n.includes(k)) || [0, "medical_services"])[1];
-  }
-
-  // Ngay / gio tu JSON (chap nhan ca chuoi ISO lan mang [y,m,d] / [h,m])
-  const isoDate = (v) => Array.isArray(v) ? `${v[0]}-${String(v[1]).padStart(2, "0")}-${String(v[2]).padStart(2, "0")}` : String(v || "").slice(0, 10);
-  const hhmm = (v) => Array.isArray(v) ? `${String(v[0]).padStart(2, "0")}:${String(v[1] ?? 0).padStart(2, "0")}` : String(v || "").slice(0, 5);
-  const localIso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-  const viDate = (s) => s.split("-").reverse().join("/");
-  function dayLabel(iso) {
-    const t = new Date(); const today = localIso(t);
-    const tm = new Date(t); tm.setDate(tm.getDate() + 1);
-    return iso === today ? "Hôm nay" : iso === localIso(tm) ? "Ngày mai" : viDate(iso);
-  }
+      // Ngay / gio tu JSON (chap nhan ca chuoi ISO lan mang [y,m,d] / [h,m])
+      const isoDate = (v) => Array.isArray(v) ? `${v[0]}-${String(v[1]).padStart(2, "0")}-${String(v[2]).padStart(2, "0")}` : String(v || "").slice(0, 10);
+      const hhmm = (v) => Array.isArray(v) ? `${String(v[0]).padStart(2, "0")}:${String(v[1] ?? 0).padStart(2, "0")}` : String(v || "").slice(0, 5);
+      const localIso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      const viDate = (s) => s.split("-").reverse().join("/");
+      function dayLabel(iso) {
+        const t = new Date(); const today = localIso(t);
+        const tm = new Date(t); tm.setDate(tm.getDate() + 1);
+        return iso === today ? "Hôm nay" : iso === localIso(tm) ? "Ngày mai" : viDate(iso);
+      }
 
 
-  // Mau sac cua 4 the chuyen khoa theo thiet ke goc
-  const SPEC_COLORS = ["bg-error-container text-error", "bg-secondary-container text-on-secondary-container", "bg-primary-fixed text-primary", "bg-tertiary-fixed text-tertiary"];
-  const specGrid = $("#featured-specialties"), docGrid = $("#featured-doctors");
-  specGrid.innerHTML = loadingBox; docGrid.innerHTML = loadingBox;
+      // Mau sac cua 4 the chuyen khoa theo thiet ke goc
+      const SPEC_COLORS = ["bg-error-container text-error", "bg-secondary-container text-on-secondary-container", "bg-primary-fixed text-primary", "bg-tertiary-fixed text-tertiary"];
+      const specGrid = $("#featured-specialties"), docGrid = $("#featured-doctors");
 
-  function renderStats(t) {
-    document.querySelectorAll("[data-stat]").forEach(el => { el.textContent = fmt(t?.[el.dataset.stat] ?? 0); });
-  }
+      function renderStats(t) {
+        document.querySelectorAll("[data-stat]").forEach(el => { el.textContent = fmt(t?.[el.dataset.stat] ?? 0); });
+      }
 
-  function renderSpecialties(list, stats) {
-    if (!list.length) { specGrid.innerHTML = emptyBox("Chưa có chuyên khoa nào trong cơ sở dữ liệu."); return; }
-    const count = (s) => stats[s.id]?.soBacSi || 0;
-    const top = [...list].sort((a, b) => count(b) - count(a) || a.id - b.id).slice(0, 4);
-    specGrid.innerHTML = top.map((s, i) => `
+      function renderSpecialties(list, stats) {
+        if (!list.length) { specGrid.innerHTML = emptyBox("Chưa có chuyên khoa nào trong cơ sở dữ liệu."); return; }
+        const count = (s) => stats[s.id]?.soBacSi || 0;
+        const top = [...list].sort((a, b) => count(b) - count(a) || a.id - b.id).slice(0, 4);
+        specGrid.innerHTML = top.map((s, i) => `
           <a class="group p-space-lg rounded-2xl bg-surface-container-lowest hover:bg-surface-container-high transition-all duration-300 shadow-sm flex flex-col justify-between"
             href="${ROUTES["bac-si"]}?specialtyId=${encodeURIComponent(s.id)}">
             <div class="flex items-center justify-between mb-space-md">
@@ -566,11 +572,11 @@
               <p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs line-clamp-2">${esc(s.moTa || "")}</p>
             </div>
           </a>`).join("");
-  }
+      }
 
-  function renderDoctors(list) {
-    if (!list.length) { docGrid.innerHTML = emptyBox("Chưa có bác sĩ nào trong cơ sở dữ liệu."); return; }
-    docGrid.innerHTML = list.slice(0, 3).map(d => `
+      function renderDoctors(list) {
+        if (!list.length) { docGrid.innerHTML = emptyBox("Chưa có bác sĩ nào trong cơ sở dữ liệu."); return; }
+        docGrid.innerHTML = list.slice(0, 3).map(d => `
             <div class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col">
               <div class="relative h-64 w-full bg-surface-container">
                 <div class="w-full h-full flex items-center justify-center text-outline-variant">
@@ -598,38 +604,28 @@
                 </div>
               </div>
             </div>`).join("");
-  }
+      }
 
-  async function init() {
-    try {
-      const data = await getJson("/api/home");
       const specialties = listOf(data.chuyenKhoa);
       renderStats(data.thongKe);
       renderSpecialties(specialties, data.thongKeChuyenKhoa || {});
       renderDoctors(listOf(data.bacSiNoiBat));
       $("#specialty-select").innerHTML = '<option value="">Tất cả chuyên khoa</option>' +
         specialties.map(s => `<option value="${esc(s.id)}">${esc(s.tenChuyenKhoa)}</option>`).join("");
-    } catch (e) {
-      console.error("Không tải được dữ liệu trang chủ:", e);
-      specGrid.innerHTML = errorBox(e.message);
-      docGrid.innerHTML = errorBox(e.message);
-    }
-  }
 
-  $("#search-button").addEventListener("click", () => {
-    const params = new URLSearchParams();
-    const keyword = $("#search-input").value.trim(), specialtyId = $("#specialty-select").value, date = $("#date-select").value;
-    if (keyword) params.set("keyword", keyword);
-    if (specialtyId) params.set("specialtyId", specialtyId);
-    if (date) params.set("date", date);
-    location.href = ROUTES["bac-si"] + (params.toString() ? "?" + params : "");
-  });
-  $("#search-input").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); $("#search-button").click(); } });
+      $("#search-button").addEventListener("click", () => {
+        const params = new URLSearchParams();
+        const keyword = $("#search-input").value.trim(), specialtyId = $("#specialty-select").value, date = $("#date-select").value;
+        if (keyword) params.set("keyword", keyword);
+        if (specialtyId) params.set("specialtyId", specialtyId);
+        if (date) params.set("date", date);
+        location.href = ROUTES["bac-si"] + (params.toString() ? "?" + params : "");
+      });
+      $("#search-input").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); $("#search-button").click(); } });
 
-  init();
-})();
+    })();
 
-</script>
+  </script>
 
 </body>
 
