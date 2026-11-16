@@ -42,18 +42,6 @@ public class LichHen {
     private BenhNhan benhNhan;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "bac_si_id")
-    private BacSi bacSi;
-
-    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lich_lam_viec_id")
     private LichLamViec lichLamViec;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "phong_kham_id")
-    private PhongKham phongKham;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "dich_vu_kham_id")
-    private DichVuKham dichVuKham;
 }
