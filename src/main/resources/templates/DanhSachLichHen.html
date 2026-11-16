@@ -84,7 +84,7 @@
                             Thống kê
                         </span>
             </a>
-            <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="ho-so-ca-nhan" href="#" th:href="@{/lichhen}">
+            <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="ho-so-ca-nhan" href="#" th:href="@{/doctor/profile}">
                         <span class="material-symbols-outlined text-[20px]">
                             person
                         </span>
@@ -112,14 +112,20 @@
                 </div>
             </div>
         </div>
-        <button class="flex items-center justify-center gap-2 w-full py-space-sm px-space-md rounded-xl text-error font-label-md text-label-md hover:bg-error-container hover:text-on-error-container transition-all">
+        <form method="post" th:action="@{/logout}">
+
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+            <button type="submit" class="flex items-center justify-center gap-2 w-full py-space-sm px-space-md rounded-xl text-error font-label-md text-label-md hover:bg-error-container hover:text-on-error-container transition-all">
                     <span class="material-symbols-outlined text-[18px]">
                         logout
                     </span>
-            <span>
+                <span>
                         Đăng xuất
                     </span>
-        </button>
+            </button>
+
+        </form>
     </div>
 </aside>
 <div class="pl-72">
@@ -254,7 +260,7 @@
                     </div>
                 </div>
                 <!-- -- Thống kê lịch hẹn -- -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-space-md">
                     <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between transition-transform hover:-translate-y-0.5 duration-200">
                         <div class="flex items-center justify-between">
                                     <span class="font-label-md text-label-md text-on-surface-variant">
@@ -352,34 +358,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between transition-transform hover:-translate-y-0.5 duration-200">
-                        <div class="flex items-center justify-between">
-                                    <span class="font-label-md text-label-md text-on-surface-variant">
-                                        Doanh thu tạm tính
-                                    </span>
-                            <div class="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
-                                        <span class="material-symbols-outlined text-[22px]">
-                                            payments
-                                        </span>
-                            </div>
-                        </div>
-                        <div class="mt-4 flex items-baseline gap-1">
-                                    <span class="font-headline-lg text-headline-lg text-on-surface" >
-                                        —
-                                    </span>
-                            <span class="font-label-md text-label-md text-on-surface-variant">
-                                        (chưa có dữ liệu doanh thu)
-                                    </span>
-                        </div>
-                        <div class="mt-3 pt-3 bg-surface-container-low rounded-lg p-2 flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
-                                    <span>
-                                        Khám chuyên khoa
-                                    </span>
-                            <span class="text-secondary font-medium">
-                                        BHYT
-                                    </span>
-                        </div>
-                    </div>
+
                 </div>
                 <!-- -- Bộ lọc trạng thái và xuất danh sách -- -->
                 <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
