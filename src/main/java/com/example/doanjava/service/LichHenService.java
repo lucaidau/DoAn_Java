@@ -59,7 +59,7 @@ public class LichHenService {
     }
 
     public Page<LichHen> danhSach(String search, String status, LocalDate from, LocalDate to, int page) {
-        return lichHenRepo.timKiem(search == null ? "" : search.trim(), status == null || status.isBlank() ? "ALL" : status, from, to, bacSiIdHienTai(), PageRequest.of(Math.max(0, page - 1), 8, Sort.by("ngayKham").descending().and(Sort.by("id").descending())));
+        return lichHenRepo.timKiem(search == null ? "" : search.trim(), status == null || status.isBlank() ? "ALL" : status, from, to, bacSiIdHienTai(), PageRequest.of(Math.max(0, page - 1), 8, Sort.by("ngayKham").descending().and(Sort.by("id").ascending())));
     }
 
     public LichHen chiTiet(Long id) {
