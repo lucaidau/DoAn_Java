@@ -1,5 +1,6 @@
-package com.example.demo.repository;
-import com.example.demo.entity.LichLamViec;
+package com.example.doanjava.repository;
+
+import com.example.doanjava.entity.LichLamViec;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,4 +9,12 @@ import java.time.LocalDate;
 import java.util.*;
 public interface LichLamViecRepository extends JpaRepository<LichLamViec, Long> {
     List<LichLamViec> findByNgayLamViecOrderByGioBatDau(LocalDate ngay);
+
+    List<LichLamViec> findByBacSi_IdAndNgayLamViecGreaterThanEqualOrderByNgayLamViecAscGioBatDauAsc(Long doctorId, LocalDate now);
+
+    List<LichLamViec> findByNgayLamViec(LocalDate ngayLamViec);
+    List<LichLamViec> findByBacSi_IdAndNgayLamViec(Long maBacSi, LocalDate ngayLamViec);
+
+    // Lich lam viec trong khoang ngay (bao gom ca hai dau)
+    List<LichLamViec> findByNgayLamViecBetween(LocalDate tuNgay, LocalDate denNgay);
 }

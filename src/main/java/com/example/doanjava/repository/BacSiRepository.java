@@ -1,9 +1,18 @@
-package vn.carehealth.repository;
+package com.example.doanjava.repository;
 
+import java.util.List;
 import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
-import vn.carehealth.model.BacSi;
 
-public interface BacSiRepository extends JpaRepository<BacSi, Long> {
+import com.example.doanjava.entity.BacSi;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+public interface BacSiRepository extends JpaRepository<BacSi, Long>, JpaSpecificationExecutor<BacSi> {
     Optional<BacSi> findByTaiKhoanId(Long taiKhoanId);
+
+    List<BacSi> findTop8ByOrderBySoNamKinhNghiemDesc();
+
+    List<BacSi> findByIdIn(List<Long> danhSachMa);
+
+
 }

@@ -1,7 +1,8 @@
 
-package com.example.demo.repository;
+package com.example.doanjava.repository;
 
-import com.example.demo.entity.SinhHieu;
+
+import com.example.doanjava.entity.SinhHieu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;

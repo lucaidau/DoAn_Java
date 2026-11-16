@@ -1,13 +1,15 @@
-package vn.carehealth.service;
+package com.example.doanjava.service;
 
 import java.util.List;
+
+import com.example.doanjava.entity.TaiKhoan;
+import com.example.doanjava.repository.TaiKhoanRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import vn.carehealth.model.TaiKhoan;
-import vn.carehealth.repository.TaiKhoanRepository;
+
 
 @Service
 public class TaiKhoanDangNhapService implements UserDetailsService {

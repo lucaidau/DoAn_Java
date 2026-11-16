@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/LayoutAdmin :: layout(~{::contentFragment})}">
+<head>
+    <title>Quản Lý Lịch Hẹn - CareHealth</title>
+</head>
+<body>
+<!-- Nội dung riêng của trang Quản lý lịch hẹn (được chèn vào <main> của LayoutAdmin) -->
+<div th:fragment="contentFragment">
+    <div class="flex flex-col w-full">
+
+        <!-- Breadcrumb & Page Title Bar -->
+        <div class="flex flex-col gap-space-sm mb-space-md">
+            <div class="flex items-center gap-space-xs font-label-sm text-label-sm text-outline">
+                <span>Quản trị hệ thống</span>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span>Lịch khám bệnh</span>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span class="text-primary font-medium">Quản lý lịch hẹn toàn viện</span>
+            </div>
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+                <div>
+                    <h1 class="font-headline-md text-headline-md text-on-surface tracking-tight">Quản Lý &amp; Điều Phối Lịch Hẹn Khám Bệnh</h1>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">
+                        Giám sát luồng đặt khám trực tuyến, điều phối ca tiếp nhận và giải quyết xung đột lịch giữa bệnh nhân và các phòng khám chuyên khoa.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Interactive Filter Toolbar & Form -->
+        <form th:action="@{/admin/dashboard}" method="get" class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md mb-space-md flex flex-col gap-space-md">
+
+            <!-- Status Tabs (Lọc nhanh theo trạng thái) -->
+            <div class="flex items-center overflow-x-auto pb-1 gap-space-xs scrollbar-none">
+                <a th:href="@{/admin/dashboard(trangThai='ALL', search=${search}, from=${from}, to=${to})}"
+                   class="px-space-md py-space-xs rounded-xl font-label-md text-label-md flex items-center gap-space-xs whitespace-nowrap shadow-sm transition-colors"
+                   th:classappend="${trangThai == 'ALL' or trangThai == null} ? 'bg-primary text-on-primary' : 'bg-surface-container hover:bg-surface-container-high text-on-surface'">
+                    <span>Tất cả lịch hẹn</span>
+                </a>
+                <a th:href="@{/admin/dashboard(trangThai='CHO_XAC_NHAN', search=${search}, from=${from}, to=${to})}"
+                   class="px-space-md py-space-xs rounded-xl font-label-md text-label-md flex items-center gap-space-xs whitespace-nowrap transition-colors"
+                   th:classappend="${trangThai == 'CHO_XAC_NHAN'} ? 'bg-primary text-on-primary' : 'bg-surface-container hover:bg-surface-container-high text-on-surface'">
+                    <span>Chờ xác nhận</span>
+                </a>
+                <a th:href="@{/admin/dashboard(trangThai='DA_XAC_NHAN', search=${search}, from=${from}, to=${to})}"
+                   class="px-space-md py-space-xs rounded-xl font-label-md text-label-md flex items-center gap-space-xs whitespace-nowrap transition-colors"
+                   th:classappend="${trangThai == 'DA_XAC_NHAN'} ? 'bg-primary text-on-primary' : 'bg-surface-container hover:bg-surface-container-high text-on-surface'">
+                    <span>Đã xác nhận</span>
+                </a>
+                <a th:href="@{/admin/dashboard(trangThai='DA_KHAM', search=${search}, from=${from}, to=${to})}"
+                   class="px-space-md py-space-xs rounded-xl font-label-md text-label-md flex items-center gap-space-xs whitespace-nowrap transition-colors"
+                   th:classappend="${trangThai == 'DA_KHAM'} ? 'bg-primary text-on-primary' : 'bg-surface-container hover:bg-surface-container-high text-on-surface'">
+                    <span>Đã hoàn thành</span>
+                </a>
+                <a th:href="@{/admin/dashboard(trangThai='DA_HUY', search=${search}, from=${from}, to=${to})}"
+                   class="px-space-md py-space-xs rounded-xl font-label-md text-label-md flex items-center gap-space-xs whitespace-nowrap transition-colors"
+                   th:classappend="${trangThai == 'DA_HUY'} ? 'bg-primary text-on-primary' : 'bg-surface-container hover:bg-surface-container-high text-on-surface'">
+                    <span>Đã hủy</span>
+                </a>
+            </div>
+
+            <!-- Secondary Filter Controls Row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-sm pt-space-xs items-center">
+
+                <!-- Search Input -->
+                <div class="lg:col-span-5 relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">search</span>
+                    <input name="search" th:value="${search}"
+                           class="w-full pl-9 pr-space-md py-space-xs bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface placeholder:text-outline outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all"
+                           placeholder="Tìm kiếm mã lịch hẹn, tên bệnh nhân, SĐT..."
+                           type="text">
+                </div>
+
+                <!-- Date From -->
+                <div class="lg:col-span-3 flex items-center gap-2">
+                    <span class="text-sm text-outline whitespace-nowrap">Từ ngày:</span>
+                    <input type="date" name="from" th:value="${from}"
+                           class="w-full bg-surface-container-low px-3 py-2 rounded-xl text-sm outline-none">
+                </div>
+
+                <!-- Date To -->
+                <div class="lg:col-span-3 flex items-center gap-2">
+                    <span class="text-sm text-outline whitespace-nowrap">Đến ngày:</span>
+                    <input type="date" name="to" th:value="${to}"
+                           class="w-full bg-surface-container-low px-3 py-2 rounded-xl text-sm outline-none">
+                </div>
+
+                <!-- Submit Button -->
+                <div class="lg:col-span-1 flex items-center gap-2">
+                    <button type="submit" class="w-full py-2 bg-primary text-on-primary rounded-xl font-medium text-sm hover:opacity-90 transition-opacity">
+                        Lọc
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Main Management Table Container -->
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden mb-space-md">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                    <tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+
+                        <th class="py-space-md px-space-md">Mã Lịch Hẹn</th>
+                        <th class="py-space-md px-space-md">Bệnh Nhân</th>
+                        <th class="py-space-md px-space-md">Bác Sĩ &amp; Chuyên Khoa</th>
+                        <th class="py-space-md px-space-md">Khung Giờ &amp; Hình Thức</th>
+                        <th class="py-space-md px-space-md">Triệu Chứng Ban Đầu</th>
+                        <th class="py-space-md px-space-md">Trạng Thái</th>
+                        <th class="py-space-md px-space-md text-right">Thao Tác</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-surface-container-low font-body-md text-body-md text-on-surface">
+
+                    <!-- Dùng th:each lặp qua danh sách lịch hẹn từ Model -->
+                    <tr th:each="lh : ${dsLichHen}" class="hover:bg-surface-container-low/60 transition-colors">
+
+
+                        <!-- Mã lịch hẹn -->
+                        <td class="py-space-md px-space-md">
+                            <div class="flex flex-col">
+                                <span class="font-label-md text-label-md font-semibold text-primary" th:text="${lh.id}">#LH-1</span>
+                                <span class="font-body-sm text-body-sm text-outline" th:text="${lh.ngayTao != null ? #temporals.format(lh.ngayTao, 'dd/MM/yyyy HH:mm') : ''}">Ngày tạo</span>
+                            </div>
+                        </td>
+
+                        <!-- Bệnh nhân -->
+                        <td class="py-space-md px-space-md">
+                            <div class="flex items-center gap-space-sm">
+                                <div class="w-9 h-9 rounded-full bg-primary-fixed text-primary flex items-center justify-center font-bold shrink-0">
+                                    <span class="material-symbols-outlined text-[20px]">person</span>
+                                </div>
+                                <div class="flex flex-col min-w-0">
+                                    <span class="font-label-md text-label-md font-medium text-on-surface" th:text="${lh.benhNhan != null ? lh.benhNhan.hoTen : 'N/A'}">Tên bệnh nhân</span>
+                                    <span class="font-body-sm text-body-sm text-outline" th:text="${lh.benhNhan != null ? lh.benhNhan.gioiTinh+' - '+lh.benhNhan.taiKhoan.soDienThoai : ''}">SĐT</span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Bác sĩ -->
+                        <td class="py-space-md px-space-md">
+                            <div class="flex flex-col">
+                                <span class="font-label-md text-label-md font-medium" th:text="${lh.bacSi != null ? lh.bacSi.hoTen : 'Chưa phân công'}">Tên bác sĩ</span>
+                                <span class="font-body-sm text-body-sm text-outline" th:text="${lh.bacSi != null ? lh.bacSi.chuyenKhoa.tenChuyenKhoa : ''}">Chuyên khoa</span>
+                            </div>
+                        </td>
+
+                        <!-- Ngày & Khung giờ -->
+                        <td class="py-space-md px-space-md">
+                            <div class="flex flex-col">
+                                <span class="font-label-md text-label-md font-medium text-primary" th:text="${lh.khungGioKham}">08:00 - 08:30</span>
+                                <span class="font-body-sm text-body-sm text-on-surface-variant" th:text="${lh.ngayKham}">2026-11-17</span>
+                            </div>
+                        </td>
+
+                        <!-- Triệu chứng -->
+                        <td class="py-space-md px-space-md max-w-xs">
+                            <p class="font-body-sm text-body-sm text-on-surface truncate" th:text="${lh.trieuChungBenh}" th:title="${lh.trieuChungBenh}">
+                                Triệu chứng...
+                            </p>
+                        </td>
+
+                        <!-- Trạng thái -->
+                        <td class="py-space-md px-space-md">
+                            <span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-primary"
+                                  th:text="${lh.trangThai == 'CHO_XAC_NHAN' ? 'Chờ xác nhận': lh.trangThai == 'DA_XAC_NHAN' ? 'Đã xác nhận' : lh.trangThai == 'DA_KHAM' ? 'Đã khám' : 'Đã hủy'}">
+                                Trạng thái
+                            </span>
+                        </td>
+
+                        <!-- Thao tác -->
+                        <td class="py-space-md px-space-md text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                <a th:href="@{'/admin/lichHen/chiTiet/' + ${lh.id}}" class="p-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Xem chi tiết hồ sơ">
+                                    <span class="material-symbols-outlined text-[18px]">visibility</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Hiển thị khi không có dữ liệu -->
+                    <tr th:if="${#lists.isEmpty(dsLichHen)}">
+                        <td colspan="8" class="text-center py-8 text-outline">Không tìm thấy lịch hẹn nào phù hợp.</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Table Footer / Pagination -->
+            <div class="px-space-md py-space-sm bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant">
+                <div></div>
+                <div class="flex items-center gap-1">
+                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest text-outline hover:text-on-surface transition-colors" disabled>
+                        <span class="material-symbols-outlined text-[18px]">first_page</span>
+                    </button>
+                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest text-outline hover:text-on-surface transition-colors" disabled>
+                        <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                    </button>
+                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-primary text-on-primary font-label-sm text-label-sm font-semibold">1</button>
+                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container font-label-sm text-label-sm text-on-surface transition-colors">2</button>
+                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container font-label-sm text-label-sm text-on-surface transition-colors">3</button>
+                    <span class="px-1 text-outline">...</span>
+                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container font-label-sm text-label-sm text-on-surface transition-colors">10</button>
+                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container text-on-surface transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                    </button>
+                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container text-on-surface transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">last_page</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
