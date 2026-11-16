@@ -1,8 +1,15 @@
-package com.example.baitapluyen.service;
+package com.example.doanjava.service;
 
-import com.example.baitapluyen.dto.AppointmentForm;
-import com.example.baitapluyen.model.*;
-import com.example.baitapluyen.repository.*;
+
+import com.example.doanjava.dto.AppointmentForm;
+import com.example.doanjava.entity.BacSi;
+import com.example.doanjava.entity.BenhNhan;
+import com.example.doanjava.entity.LichHen;
+import com.example.doanjava.entity.LichLamViec;
+import com.example.doanjava.repository.BacSiRepository;
+import com.example.doanjava.repository.BenhNhanRepository;
+import com.example.doanjava.repository.LichHenRepository;
+import com.example.doanjava.repository.LichLamViecRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +68,7 @@ public class PatientService {
             row.put("shiftName", item.getTenCa());
             row.put("startTime", Time.valueOf(item.getGioBatDau()));
             row.put("endTime", Time.valueOf(item.getGioKetThuc()));
-            row.put("maxPatients", item.getSoLuongToiDa());
+//            row.put("maxPatients", item.getSoLuongToiDa());
             result.add(row);
         }
         return result;
@@ -92,7 +99,7 @@ public class PatientService {
         schedule.put("ngay_lam_viec", Date.valueOf(item.getNgayLamViec()));
         schedule.put("gio_bat_dau", Time.valueOf(item.getGioBatDau()));
         schedule.put("gio_ket_thuc", Time.valueOf(item.getGioKetThuc()));
-        schedule.put("so_luong_toida", item.getSoLuongToiDa());
+//        schedule.put("so_luong_toida", item.getSoLuongToiDa());
         schedule.put("ten_ca", item.getTenCa());
         return schedule;
     }
@@ -151,9 +158,9 @@ public class PatientService {
         }
         long bookedCount = lichHenRepository
                 .countByLichLamViec_IdAndTrangThaiNot(schedule.getId(), "DA_HUY");
-        if (bookedCount >= schedule.getSoLuongToiDa()) {
-            throw new IllegalArgumentException("Ca khám đã hết số lượng tiếp nhận.");
-        }
+//        if (bookedCount >= schedule.getSoLuongToiDa()) {
+//            throw new IllegalArgumentException("Ca khám đã hết số lượng tiếp nhận.");
+//        }
 
         LichHen appointment = new LichHen();
         appointment.setBenhNhan(patient);
@@ -173,22 +180,22 @@ public class PatientService {
     }
 
     // Chức năng 3: Lấy lịch hẹn vừa tạo, đồng thời kiểm tra chủ sở hữu.
-    @Transactional(readOnly = true)
-    public Map<String, Object> getAppointment(Long appointmentId, Long patientId) {
-        LichHen lh = lichHenRepository.findByIdAndBenhNhan_Id(appointmentId, patientId)
-                .orElse(null);
-        if (lh == null) return null;
-
-        Map<String, Object> appointment = new HashMap<>();
-        appointment.put("appointmentId", lh.getId());
-        appointment.put("patientName", lh.getBenhNhan().getHoTen());
-        appointment.put("phone", lh.getBenhNhan().getTaiKhoan().getSoDienThoai());
-        appointment.put("doctorName", lh.getBacSi().getHoTen());
-        appointment.put("specialty", lh.getBacSi().getChuyenKhoa().getTenChuyenKhoa());
-        appointment.put("appointmentDate", Date.valueOf(lh.getNgayKham()));
-        appointment.put("timeSlot", lh.getKhungGioKham());
-        appointment.put("symptoms", lh.getTrieuChungBenh());
-        appointment.put("status", lh.getTrangThai());
-        return appointment;
-    }
+//    @Transactional(readOnly = true)
+//    public Map<String, Object> getAppointment(Long appointmentId, Long patientId) {
+//        LichHen lh = lichHenRepository.timKiem(appointmentId, patientId)
+//                .orElse(null);
+//        if (lh == null) return null;
+//
+//        Map<String, Object> appointment = new HashMap<>();
+//        appointment.put("appointmentId", lh.getId());
+//        appointment.put("patientName", lh.getBenhNhan().getHoTen());
+//        appointment.put("phone", lh.getBenhNhan().getTaiKhoan().getSoDienThoai());
+//        appointment.put("doctorName", lh.getBacSi().getHoTen());
+//        appointment.put("specialty", lh.getBacSi().getChuyenKhoa().getTenChuyenKhoa());
+//        appointment.put("appointmentDate", Date.valueOf(lh.getNgayKham()));
+//        appointment.put("timeSlot", lh.getKhungGioKham());
+//        appointment.put("symptoms", lh.getTrieuChungBenh());
+//        appointment.put("status", lh.getTrangThai());
+//        return appointment;
+//    }
 }

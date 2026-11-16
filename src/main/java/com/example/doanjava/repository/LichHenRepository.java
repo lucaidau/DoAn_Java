@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+
 import java.time.LocalDate;
 import java.util.List;
 public interface LichHenRepository extends JpaRepository<LichHen, Long> {
@@ -24,4 +26,10 @@ public interface LichHenRepository extends JpaRepository<LichHen, Long> {
     boolean existsByNgayKhamAndKhungGioKhamAndTrangThaiNotAndIdNot(LocalDate ngay, String gio, String trangThai, Long id);
 
     List<LichHen> findTop10ByOrderByNgayTaoDesc();
+
+    List<LichHen> findByLichLamViec_IdAndTrangThaiNot(Long scheduleId, String daHuy);
+
+    long countByLichLamViec_IdAndTrangThaiNot(Long id, String daHuy);
+
+
 }

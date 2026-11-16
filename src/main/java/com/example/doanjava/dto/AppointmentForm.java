@@ -1,4 +1,4 @@
-package com.example.baitapluyen.dto;
+package com.example.doanjava.dto;
 
 import java.time.LocalDate;
 
