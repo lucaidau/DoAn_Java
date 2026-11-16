@@ -1,7 +1,8 @@
-package com.example.baitapluyen.controller;
+package com.example.doanjava.controller;
 
-import com.example.baitapluyen.dto.AppointmentForm;
-import com.example.baitapluyen.service.PatientService;
+
+import com.example.doanjava.dto.AppointmentForm;
+import com.example.doanjava.service.PatientService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -95,10 +96,10 @@ public class PatientController {
         Long benhNhanId = (Long) session.getAttribute("benhNhanId");
         if (benhNhanId == null) return "redirect:/dang-nhap";
 
-        Map<String, Object> appointment = patientService.getAppointment(id, benhNhanId);
-        if (appointment == null) return "redirect:/";
+//        Map<String, Object> appointment = patientService.getAppointment(id, benhNhanId);
+//        if (appointment == null) return "redirect:/";
 
-        model.addAttribute("appointment", appointment);
+//        model.addAttribute("appointment", appointment);
         return "BenhNhan/DatLichKhamThanhCong";
     }
 }

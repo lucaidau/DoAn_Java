@@ -1,7 +1,5 @@
 package com.example.doanjava.service;
 
-import com.example.doanjava.entity.BacSi;
-import com.example.doanjava.entity.ChuyenKhoa;
 import com.example.doanjava.entity.LichLamViec;
 import com.example.doanjava.repository.BacSiRepository;
 import com.example.doanjava.repository.ChuyenKhoaRepository;

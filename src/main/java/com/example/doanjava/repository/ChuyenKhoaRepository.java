@@ -8,4 +8,6 @@ import org.springframework.data.domain.*;
 import java.time.LocalDate;
 import java.util.*;
 public interface ChuyenKhoaRepository extends JpaRepository<ChuyenKhoa, Long> {
+    Page<ChuyenKhoa> findByTenChuyenKhoaContainingIgnoreCase(
+            String tuKhoa, Pageable phanTrang);
 }
