@@ -20,9 +20,11 @@
 
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
                 <div>
-                    <h1 class="font-headline-md text-headline-md text-on-surface tracking-tight">Quản Lý Danh Sách Tài Khoản &amp; Tổng Quan Người Dùng</h1>
+                    <h1 class="font-headline-md text-headline-md text-on-surface tracking-tight">Quản Lý Danh Sách Tài
+                        Khoản &amp; Tổng Quan Người Dùng</h1>
                     <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">
-                        Theo dõi, kiểm duyệt định danh và phân quyền tài khoản cho Bác sĩ, Bệnh nhân và Nhân viên hỗ trợ trên toàn hệ thống CareHealth.
+                        Theo dõi, kiểm duyệt định danh và phân quyền tài khoản cho Bác sĩ, Bệnh nhân và Nhân viên hỗ trợ
+                        trên toàn hệ thống CareHealth.
                     </p>
                 </div>
 
@@ -61,12 +63,15 @@
                 </select>
 
                 <!-- Nút Tìm kiếm -->
-                <button type="submit" class="px-space-md py-space-xs rounded-xl bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors">
+                <button type="submit"
+                        class="px-space-md py-space-xs rounded-xl bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors">
                     Tìm kiếm
                 </button>
 
                 <!-- Nút Đặt lại bộ lọc -->
-                <a th:href="@{/admin/taiKhoan}" class="p-space-xs rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant transition-colors" title="Đặt lại bộ lọc">
+                <a th:href="@{/admin/taiKhoan}"
+                   class="p-space-xs rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant transition-colors"
+                   title="Đặt lại bộ lọc">
                     <span class="material-symbols-outlined text-[20px]">restart_alt</span>
                 </a>
             </div>
@@ -78,16 +83,10 @@
             <div class="px-space-md py-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm border-b border-surface-container-low">
                 <div class="flex items-center gap-space-xs">
                     <h2 class="font-headline-sm text-headline-sm text-on-surface">Danh Sách Người Dùng</h2>
-                    <span th:text="${#numbers.formatInteger(tongTaiKhoan, 1, 'POINT')}" class="px-2 py-0.5 rounded-full bg-primary-fixed text-primary font-label-sm text-label-sm font-semibold">0</span>
+                    <span th:text="${#numbers.formatInteger(tongTaiKhoan, 1, 'POINT')}"
+                          class="px-2 py-0.5 rounded-full bg-primary-fixed text-primary font-label-sm text-label-sm font-semibold">0</span>
                 </div>
-                <div class="flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
-                    <span>Hiển thị mỗi trang:</span>
-                    <select class="bg-surface-container-low px-space-sm py-1 rounded-lg text-body-sm text-on-surface outline-none cursor-pointer font-medium">
-                        <option selected>10 dòng</option>
-                        <option>20 dòng</option>
-                        <option>50 dòng</option>
-                    </select>
-                </div>
+
             </div>
 
             <!-- Table Content -->
@@ -97,7 +96,7 @@
                     <tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
 
                         <th class="py-space-md px-space-md">NGƯỜI DÙNG</th>
-                        <th class="py-space-md px-space-md text-center">VAI TRÒ</th>
+                        <th class="py-space-md px-space-md">VAI TRÒ</th>
                         <th class="py-space-md px-space-md">EMAIL &amp; ĐIỆN THOẠI</th>
 
                         <th class="py-space-md px-space-md">NGÀY THAM GIA</th>
@@ -118,49 +117,60 @@
                                 </div>
                                 <div class="flex flex-col min-w-0">
                                     <!-- Hiển thị Họ và tên đã gom từ bảng Bác sĩ/Bệnh nhân -->
-                                    <span class="font-label-md text-on-surface font-semibold truncate" th:text="${tk.hoTen}">Họ tên</span>
+                                    <span class="font-label-md text-on-surface font-semibold truncate"
+                                          th:text="${tk.hoTen}">Họ tên</span>
                                 </div>
                             </div>
                         </td>
 
                         <!-- Cột Vai trò -->
                         <td class="py-4 px-3">
-                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant" th:text="${tk.vaiTro}">VAI_TRO</span>
+                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant"
+                                  th:text="${tk.vaiTro}">VAI_TRO</span>
                         </td>
 
                         <!-- Cột Email & Số điện thoại -->
                         <td class="py-4 px-3">
                             <div class="flex flex-col">
-                                <span class="font-body-md text-on-surface" th:text="${tk.email}">email@example.com</span>
+                                <span class="font-body-md text-on-surface"
+                                      th:text="${tk.email}">email@example.com</span>
                                 <span class="text-body-sm text-outline" th:text="${tk.soDienThoai}">0123456789</span>
                             </div>
                         </td>
 
                         <td class="py-4 px-3">
                             <div class="flex flex-col">
-                                <span class="font-body-md text-on-surface" th:text="${#temporals.format(tk.ngayTao, 'dd-MM-yyyy HH:mm:ss')}"></span>
+                                <span class="font-body-md text-on-surface"
+                                      th:text="${#temporals.format(tk.ngayTao, 'dd-MM-yyyy HH:mm:ss')}"></span>
                             </div>
                         </td>
 
                         <!-- Cột Trạng thái -->
                         <td class="py-4 px-3">
-            <span th:if="${tk.trangThai}" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">
+            <span th:if="${tk.trangThai}"
+                  class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Hoạt động
             </span>
-                            <span th:unless="${tk.trangThai}" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700">
+                            <span th:unless="${tk.trangThai}"
+                                  class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700">
                 <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Tạm khóa
             </span>
                         </td>
 
                         <!-- Cột Thao tác -->
+                        <!-- Cột Thao tác -->
                         <td class="py-4 px-4 text-right">
-                            <button type="button" class="p-1.5 rounded-lg hover:bg-surface-container text-primary transition-colors">
-                                <span class="material-symbols-outlined text-[18px]">edit</span>
-                            </button>
-
-                            <button type="button" class="p-1.5 rounded-lg hover:bg-surface-container text-primary transition-colors">
-                                <span class="material-symbols-outlined text-[18px]">lock</span>
-                            </button>
+                            <form th:action="@{'/admin/taiKhoan/doiTrangThai/' + ${tk.id}}" method="post"
+                                  class="inline-block">
+                                <button type="submit"
+                                        th:title="${tk.trangThai ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}"
+                                        th:onclick="${tk.trangThai} ? 'return confirm(\'Bạn có chắc muốn tạm khóa tài khoản này?\');' : 'return confirm(\'Bạn có chắc muốn mở khóa tài khoản này?\');'"
+                                        th:classappend="${tk.trangThai} ? 'hover:bg-red-50 text-error' : 'hover:bg-emerald-50 text-emerald-700'"
+                                        class="p-1.5 rounded-lg transition-colors">
+                                  <span class="material-symbols-outlined text-[18px]"
+                                        th:text="${tk.trangThai ? 'lock' : 'lock_open'}">lock</span>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     </tbody>
@@ -170,23 +180,25 @@
             <!-- Pagination Footer -->
             <div class="px-space-md py-space-sm bg-surface-container-low/50 border-t border-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant">
                 <div class="font-body-sm text-body-sm">
-                    Trang <strong class="text-on-surface" th:text="${trangHienTai + 1}">1</strong> / <strong class="text-on-surface" th:text="${tongTrang == 0 ? 1 : tongTrang}">1</strong>
+                    Trang <strong class="text-on-surface" th:text="${trangHienTai + 1}">1</strong> / <strong
+                        class="text-on-surface" th:text="${tongTrang == 0 ? 1 : tongTrang}">1</strong>
                 </div>
 
                 <div class="flex items-center gap-1">
                     <!-- Nút "Trước" (Previous) -->
-                    <a th:href="@{/admin/taiKhoan(page=${trangHienTai - 1}, keyword=${keyword})}"
+
+                    <a th:href="@{/admin/taiKhoan(page=${trangHienTai - 1}, keyword=${keyword}, vaiTro=${vaiTro}, trangThai=${trangThai})}"
                        class="px-space-sm py-1 rounded-lg bg-surface-container-lowest border border-outline-variant/40 text-on-surface font-label-sm text-label-sm flex items-center gap-1 hover:bg-surface-container transition-colors"
                        th:classappend="${trangHienTai == 0} ? 'opacity-50 pointer-events-none' : ''">
-                        <span class="material-symbols-outlined text-[16px]">chevron_left</span>
                         <span>Trước</span>
+                        <span class="material-symbols-outlined text-[16px]">chevron_left</span>
                     </a>
 
                     <!-- Danh sách các nút số trang (Dùng th:each chạy từ 0 đến totalPages - 1) -->
                     <div class="flex items-center gap-1" th:if="${tongTrang > 0}">
                         <th:block th:each="i : ${#numbers.sequence(0, tongTrang - 1)}">
                             <!-- Chỉ hiển thị một số trang gọn gàng nếu số trang quá lớn, hoặc hiển thị tất cả nếu ít -->
-                            <a th:href="@{/admin/taiKhoan(page=${i}, keyword=${keyword})}"
+                            <a th:href="@{/admin/taiKhoan(page=${i}, keyword=${keyword}, vaiTro=${vaiTro}, trangThai=${trangThai})}"
                                th:text="${i + 1}"
                                class="w-8 h-8 rounded-lg flex items-center justify-center font-label-sm text-label-sm font-semibold transition-colors border"
                                th:classappend="${i == trangHienTai} ? 'bg-primary text-on-primary border-primary shadow-sm' : 'bg-surface-container-lowest hover:bg-surface-container border-outline-variant/40 text-on-surface'">
@@ -196,7 +208,7 @@
                     </div>
 
                     <!-- Nút "Tiếp theo" (Next) -->
-                    <a th:href="@{/admin/taiKhoan(page=${trangHienTai + 1}, keyword=${keyword})}"
+                    <a th:href="@{/admin/taiKhoan(page=${trangHienTai + 1}, keyword=${keyword}, vaiTro=${vaiTro}, trangThai=${trangThai})}"
                        class="px-space-sm py-1 rounded-lg bg-surface-container-lowest border border-outline-variant/40 text-on-surface font-label-sm text-label-sm flex items-center gap-1 hover:bg-surface-container transition-colors"
                        th:classappend="${trangHienTai + 1 >= tongTrang} ? 'opacity-50 pointer-events-none' : ''">
                         <span>Tiếp theo</span>

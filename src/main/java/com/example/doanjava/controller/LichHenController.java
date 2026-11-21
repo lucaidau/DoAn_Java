@@ -105,7 +105,7 @@ public class LichHenController {
         model.addAttribute("tuoi", lich.getBenhNhan().getNgaySinh() == null ? null : Math.max(0, Period.between(lich.getBenhNhan().getNgaySinh(), LocalDate.now()).getYears()));
         model.addAttribute("lichSuKhams", service.lichSuKham(id));
         model.addAttribute("sinhHieu", service.sinhHieu(id).orElse(null));
-        model.addAttribute("thanhToan", service.thanhToan(id).orElse(null));
+
         return "ChiTietLichHen";
     }
 

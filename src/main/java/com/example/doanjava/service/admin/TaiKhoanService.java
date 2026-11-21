@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TaiKhoanService {
@@ -44,6 +45,10 @@ public class TaiKhoanService {
             if (vaiTro != null && !vaiTro.trim().isEmpty()) {
                 predicates = criteriaBuilder.and(predicates, criteriaBuilder.equal(root.get("vaiTro"), vaiTro));
             }
+            predicates = criteriaBuilder.and(
+                    predicates,
+                    criteriaBuilder.notEqual(criteriaBuilder.upper(root.get("vaiTro")), "ADMIN")
+            );
 
             // 3. Lọc theo trạng thái
             if (trangThai != null) {
@@ -87,5 +92,15 @@ public class TaiKhoanService {
         return dto;
     }
 
+    @Transactional
+    public boolean doiTrangThaiTaiKhoan(Long id)
+    {
+        TaiKhoan tk = taiKhoanRepository.findById(id)
+                .orElseThrow(()->new IllegalArgumentException("Không tìm thấy tài khoản"));
 
+        boolean trangThaiMoi = !Boolean.TRUE.equals(tk.getTrangThai());
+        tk.setTrangThai(trangThaiMoi);
+        taiKhoanRepository.save(tk);
+        return trangThaiMoi;
+    }
 }
