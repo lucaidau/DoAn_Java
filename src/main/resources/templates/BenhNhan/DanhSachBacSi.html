@@ -45,46 +45,64 @@
 
 <body class="bg-background font-body-md text-on-surface antialiased">
   <header
-    class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-    <div class="h-20 w-full px-gutter flex items-center justify-between gap-space-md">
-      <div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm focus:outline-none"
-          data-path="trang-chu" href="#">
+    class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="w-full px-space-lg h-20 flex items-center justify-between gap-space-md">
+      <div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm group"
+          data-path="trang-chu" href="/patient/dashboard" th:href="@{/patient/dashboard}">
           <div
-            class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary shadow-sm">
+            class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-sm">
             <span class="material-symbols-outlined text-[24px]">local_hospital</span>
           </div>
           <div class="flex flex-col"><span
-              class="font-headline-sm text-headline-sm text-primary tracking-tight">CareHealth</span><span
-              class="font-label-sm text-label-sm text-secondary -mt-1">Y tế thông minh</span></div>
+              class="font-headline-sm text-headline-sm text-primary leading-tight tracking-tight">CareHealth</span><span
+              class="font-label-sm text-label-sm text-secondary leading-none">Y tế thông minh</span></div>
         </a>
-        <nav class="hidden lg:flex items-center gap-space-xs"
-          data-active-classes="bg-surface-container-high text-primary font-label-md"><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
-            data-path="trang-chu" href="#">Trang chủ</a><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
-            data-path="chuyen-khoa" href="#">Chuyên khoa</a><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
-            data-path="bac-si" href="#">Bác sĩ</a><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
+        <nav class="hidden xl:flex items-center gap-space-xs"
+          data-active-classes="bg-primary-container text-on-primary-container font-label-md"><a
+            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            data-path="trang-chu" href="/patient/dashboard" th:href="@{/patient/dashboard}">Trang chủ</a><a
+            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            data-path="chuyen-khoa" href="/patient/specialties" th:href="@{/patient/specialties}">Chuyên khoa</a><a
+            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            data-path="bac-si" href="/patient/doctors" th:href="@{/patient/doctors}">Bác sĩ</a><a
+            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
             data-path="lich-hen-cua-toi" href="/patient/appointments" th:href="@{/patient/appointments}">Lịch hẹn của tôi</a></nav>
       </div>
-      <div class="flex items-center gap-space-md">
-        <div class="hidden xl:flex items-center relative w-72"><span
-            class="material-symbols-outlined absolute left-3 text-outline text-[20px]">search</span><input
-            class="w-full bg-surface-container-low text-on-surface font-body-sm text-body-sm pl-10 pr-4 py-space-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest transition-all"
-            placeholder="Tìm bác sĩ, chuyên khoa..." type="text"><span
-            class="absolute right-3 font-label-sm text-label-sm text-outline border border-outline-variant px-1 rounded">⌘K</span>
-        </div><a
-          class="hidden sm:inline-flex items-center gap-space-xs bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-md py-space-sm rounded-lg shadow-sm transition-all"
-          data-path="dat-lich-kham" href="#"><span
-            class="material-symbols-outlined text-[18px]">calendar_today</span><span>Đặt lịch khám</span></a>
-        <div class="flex items-center gap-space-sm pl-space-xs">
-          <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span
-              class="material-symbols-outlined text-on-primary text-[18px]">person</span></div>
-          <div class="hidden md:flex flex-col text-left"><span
-              class="font-label-sm text-label-sm text-on-surface leading-tight">Nguyễn Văn A</span><span
-              class="font-body-sm text-[11px] text-secondary leading-tight">Bệnh nhân VIP</span></div>
-        </div>
+      <div class="hidden lg:flex items-center flex-1 max-w-xs xl:max-w-md mx-space-md">
+        <div class="relative w-full"><span
+            class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span><input
+            class="w-full pl-10 pr-space-md py-space-sm bg-surface-container-low rounded-xl font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all"
+            placeholder="Tìm nhanh bác sĩ, chuyên khoa..." type="text" /></div>
+      </div>
+      <div class="flex items-center gap-space-md"><a
+          class="hidden sm:inline-flex items-center justify-center gap-space-xs px-space-md py-space-sm bg-primary text-on-primary rounded-xl font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-all shadow-sm"
+          data-path="dat-lich-kham" href="/patient/doctors" th:href="@{/patient/doctors}"><span
+            class="material-symbols-outlined text-[18px]">calendar_month</span>Đặt lịch khám</a>
+        <details class="relative border-l border-surface-container-high pl-space-sm">
+          <summary class="flex items-center gap-space-sm cursor-pointer list-none">
+            <div class="text-right hidden md:flex flex-col"><span
+                class="font-label-md text-label-md text-on-surface leading-tight" th:text="${benhNhan.hoTen}">Bệnh nhân</span><span
+                class="font-label-sm text-label-sm text-secondary font-medium leading-none">Bệnh nhân</span></div>
+            <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span
+                class="material-symbols-outlined text-on-primary text-[18px]">person</span></div>
+            <span class="material-symbols-outlined text-outline text-[18px]">expand_more</span>
+          </summary>
+          <div class="absolute right-0 mt-2 w-56 rounded-lg bg-surface-container-lowest py-1 shadow-lg ring-1 ring-outline-variant/50">
+            <a class="flex items-center gap-2 px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container transition-colors"
+              th:href="@{/patient/profile}">
+              <span class="material-symbols-outlined text-[18px]">person</span>
+              Xem thông tin bệnh nhân
+            </a>
+            <div class="border-t border-surface-container-high my-1"></div>
+            <form th:action="@{/logout}" method="post">
+              <button type="submit"
+                class="flex items-center gap-2 w-full px-4 py-2 font-label-md text-label-md text-error hover:bg-error-container transition-colors">
+                <span class="material-symbols-outlined text-[18px]">logout</span>
+                Đăng xuất
+              </button>
+            </form>
+          </div>
+        </details>
       </div>
     </div>
   </header>
@@ -127,19 +145,6 @@
               </h1>
               <p class="font-body-md text-body-md text-on-surface-variant mt- space-xs leading-relaxed max-w-2xl"
                 id="heroDesc"></p>
-            </div>
-            <!-- Quick Summary Stats -->
-            <div
-              class="flex items-center gap-space-md bg-surface-container-lowest p-space-sm rounded-xl shadow-sm self-start md:self-auto">
-              <div class="flex items-center gap-2 px-space-sm py-1">
-                <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
-                  <span class="material-symbols-outlined text-[18px]">verified</span>
-                </div>
-                <div class="flex flex-col">
-                  <span class="font-label-sm text-label-sm text-on-surface font-semibold">100% Bộ Y Tế</span>
-                  <span class="font-body-sm text-[11px] text-on-surface-variant">Chứng chỉ hành nghề</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -253,6 +258,12 @@
                       Cuối tuần
                     </button>
                   </div>
+                  <div class="mt-2">
+                    <label class="font-label-sm text-[12px] text-on-surface-variant block mb-1" for="exactDate">Chọn ngày chính xác</label>
+                    <input id="exactDate"
+                      class="w-full border border-outline-variant/60 bg-surface-container-lowest text-on-surface font-body-sm text-body-sm px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      type="date">
+                  </div>
                 </div>
                 <div class="h-px bg-surface-variant"></div>
                 <!-- Khung giờ khám -->
@@ -300,18 +311,6 @@
                   </button>
                 </div>
               </form>
-            </div>
-            <!-- Support Info Card -->
-            <div class="bg-surface-container-low p-space-md rounded-xl flex items-start gap-space-sm">
-              <div
-                class="w-8 h-8 rounded-lg bg-secondary-fixed flex items-center justify-center text-secondary shrink-0">
-                <span class="material-symbols-outlined text-[18px]">contact_support</span>
-              </div>
-              <div>
-                <p class="font-label-sm text-label-sm font-semibold text-on-surface">Cần trợ giúp chọn bác sĩ?</p>
-                <p class="font-body-sm text-[12px] text-on-surface-variant mt-0.5">Gọi đội ngũ điều dưỡng điều phối miễn
-                  phí 24/7 qua <strong>1900 6868</strong>.</p>
-              </div>
             </div>
           </aside>
           <!-- Right Column: Doctor List & Toolbar (Takes ~3/4) -->
@@ -510,6 +509,7 @@
         const state = { page: 0, dateFrom: "", dateTo: "", seq: 0 };
         const el = {
           feed: $("#doctorFeed"), chip: $("#dateChip"), search: $("#doctorSearch"), sort: $("#doctorSort"), form: $("#filterForm"),
+          exactDate: $("#exactDate"),
           pager: $("#doctorPagination"), shown: $("#shownCount"), total: $("#totalCount"),
           badge: $("#heroBadge"), title: $("#heroTitle"), desc: $("#heroDesc"), crumb: $("#crumbCurrent")
         };
@@ -674,10 +674,21 @@
                 const date = isoDate(shift.ngayLamViec);
                 if (state.dateFrom && (date < state.dateFrom || date > state.dateTo)) return false;
                 if (!slots.length) return true;
-                const hour = Number(hhmm(shift.gioBatDau).slice(0, 2));
-                return slots.some(slot => slot === "morning" ? hour < 12
-                  : slot === "afternoon" ? hour >= 12 && hour < 17
-                    : slot === "evening" && hour >= 17);
+                const start = hhmm(shift.gioBatDau);
+                const end = hhmm(shift.gioKetThuc) || "23:59";
+                const minute = time => {
+                  const [hour, minute] = time.split(":").map(Number);
+                  return hour * 60 + minute;
+                };
+                return slots.some(slot => {
+                  const ranges = {
+                    morning: ["07:30", "11:30"],
+                    afternoon: ["13:30", "17:00"],
+                    evening: ["17:00", "20:00"]
+                  };
+                  const [slotStart, slotEnd] = ranges[slot];
+                  return minute(start) < minute(slotEnd) && minute(end) > minute(slotStart);
+                });
               });
             }
             return true;
@@ -699,12 +710,27 @@
           renderPager(state.page, pages, total);
         }
         const reload = () => { state.page = 0; load(); };
-        const clearDate = () => { state.dateFrom = state.dateTo = ""; setQuickActive(""); renderChip(); reload(); };
+        const clearDate = () => {
+          state.dateFrom = state.dateTo = "";
+          if (el.exactDate) el.exactDate.value = "";
+          setQuickActive("");
+          renderChip();
+          reload();
+        };
 
         el.search.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(reload, 300); });
         el.sort.addEventListener("change", reload);
         el.form.addEventListener("change", reload);
         el.form.addEventListener("submit", reload);
+        if (el.exactDate) {
+          el.exactDate.addEventListener("change", () => {
+            if (!el.exactDate.value) return clearDate();
+            state.dateFrom = state.dateTo = el.exactDate.value;
+            setQuickActive("");
+            renderChip();
+            reload();
+          });
+        }
         el.pager.addEventListener("click", e => {
           const b = e.target.closest("button[data-page]");
           if (!b || b.disabled) return;
@@ -720,16 +746,22 @@
           const range = already ? ["", ""] : rangeFor(b.dataset.range);
           state.dateFrom = range[0];
           state.dateTo = range[1];
+          if (el.exactDate) el.exactDate.value = "";
           setQuickActive(already ? "" : b.dataset.range); renderChip(); reload();
         }));
         $("#resetFilterBtn").addEventListener("click", () => {
           el.form.reset(); el.search.value = ""; state.dateFrom = state.dateTo = "";
+          if (el.exactDate) el.exactDate.value = "";
           setQuickActive(""); renderChip(); reload();
         });
 
         if (urlParams.get("keyword")) el.search.value = urlParams.get("keyword");
         const date = urlParams.get("date");
-        if (/^\d{4}-\d{2}-\d{2}$/.test(date || "")) { state.dateFrom = state.dateTo = date; renderChip(); }
+        if (/^\d{4}-\d{2}-\d{2}$/.test(date || "")) {
+          state.dateFrom = state.dateTo = date;
+          if (el.exactDate) el.exactDate.value = date;
+          renderChip();
+        }
         setQuickActive("");
         initHero();
         load();
