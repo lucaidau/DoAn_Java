@@ -45,46 +45,64 @@
 
 <body class="bg-background font-body-md text-on-surface antialiased">
   <header
-    class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-    <div class="h-20 w-full px-gutter flex items-center justify-between gap-space-md">
-      <div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm focus:outline-none"
-          data-path="trang-chu" href="#">
+    class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="w-full px-space-lg h-20 flex items-center justify-between gap-space-md">
+      <div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm group"
+          data-path="trang-chu" href="/patient/dashboard" th:href="@{/patient/dashboard}">
           <div
-            class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary shadow-sm">
+            class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-sm">
             <span class="material-symbols-outlined text-[24px]">local_hospital</span>
           </div>
           <div class="flex flex-col"><span
-              class="font-headline-sm text-headline-sm text-primary tracking-tight">CareHealth</span><span
-              class="font-label-sm text-label-sm text-secondary -mt-1">Y tế thông minh</span></div>
+              class="font-headline-sm text-headline-sm text-primary leading-tight tracking-tight">CareHealth</span><span
+              class="font-label-sm text-label-sm text-secondary leading-none">Y tế thông minh</span></div>
         </a>
-        <nav class="hidden lg:flex items-center gap-space-xs"
-          data-active-classes="bg-surface-container-high text-primary font-label-md"><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
-            data-path="trang-chu" href="#">Trang chủ</a><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
-            data-path="chuyen-khoa" href="#">Chuyên khoa</a><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
-            data-path="bac-si" href="#">Bác sĩ</a><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
-            data-path="lich-hen-cua-toi" href="#">Lịch hẹn của tôi</a></nav>
+        <nav class="hidden xl:flex items-center gap-space-xs"
+          data-active-classes="bg-primary-container text-on-primary-container font-label-md"><a
+            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            data-path="trang-chu" href="/patient/dashboard" th:href="@{/patient/dashboard}">Trang chủ</a><a
+            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            data-path="chuyen-khoa" href="/patient/specialties" th:href="@{/patient/specialties}">Chuyên khoa</a><a
+            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            data-path="bac-si" href="/patient/doctors" th:href="@{/patient/doctors}">Bác sĩ</a><a
+            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            data-path="lich-hen-cua-toi" href="/patient/appointments" th:href="@{/patient/appointments}">Lịch hẹn của tôi</a></nav>
       </div>
-      <div class="flex items-center gap-space-md">
-        <div class="hidden xl:flex items-center relative w-72"><span
-            class="material-symbols-outlined absolute left-3 text-outline text-[20px]">search</span><input
-            class="w-full bg-surface-container-low text-on-surface font-body-sm text-body-sm pl-10 pr-4 py-space-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest transition-all"
-            placeholder="Tìm bác sĩ, chuyên khoa..." type="text"><span
-            class="absolute right-3 font-label-sm text-label-sm text-outline border border-outline-variant px-1 rounded">⌘K</span>
-        </div><a
-          class="hidden sm:inline-flex items-center gap-space-xs bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-md py-space-sm rounded-lg shadow-sm transition-all"
-          data-path="dat-lich-kham" href="#"><span
-            class="material-symbols-outlined text-[18px]">calendar_today</span><span>Đặt lịch khám</span></a>
-        <div class="flex items-center gap-space-sm pl-space-xs">
-          <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span
-              class="material-symbols-outlined text-on-primary text-[18px]">person</span></div>
-          <div class="hidden md:flex flex-col text-left"><span
-              class="font-label-sm text-label-sm text-on-surface leading-tight">Nguyễn Văn A</span><span
-              class="font-body-sm text-[11px] text-secondary leading-tight">Bệnh nhân VIP</span></div>
-        </div>
+      <div class="hidden lg:flex items-center flex-1 max-w-xs xl:max-w-md mx-space-md">
+        <div class="relative w-full"><span
+            class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span><input
+            class="w-full pl-10 pr-space-md py-space-sm bg-surface-container-low rounded-xl font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all"
+            placeholder="Tìm nhanh bác sĩ, chuyên khoa..." type="text" /></div>
+      </div>
+      <div class="flex items-center gap-space-md"><a
+          class="hidden sm:inline-flex items-center justify-center gap-space-xs px-space-md py-space-sm bg-primary text-on-primary rounded-xl font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-all shadow-sm"
+          data-path="dat-lich-kham" href="/patient/doctors" th:href="@{/patient/doctors}"><span
+            class="material-symbols-outlined text-[18px]">calendar_month</span>Đặt lịch khám</a>
+        <details class="relative border-l border-surface-container-high pl-space-sm">
+          <summary class="flex items-center gap-space-sm cursor-pointer list-none">
+            <div class="text-right hidden md:flex flex-col"><span
+                class="font-label-md text-label-md text-on-surface leading-tight" th:text="${benhNhan.hoTen}">Bệnh nhân</span><span
+                class="font-label-sm text-label-sm text-secondary font-medium leading-none">Bệnh nhân</span></div>
+            <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span
+                class="material-symbols-outlined text-on-primary text-[18px]">person</span></div>
+            <span class="material-symbols-outlined text-outline text-[18px]">expand_more</span>
+          </summary>
+          <div class="absolute right-0 mt-2 w-56 rounded-lg bg-surface-container-lowest py-1 shadow-lg ring-1 ring-outline-variant/50">
+            <a class="flex items-center gap-2 px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container transition-colors"
+              th:href="@{/patient/profile}">
+              <span class="material-symbols-outlined text-[18px]">person</span>
+              Xem thông tin bệnh nhân
+            </a>
+            <div class="border-t border-surface-container-high my-1"></div>
+            <form th:action="@{/logout}" method="post">
+              <button type="submit"
+                class="flex items-center gap-2 w-full px-4 py-2 font-label-md text-label-md text-error hover:bg-error-container transition-colors">
+                <span class="material-symbols-outlined text-[18px]">logout</span>
+                Đăng xuất
+              </button>
+            </form>
+          </div>
+        </details>
       </div>
     </div>
   </header>
@@ -108,7 +126,7 @@
                   <span>Trang chủ</span>
                 </a>
                 <span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
-                <span class="text-primary font-label-md">Danh mục Chuyên khoa</span>
+                <span class="text-primary font-label-md">Chuyên khoa</span>
               </nav>
               <!-- Headline & Metadata Tag -->
               <div class="flex items-center gap-space-sm mb-space-xs">
@@ -210,32 +228,6 @@
             </div>
             <nav aria-label="Phân trang chuyên khoa" class="flex items-center gap-space-xs" id="specialtyPagination">
             </nav>
-          </section>
-          <!-- Quick Consultation Floating Card Banner -->
-          <section
-            class="relative overflow-hidden bg-primary text-on-primary rounded-xl p-space-lg lg:p-space-xl flex flex-col md:flex-row items-center justify-between gap-space-lg shadow-md">
-            <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-white/10 rounded-full blur-2xl pointer-events-none">
-            </div>
-            <div class="flex items-center gap-space-md z-10">
-              <div
-                class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center flex-shrink-0">
-                <span class="material-symbols-outlined text-[32px] text-white">support_agent</span>
-              </div>
-              <div class="flex flex-col">
-                <h3 class="font-headline-sm text-headline-sm font-bold text-white">Chưa rõ triệu chứng nên khám khoa
-                  nào?</h3>
-                <p class="font-body-md text-body-md text-on-primary/80 mt-1 max-w-xl">
-                  Hệ thống trợ lý phân luồng thông minh hoặc đội ngũ điều dưỡng viên trực tuyến sẵn sàng tư vấn miễn phí
-                  24/7.
-                </p>
-              </div>
-            </div>
-            <div class="flex items-center gap-space-sm z-10 w-full md:w-auto flex-shrink-0">
-              <a class="w-full md:w-auto text-center px-space-lg py-3 rounded-lg bg-surface-container-lowest text-primary font-label-md text-label-md font-semibold hover:bg-surface-container-low shadow-sm transition-all"
-                data-path="dat-lich-kham" href="#">
-                Tư vấn phân khoa ngay
-              </a>
-            </div>
           </section>
         </div>
       </div>

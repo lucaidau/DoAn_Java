@@ -1,5 +1,6 @@
 package com.example.doanjava.service;
 
+import com.example.doanjava.entity.BacSi;
 import com.example.doanjava.entity.BenhNhan;
 import com.example.doanjava.entity.ChuyenKhoa;
 import com.example.doanjava.entity.LichHen;
@@ -188,15 +189,16 @@ public class LichHenCuaToiService {
             case "DANG_KHAM" -> "bg-primary-fixed text-on-primary-fixed";
             default -> "bg-status-confirmed/15 text-status-confirmed";
         };
-        String tenBacSi = lichHen.getLichLamViec().getBacSi() == null
+        BacSi bacSi = lichHen.getBacSi() != null ? lichHen.getBacSi() : (lichHen.getLichLamViec() != null ? lichHen.getLichLamViec().getBacSi() : null);
+        String tenBacSi = bacSi == null
                 ? "Bác sĩ chưa được phân công"
                 : String.join(" ", List.of(
-                        Objects.toString(lichHen.getLichLamViec().getBacSi().getHocHamHocVi(), ""),
-                        Objects.toString(lichHen.getLichLamViec().getBacSi().getHoTen(), "")).stream()
+                        Objects.toString(bacSi.getHocHamHocVi(), ""),
+                        Objects.toString(bacSi.getHoTen(), "")).stream()
                         .filter(value -> !value.isBlank()).toList());
-        String tenChuyenKhoa = lichHen.getLichLamViec().getBacSi() == null || lichHen.getLichLamViec().getBacSi().getChuyenKhoa() == null
+        String tenChuyenKhoa = (bacSi == null || bacSi.getChuyenKhoa() == null)
                 ? "Chưa cập nhật chuyên khoa"
-                : lichHen.getLichLamViec().getBacSi().getChuyenKhoa().getTenChuyenKhoa();
+                : bacSi.getChuyenKhoa().getTenChuyenKhoa();
         String tenPhong = tenPhong(lichHen);
 
         return new LichHenHienThi(
@@ -213,9 +215,22 @@ public class LichHenCuaToiService {
     }
 
     private String tenPhong(LichHen lichHen) {
-        if (lichHen.getLichLamViec().getPhongKham() != null) {
+        if (lichHen.getLichLamViec() != null && lichHen.getLichLamViec().getPhongKham() != null) {
             String ten = Objects.toString(lichHen.getLichLamViec().getPhongKham().getTenPhong(), "").trim();
             String khuVuc = Objects.toString(lichHen.getLichLamViec().getPhongKham().getKhuVuc(), "").trim();
+            if (!ten.isEmpty() && !khuVuc.isEmpty()) {
+                return ten + " • " + khuVuc;
+            }
+            if (!ten.isEmpty()) {
+                return ten;
+            }
+            if (!khuVuc.isEmpty()) {
+                return khuVuc;
+            }
+        }
+        if (lichHen.getPhongKham() != null) {
+            String ten = Objects.toString(lichHen.getPhongKham().getTenPhong(), "").trim();
+            String khuVuc = Objects.toString(lichHen.getPhongKham().getKhuVuc(), "").trim();
             if (!ten.isEmpty() && !khuVuc.isEmpty()) {
                 return ten + " • " + khuVuc;
             }
