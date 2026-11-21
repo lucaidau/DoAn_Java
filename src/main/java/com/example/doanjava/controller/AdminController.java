@@ -41,7 +41,7 @@ public class AdminController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("vaiTro", vaiTro);
         model.addAttribute("trangThai", trangThai);
-        return "/admin/QLTaiKhoan";
+        return "admin/QLTaiKhoan";
     }
 
     @Autowired
@@ -53,14 +53,14 @@ public class AdminController {
             @RequestParam(required = false, defaultValue = "ALL") String trangThai,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             Model model
     )
     {
-        Page<LichHen> pageLichHen = lichHenService.danhSach(search, trangThai, from, to, page);
+        Page<LichHen> pageLichHen = lichHenService.danhSach(search, trangThai, from, to, Math.max(1, page));
 
         model.addAttribute("dsLichHen", pageLichHen.getContent());
-        model.addAttribute("trangHienTai", page);
+        model.addAttribute("trangHienTai", Math.max(1, page));
         model.addAttribute("tongTrang", pageLichHen.getTotalPages());
 
         model.addAttribute("timKiem", search);
@@ -73,19 +73,19 @@ public class AdminController {
         model.addAttribute("daXacNhan", lichHenService.thongKe("DA_XAC_NHAN"));
         model.addAttribute("daKham", lichHenService.thongKe("DA_KHAM"));
         model.addAttribute("daHuy", lichHenService.thongKe("DA_HUY"));
-        return "/admin/QLLichHen";
+        return "admin/QLLichHen";
     }
 
     @GetMapping("/bacSi")
     public String QLBacSi()
     {
-        return  "/admin/QLBacSi";
+        return  "admin/QLBacSi";
     }
 
     @GetMapping("/chuyenKhoa")
     public String QLChuyenKhoa()
     {
-        return "/admin/QLChuyenKhoa";
+        return "admin/QLChuyenKhoa";
     }
 
 }
