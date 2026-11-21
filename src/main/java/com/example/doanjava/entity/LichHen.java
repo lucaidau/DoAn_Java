@@ -38,7 +38,7 @@ public class LichHen {
     private PhongKham phongKham;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dich_vu_kham_id")
-    private DichVuKham dichVuKham;
+
 
     public PhongKham getPhongKham() {
         return phongKham;
@@ -46,14 +46,6 @@ public class LichHen {
 
     public void setPhongKham(PhongKham phongKham) {
         this.phongKham = phongKham;
-    }
-
-    public DichVuKham getDichVuKham() {
-        return dichVuKham;
-    }
-
-    public void setDichVuKham(DichVuKham dichVuKham) {
-        this.dichVuKham = dichVuKham;
     }
 
     public Long getId() {

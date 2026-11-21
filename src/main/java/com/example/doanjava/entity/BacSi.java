@@ -31,6 +31,9 @@ public class BacSi {
     @Column(name = "gioi_thieu")
     private String gioiThieu;
 
+    @Column(name = "trang_thai")
+    private Boolean trangThai;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tai_khoan_id")
     private TaiKhoan taiKhoan;

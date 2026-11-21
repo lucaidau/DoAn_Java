@@ -51,6 +51,7 @@ CREATE TABLE bac_si (
     hoc_ham_hoc_vi     NVARCHAR (50) , -- Ví dụ: Thạc sĩ, Bác sĩ CKI, PGS.TS
     so_nam_kinh_nghiem INT           ,
     gioi_thieu         NVARCHAR (MAX),
+    trang_thai         BIT            DEFAULT 1,
     FOREIGN KEY (tai_khoan_id) REFERENCES tai_khoan (id) ON DELETE CASCADE,
     FOREIGN KEY (chuyen_khoa_id) REFERENCES chuyen_khoa (id) ON DELETE NO ACTION
 );
@@ -149,6 +150,4 @@ CREATE TABLE sinh_hieu (
     CONSTRAINT CK_sinhhieu_chieucao CHECK (chieu_cao > 0),
     CONSTRAINT CK_sinhhieu_cannang CHECK (can_nang > 0)
 );
-
-
 GO
