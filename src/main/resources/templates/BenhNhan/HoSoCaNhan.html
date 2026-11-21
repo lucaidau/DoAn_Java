@@ -530,8 +530,9 @@
                     </p>
                     <p
                       class="font-label-md text-label-md text-on-surface font-mono font-semibold mt-1"
+                      th:text="${benhNhan.soCccd != null and !benhNhan.soCccd.isBlank() ? (benhNhan.soCccd.length() >= 6 ? #strings.substring(benhNhan.soCccd, 0, 6) + '******' : '******') : 'Chưa cập nhật'}"
                     >
-                      079088******
+                      Chưa cập nhật
                     </p>
                   </div>
                   <div class="bg-surface-container-low p-space-md rounded-lg">
@@ -955,7 +956,19 @@
               </option>
             </select>
           </label>
-          <div class="hidden sm:block"></div>
+          <label class="text-sm font-medium"
+            >Số CCCD (12 chữ số, không bắt buộc)
+            <input
+              class="mt-1 block w-full p-3 border rounded-lg"
+              inputmode="numeric"
+              maxlength="12"
+              name="soCccd"
+              pattern="[0-9]{12}"
+              th:value="${benhNhan.soCccd}"
+              title="CCCD gồm đúng 12 chữ số"
+              type="text"
+            />
+          </label>
           <label class="text-sm font-medium sm:col-span-2"
             >Email *
             <input
