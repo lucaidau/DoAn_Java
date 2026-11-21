@@ -227,6 +227,22 @@ public class HoSoService {
         }
 
         benhNhan.setNhomMau(nhomMau);
+        String soCccd = duLieu.getSoCccd() == null
+                ? ""
+                : duLieu.getSoCccd().trim();
+
+        if (!soCccd.isEmpty() && !soCccd.matches("[0-9]{12}")) {
+
+            throw new IllegalArgumentException(
+                    "CCCD phải gồm đúng 12 chữ số."
+            );
+        }
+
+        benhNhan.setSoCccd(
+                soCccd.isEmpty()
+                        ? null
+                        : soCccd
+        );
 
         benhNhan.setDiaChi(
                 duLieu.getDiaChi() == null
