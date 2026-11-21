@@ -14,12 +14,11 @@ import java.util.*;
 public class LichHenService {
     private final LichHenRepository lichHenRepo;
     @org.springframework.beans.factory.annotation.Autowired private PhongKhamRepository phongKhamRepo;
-    @org.springframework.beans.factory.annotation.Autowired private DichVuKhamRepository dichVuKhamRepo;
-    @org.springframework.beans.factory.annotation.Autowired private ThuocRepository thuocRepo;
+
     @org.springframework.beans.factory.annotation.Autowired
     private SinhHieuRepository sinhHieuRepo;
     @org.springframework.beans.factory.annotation.Autowired
-    private ThanhToanRepository thanhToanRepo;
+
     private final BenhNhanRepository benhNhanRepo;
     private final BacSiRepository bacSiRepo;
     private final LichLamViecRepository caRepo;
@@ -121,8 +120,8 @@ public class LichHenService {
     }
 
     public List<PhongKham> phongKhams() { return phongKhamRepo.findAll(Sort.by("tenPhong")); }
-    public List<DichVuKham> dichVuKhams() { return dichVuKhamRepo.findAll(Sort.by("tenDichVu")); }
-    public List<Thuoc> thuocs() { return thuocRepo.findAll(Sort.by("tenThuoc")); }
+
+    public List<DonThuoc> thuocs() { return donThuocRepo.findAll(Sort.by("tenThuoc")); }
 
     @Transactional
     public LichHen tao(Long benhNhanId, Long bacSiId, Long caId, LocalDate ngay, String gio, String trieuChung) {
@@ -216,9 +215,7 @@ public class LichHenService {
         return sinhHieuRepo.findByLichHenId(lichId);
     }
 
-    public Optional<ThanhToan> thanhToan(Long lichId) {
-        return thanhToanRepo.findByLichHenId(lichId);
-    }
+
 
     public Optional<HoSoBenhAn> hoSo(Long lichId) {
         return hoSoRepo.findByLichHenId(lichId);
