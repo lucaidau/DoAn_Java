@@ -38,16 +38,7 @@
                         </span>
             </div>
         </div>
-        <div class="px-space-md py-space-sm">
-            <div class="bg-surface-container-low rounded-lg p-space-sm flex items-center justify-between">
-                        <span class="font-label-sm text-label-sm text-on-surface-variant font-medium">
-                            Khoa: Tim Mạch
-                        </span>
-                <span class="w-2 h-2 rounded-full bg-status-confirmed">
-                        </span>
-            </div>
-        </div>
-        <nav class="flex flex-col gap-1 px-space-md mt-space-sm" data-active-classes="bg-primary text-on-primary font-medium rounded-xl shadow-sm">
+        <nav id="sidebar-menu" class="flex flex-col gap-1 px-space-md mt-space-sm">
             <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="trang-chu-&amp;-lich-hen" href="#" th:href="@{/lichhen}">
                         <span class="material-symbols-outlined text-[20px]">
                             calendar_today
@@ -58,30 +49,12 @@
                             Lịch hẹn
                         </span>
             </a>
-            <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="chi-tiet-lich-hen" href="#" th:href="@{/lichhen/{id}(id=${lich.id})}">
-                        <span class="material-symbols-outlined text-[20px]">
-                            schedule
-                        </span>
-                <span>
-                            Chi tiết lịch hẹn
-                        </span>
-            </a>
             <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="thong-tin-ca-kham" href="#" th:href="@{/lichhen/{id}/khambenh(id=${lich.id})}">
                         <span class="material-symbols-outlined text-[20px]">
                             clinical_notes
                         </span>
                 <span>
                             Thông tin ca khám
-                        </span>
-            </a>
-            <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="bao-cao-&amp;-thong-ke" href="#" th:href="@{/lichhen}">
-                        <span class="material-symbols-outlined text-[20px]">
-                            bar_chart
-                        </span>
-                <span>
-                            Báo cáo
-                            &amp;
-                            Thống kê
                         </span>
             </a>
             <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="ho-so-ca-nhan" href="#" th:href="@{/doctor/profile}">
@@ -103,11 +76,10 @@
                             </span>
                 </div>
                 <div class="flex flex-col min-w-0">
-                            <span class="font-label-md text-label-md text-on-surface font-semibold truncate">
-                                Bác sĩ CareHealth
+                            <span class="font-label-md text-label-md text-on-surface font-semibold truncate" th:text="${tenBacSiHienTai}">
                             </span>
                     <span class="font-body-sm text-body-sm text-on-surface-variant truncate">
-                                Bệnh viện ĐHYD TP.HCM
+                                CareHealth
                             </span>
                 </div>
             </div>
@@ -162,11 +134,10 @@
                             </span>
                 </div>
                 <div class="hidden xl:flex flex-col text-left">
-                            <span class="font-label-md text-label-md font-semibold text-on-surface leading-none">
-                                Bác sĩ CareHealth
+                            <span class="font-label-md text-label-md font-semibold text-on-surface leading-none" th:text="${tenBacSiHienTai}">
                             </span>
                     <span class="font-label-sm text-label-sm text-on-surface-variant leading-tight mt-0.5">
-                                Khoa Tim Mạch
+                                CareHealth
                             </span>
                 </div>
             </div>
@@ -222,13 +193,6 @@
                     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg relative z-10">
                         <!-- Patient Identity & Status -->
                         <div class="flex items-start sm:items-center gap-space-md">
-                            <div class="relative">
-                                <div class="w-16 h-16 rounded-xl bg-surface-container flex items-center justify-center overflow-hidden shadow-inner">
-                                    <img class="w-full h-full object-cover" data-alt="Close-up professional portrait of an Asian male patient in his early 30s with a calm, friendly expression against a clean, modern clinical studio background with subtle cool medical blue tones and soft natural key lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkcIOI0727Fa5yf5X6bjtDOSGhjm5jaAgMh6sSlbAWSL3MlTRkYqcT6NvGIF77pK6knyohnzYyhrUWcR3a00uNR-ziM9LH0QbyoYuEN8h90i1RxP9VpGlQj7GHEy2aDYFJbduHPc-mCeYV0wRqVfYrp-ZOCEIHuHxFk2j9a3209IC4kLey0tBNLBEFXu1VnmDsTMeT5Jmg6WPzDl1Z7HZPBbzzcwQQRzg1CfTf_F0SRzV8WMCb7MDcaA"/>
-                                </div>
-                                <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-status-confirmed border-2 border-surface-container-lowest shadow-sm" title="Bệnh nhân đã có mặt">
-                                        </span>
-                            </div>
                             <div class="flex flex-col gap-1 min-w-0">
                                 <div class="flex flex-wrap items-center gap-2.5">
                                     <h1 class="font-headline-md text-headline-md text-on-surface font-bold tracking-tight" th:text="${lich.benhNhan.hoTen}">

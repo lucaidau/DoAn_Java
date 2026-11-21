@@ -51,16 +51,7 @@
                         </span>
             </div>
         </div>
-        <div class="px-space-md py-space-sm">
-            <div class="bg-surface-container-low rounded-lg p-space-sm flex items-center justify-between">
-                        <span class="font-label-sm text-label-sm text-on-surface-variant font-medium">
-                            Khoa: Tim Mạch
-                        </span>
-                <span class="w-2 h-2 rounded-full bg-status-confirmed">
-                        </span>
-            </div>
-        </div>
-        <nav class="flex flex-col gap-1 px-space-md mt-space-sm" data-active-classes="bg-primary text-on-primary font-medium rounded-xl shadow-sm">
+        <nav id="sidebar-menu" class="flex flex-col gap-1 px-space-md mt-space-sm">
             <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="trang-chu-&amp;-lich-hen" href="#" th:href="@{/lichhen}">
                         <span class="material-symbols-outlined text-[20px]">
                             calendar_today
@@ -69,28 +60,12 @@
                             Trang chủ &amp; Lịch hẹn
                         </span>
             </a>
-            <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="chi-tiet-lich-hen" href="#" th:href="@{/lichhen/{id}(id=${lich.id})}">
-                        <span class="material-symbols-outlined text-[20px]">
-                            schedule
-                        </span>
-                <span>
-                            Chi tiết lịch hẹn
-                        </span>
-            </a>
-            <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="thong-tin-ca-kham" href="#" th:href="@{/lichhen/{id}/khambenh(id=${lich.id})}">
-                        <span class="material-symbols-outlined text-[20px]">
+            <a class="flex items-center gap-3 px-space-md py-space-sm transition-all bg-primary text-on-primary font-medium rounded-xl shadow-sm" data-path="thong-tin-ca-kham" href="#" th:href="@{/lichhen/{id}/khambenh(id=${lich.id})}">
+                        <span class="material-symbols-outlined text-[20px] text-on-primary">
                             clinical_notes
                         </span>
                 <span>
                             Thông tin ca khám
-                        </span>
-            </a>
-            <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="bao-cao-&amp;-thong-ke" href="#" th:href="@{/lichhen}">
-                        <span class="material-symbols-outlined text-[20px]">
-                            bar_chart
-                        </span>
-                <span>
-                            Báo cáo &amp; Thống kê
                         </span>
             </a>
             <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="ho-so-ca-nhan" href="#" th:href="@{/doctor/profile}">
@@ -112,11 +87,10 @@
                             </span>
                 </div>
                 <div class="flex flex-col min-w-0">
-                            <span class="font-label-md text-label-md text-on-surface font-semibold truncate">
-                                Bác sĩ CareHealth
+                            <span class="font-label-md text-label-md text-on-surface font-semibold truncate" th:text="${tenBacSiHienTai}">
                             </span>
                     <span class="font-body-sm text-body-sm text-on-surface-variant truncate">
-                                Bệnh viện ĐHYD TP.HCM
+                                CareHealth
                             </span>
                 </div>
             </div>
@@ -171,11 +145,10 @@
                             </span>
                 </div>
                 <div class="hidden xl:flex flex-col text-left">
-                            <span class="font-label-md text-label-md font-semibold text-on-surface leading-none">
-                                Bác sĩ CareHealth
+                            <span class="font-label-md text-label-md font-semibold text-on-surface leading-none" th:text="${tenBacSiHienTai}">
                             </span>
                     <span class="font-label-sm text-label-sm text-on-surface-variant leading-tight mt-0.5">
-                                Khoa Tim Mạch
+                                CareHealth
                             </span>
                 </div>
             </div>
@@ -226,22 +199,6 @@
                 </div>
                 <!-- Right Clinical Action CTAs -->
                 <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                    <button class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors" form="clinicalForm" name="hoanThanh" th:disabled="${lich.trangThai == 'DA_KHAM'}" type="submit" value="false">
-                                <span class="material-symbols-outlined text-[18px]">
-                                    save
-                                </span>
-                        <span>
-                                    Tạm lưu nháp
-                                </span>
-                    </button>
-                    <button class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-secondary text-on-secondary font-label-md text-label-md hover:opacity-90 shadow-sm transition-all" onclick="document.getElementById('drugSection').scrollIntoView({behavior:'smooth'})" type="button">
-                                <span class="material-symbols-outlined text-[18px]">
-                                    medication
-                                </span>
-                        <span>
-                                    Kê đơn thuốc
-                                </span>
-                    </button>
                     <button class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors" onclick="window.print()" type="button">
                                 <span class="material-symbols-outlined text-[18px]">
                                     print
@@ -251,14 +208,6 @@
                                 </span>
                         <span class="xl:hidden">
                                     In phiếu
-                                </span>
-                    </button>
-                    <button class="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-semibold hover:bg-primary-container shadow-sm transition-all" form="clinicalForm" name="hoanThanh" th:disabled="${lich.trangThai == 'DA_KHAM'}" type="submit" value="true">
-                                <span class="material-symbols-outlined text-[18px]">
-                                    check_circle
-                                </span>
-                        <span>
-                                    Hoàn thành ca khám
                                 </span>
                     </button>
                 </div>
@@ -646,7 +595,7 @@
                                         </tr>
                                         </thead>
                                         <tbody class="divide-y-0 text-on-surface font-body-sm text-body-sm">
-                                        <tr class="bg-surface-container-low" th:each="i : ${#numbers.sequence(0,4)}">
+                                        <tr class="bg-surface-container-low" th:each="i : ${#numbers.sequence(0,0)}">
                                             <td class="py-3 px-2 text-center drug-index">
                                                 1
                                             </td>
@@ -766,7 +715,7 @@
                                             verified
                                         </span>
                                 <span>
-                                            Ký tên &amp; Kết thúc khám
+                                            Hoàn thành ca khám
                                         </span>
                             </button>
                         </div>
@@ -779,7 +728,7 @@
 <script>
     function addDrugRow(){
         const tbody=document.querySelector('#drugSection tbody');
-        if(tbody.rows.length>=5)return;
+        if(tbody.rows.length>=20)return;
         const row=tbody.rows[0].cloneNode(true);
         row.removeAttribute('th:each');
         row.querySelectorAll('input').forEach(x=>x.value=x.name==='soLuong'?'1':'');
