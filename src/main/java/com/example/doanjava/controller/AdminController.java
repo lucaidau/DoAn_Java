@@ -4,6 +4,7 @@ import com.example.doanjava.dto.admin.BacSiDTO;
 import com.example.doanjava.dto.admin.SuaBacSiDTO;
 import com.example.doanjava.dto.admin.TaiKhoanDTO;
 import com.example.doanjava.entity.BacSi;
+import com.example.doanjava.entity.ChuyenKhoa;
 import com.example.doanjava.entity.LichHen;
 import com.example.doanjava.service.BacSiService;
 import com.example.doanjava.service.ChuyenKhoaService;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -190,9 +194,24 @@ public class AdminController {
     }
 
     @GetMapping("/chuyenKhoa")
-    public String QLChuyenKhoa(Model model)
+    public String QLChuyenKhoa(
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model)
     {
-        model.addAttribute("dsChuyenKhoa", chuyenKhoaService.layDanhSachChuyenKhoa());
+        Page<Map<String, Object>> pageChuyenKhoa =
+                chuyenKhoaService.layDanhSachChuyenKhoaAdmin(search, page, size);
+        model.addAttribute("dsChuyenKhoa", pageChuyenKhoa.getContent());
+        model.addAttribute("phongKhamMap", chuyenKhoaService.layPhongKhamTheoChuyenKhoa());
+
+        model.addAttribute("trangHienTai", pageChuyenKhoa.getNumber());
+        model.addAttribute("tongTrang", pageChuyenKhoa.getTotalPages());
+        model.addAttribute("tongChuyenKhoa", pageChuyenKhoa.getTotalElements());
+        model.addAttribute("size", size);
+        model.addAttribute("pageChuyenKhoa", pageChuyenKhoa);
+
+        model.addAttribute("search", search);
         return "/admin/QLChuyenKhoa";
     }
 

@@ -39,6 +39,7 @@
   <!-- 2. Search & Filter Toolbar -->
   <form th:action="@{/admin/chuyenKhoa}" method="get"
         class="bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_1px_8px_rgba(0,0,0,0.03)] border border-surface-container">
+    <input type="hidden" name="page" value="0">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-space-sm items-center">
       <div class="md:col-span-9 relative flex items-center bg-surface-container-low rounded-xl px-space-md py-2.5 border border-transparent focus-within:border-primary/40 focus-within:bg-surface-container-lowest transition-all">
         <span class="material-symbols-outlined text-outline text-[20px] mr-space-sm">search</span>
@@ -78,7 +79,8 @@
         <tr th:each="ck : ${dsChuyenKhoa}" class="hover:bg-surface-container-low/50 transition-colors">
           <!-- Mã khoa -->
           <td class="py-4 px-4">
-            <span class="text-label-sm font-semibold text-primary" th:text="'#CK-' + ${ck.id}">#CK-1</span>
+            <span class="text-label-sm font-semibold text-primary"
+                  th:text="'#CK-' + ${ck['id']}">#CK-1</span>
           </td>
 
           <!-- Tên chuyên khoa -->
@@ -87,31 +89,35 @@
               <div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
                 <span class="material-symbols-outlined text-[20px]">medical_services</span>
               </div>
-              <span class="font-label-md text-on-surface font-semibold" th:text="${ck.tenChuyenKhoa}">Tên chuyên khoa</span>
+              <span class="font-label-md text-on-surface font-semibold"
+                    th:text="${ck['tenChuyenKhoa']}">Tên chuyên khoa</span>
             </div>
           </td>
 
           <!-- Danh sách phòng khám theo chuyên khoa -->
-          <td class="py-4 px-4">
-            <div th:if="${phongKhamMap != null && phongKhamMap[ck.id] != null && !#lists.isEmpty(phongKhamMap[ck.id])}"
+          <td class="py-4 px-4"
+              th:with="rawId=${ck != null ? ck['id'] : null},
+             ckId=${rawId != null ? T(java.lang.Long).valueOf(rawId.toString()) : null},
+             dsPhong=${(phongKhamMap != null && ckId != null) ? phongKhamMap.get(ckId) : null}">
+            <div th:if="${dsPhong != null && !#lists.isEmpty(dsPhong)}"
                  class="flex flex-wrap gap-1.5">
-              <span th:each="pk : ${phongKhamMap[ck.id]}"
-                    class="px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface text-body-sm font-medium border border-surface-container"
-                    th:text="${pk.tenPhong} + (${pk.khuVuc != null ? ' (' + pk.khuVuc + ')' : ''})">
-                Phòng khám
-              </span>
+    <span th:each="pk : ${dsPhong}"
+          class="px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface text-body-sm font-medium border border-surface-container"
+          th:text="${pk.tenPhong} + (${pk.khuVuc != null && !#strings.isEmpty(pk.khuVuc) ? ' (' + pk.khuVuc + ')' : ''})">
+      Phòng khám
+    </span>
             </div>
-            <span th:unless="${phongKhamMap != null && phongKhamMap[ck.id] != null && !#lists.isEmpty(phongKhamMap[ck.id])}"
+            <span th:unless="${dsPhong != null && !#lists.isEmpty(dsPhong)}"
                   class="text-body-sm text-outline">
-              Chưa có phòng khám
-            </span>
+    Chưa có phòng khám
+  </span>
           </td>
 
           <!-- Thao tác -->
           <td class="py-4 px-4 text-right">
             <div class="flex items-center justify-end gap-1 text-on-surface-variant">
               <button type="button"
-                      th:attr="data-id=${ck.id}, data-ten=${ck.tenChuyenKhoa}"
+                      th:attr="data-id=${ck['id']}, data-ten=${ck['tenChuyenKhoa']}"
                       onclick="openSuaChuyenKhoaModal(this)"
                       title="Sửa chuyên khoa"
                       class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">
@@ -127,12 +133,38 @@
         </tbody>
       </table>
     </div>
+    <!-- Table Pagination Footer -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-space-md px-space-lg py-space-md border-t border-surface-container-low bg-surface-container-lowest">
+      <div class="font-body-sm text-body-sm">
+        Trang <strong class="text-on-surface" th:text="${trangHienTai + 1}">1</strong> / <strong class="text-on-surface" th:text="${tongTrang == 0 ? 1 : tongTrang}">1</strong>
+      </div>
 
-    <!-- Footer hiển thị tổng số -->
-    <div class="flex items-center justify-between px-space-lg py-space-md border-t border-surface-container-low bg-surface-container-lowest text-body-sm text-on-surface-variant">
-      <span>
-        Tổng số chuyên khoa: <strong class="text-on-surface font-semibold" th:text="${#lists.size(dsChuyenKhoa)}">0</strong>
-      </span>
+      <div class="flex items-center gap-1" th:if="${tongTrang > 0}">
+        <!-- Nút Trước -->
+        <a th:href="@{/admin/chuyenKhoa(page=${trangHienTai - 1}, size=${size}, search=${search})}"
+           class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-label-sm font-medium text-on-surface hover:bg-surface-container transition-colors"
+           th:classappend="${trangHienTai == 0} ? 'opacity-50 pointer-events-none' : ''">
+          <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+          <span>Trước</span>
+        </a>
+
+        <!-- Các số trang -->
+        <th:block th:each="i : ${#numbers.sequence(0, tongTrang - 1)}">
+          <a th:href="@{/admin/chuyenKhoa(page=${i}, size=${size}, search=${search})}"
+             th:text="${i + 1}"
+             th:classappend="${i == trangHienTai} ? 'bg-primary text-on-primary font-semibold shadow-sm' : 'text-on-surface-variant hover:bg-surface-container font-medium'"
+             class="w-8 h-8 flex items-center justify-center rounded-lg text-label-sm transition-colors">
+          </a>
+        </th:block>
+
+        <!-- Nút Sau -->
+        <a th:if="${!pageChuyenKhoa.last}"
+           th:href="@{/admin/chuyenKhoa(page=${trangHienTai + 1}, size=${size}, search=${search})}"
+           class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-label-sm font-medium text-on-surface hover:bg-surface-container transition-colors">
+          <span>Sau</span>
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        </a>
+      </div>
     </div>
   </div>
 

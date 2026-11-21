@@ -24,4 +24,6 @@ public class ChuyenKhoa {
 
     @Column(name = "mo_ta")
     private String moTa;
+
+
 }
