@@ -1,6 +1,33 @@
 <!DOCTYPE html><html lang="vi" xmlns:th="http://www.thymeleaf.org"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_standard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"error-container":"#ffdad6","tertiary-container":"#bc4800","on-secondary-fixed":"#00201d","surface-container-low":"#f3f4f5","on-primary-container":"#eeefff","primary":"#004ac6","tertiary":"#943700","outline":"#737686","on-background":"#191c1d","on-tertiary-fixed-variant":"#7d2d00","surface-container-high":"#e7e8e9","surface":"#f8f9fa","on-surface-variant":"#434655","secondary-container":"#86f2e4","secondary":"#006a61","background":"#f8f9fa","status-confirmed":"#10B981","on-tertiary-fixed":"#360f00","status-pending":"#F59E0B","on-error-container":"#93000a","tertiary-fixed":"#ffdbcd","outline-variant":"#c3c6d7","surface-bright":"#f8f9fa","primary-container":"#2563eb","inverse-on-surface":"#f0f1f2","on-primary":"#ffffff","on-primary-fixed-variant":"#003ea8","tertiary-fixed-dim":"#ffb596","surface-variant":"#e1e3e4","on-secondary":"#ffffff","secondary-fixed-dim":"#6bd8cb","on-surface":"#191c1d","surface-dim":"#d9dadb","on-error":"#ffffff","surface-container":"#edeeef","status-completed":"#2563EB","surface-tint":"#0053db","on-secondary-container":"#006f66","primary-fixed-dim":"#b4c5ff","status-cancelled":"#F43F5E","inverse-primary":"#b4c5ff","on-tertiary":"#ffffff","on-secondary-fixed-variant":"#005049","secondary-fixed":"#89f5e7","error":"#ba1a1a","on-tertiary-container":"#ffede6","primary-fixed":"#dbe1ff","surface-container-highest":"#e1e3e4","on-primary-fixed":"#00174b","inverse-surface":"#2e3132","surface-container-lowest":"#ffffff"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"gutter":"1.5rem","margin":"2rem","space-lg":"1.5rem","space-md":"1rem","space-xl":"2.5rem","space-xs":"0.25rem","space-sm":"0.5rem"},fontFamily:{"label-sm":["Inter"],"body-sm":["Inter"],"body-md":["Inter"],"body-lg":["Inter"],"headline-lg":["Inter"],"headline-sm":["Inter"],"headline-md":["Inter"],"label-md":["Inter"]},fontSize:{"label-sm":["12px",{"lineHeight":"16px","fontWeight":"500"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-lg":["32px",{"lineHeight":"40px","fontWeight":"700"}],"headline-sm":["18px",{"lineHeight":"24px","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"label-md":["14px",{"lineHeight":"20px","fontWeight":"500"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 w-full px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm focus:outline-none" data-path="trang-chu" th:href="@{/patient/dashboard}"><div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[24px]">local_hospital</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary tracking-tight">CareHealth</span><span class="font-label-sm text-label-sm text-secondary -mt-1">Y tế thông minh</span></div></a><nav class="hidden lg:flex items-center gap-space-xs" data-active-classes="bg-surface-container-high text-primary font-label-md"><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="trang-chu" th:href="@{/patient/dashboard}">Trang chủ</a><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="chuyen-khoa" th:href="@{/patient/doctors}">Chuyên khoa</a><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="bac-si" th:href="@{/patient/doctors}">Bác sĩ</a><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="lich-hen-cua-toi" th:href="@{/patient/appointments}">Lịch hẹn của tôi</a></nav></div><div class="flex items-center gap-space-md"><form method="get" th:action="@{/patient/doctors}" class="hidden xl:flex items-center relative w-72"><span class="material-symbols-outlined absolute left-3 text-outline text-[20px]">search</span><input name="keyword" class="w-full bg-surface-container-low text-on-surface font-body-sm text-body-sm pl-10 pr-4 py-space-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest transition-all" placeholder="Tìm bác sĩ, chuyên khoa..." type="search"></form><a class="hidden sm:inline-flex items-center gap-space-xs bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-md py-space-sm rounded-lg shadow-sm transition-all" data-path="dat-lich-kham" th:href="@{/dat-lich-kham(bacSiId=${doctor.doctorId},lichLamViecId=${firstSchedule.scheduleId})}" th:if="${firstSchedule != null}"><span class="material-symbols-outlined text-[18px]">calendar_today</span><span>Đặt lịch khám</span></a><span class="hidden sm:inline-flex items-center gap-space-xs bg-surface-container text-outline font-label-md text-label-md px-space-md py-space-sm rounded-lg cursor-not-allowed" th:if="${firstSchedule == null}"><span class="material-symbols-outlined text-[18px]">event_busy</span><span>Chưa có lịch trống</span></span><div class="flex items-center gap-space-sm pl-space-xs"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="hidden md:flex flex-col text-left"><span class="font-label-sm text-label-sm text-on-surface leading-tight" th:text="${benhNhan.hoTen}">Tên bệnh nhân</span><span class="font-body-sm text-[11px] text-secondary leading-tight">Bệnh nhân</span></div></div></div></div></header><main class="w-full pt-20 bg-background"><div class="flex flex-col w-full">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"error-container":"#ffdad6","tertiary-container":"#bc4800","on-secondary-fixed":"#00201d","surface-container-low":"#f3f4f5","on-primary-container":"#eeefff","primary":"#004ac6","tertiary":"#943700","outline":"#737686","on-background":"#191c1d","on-tertiary-fixed-variant":"#7d2d00","surface-container-high":"#e7e8e9","surface":"#f8f9fa","on-surface-variant":"#434655","secondary-container":"#86f2e4","secondary":"#006a61","background":"#f8f9fa","status-confirmed":"#10B981","on-tertiary-fixed":"#360f00","status-pending":"#F59E0B","on-error-container":"#93000a","tertiary-fixed":"#ffdbcd","outline-variant":"#c3c6d7","surface-bright":"#f8f9fa","primary-container":"#2563eb","inverse-on-surface":"#f0f1f2","on-primary":"#ffffff","on-primary-fixed-variant":"#003ea8","tertiary-fixed-dim":"#ffb596","surface-variant":"#e1e3e4","on-secondary":"#ffffff","secondary-fixed-dim":"#6bd8cb","on-surface":"#191c1d","surface-dim":"#d9dadb","on-error":"#ffffff","surface-container":"#edeeef","status-completed":"#2563EB","surface-tint":"#0053db","on-secondary-container":"#006f66","primary-fixed-dim":"#b4c5ff","status-cancelled":"#F43F5E","inverse-primary":"#b4c5ff","on-tertiary":"#ffffff","on-secondary-fixed-variant":"#005049","secondary-fixed":"#89f5e7","error":"#ba1a1a","on-tertiary-container":"#ffede6","primary-fixed":"#dbe1ff","surface-container-highest":"#e1e3e4","on-primary-fixed":"#00174b","inverse-surface":"#2e3132","surface-container-lowest":"#ffffff"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"gutter":"1.5rem","margin":"2rem","space-lg":"1.5rem","space-md":"1rem","space-xl":"2.5rem","space-xs":"0.25rem","space-sm":"0.5rem"},fontFamily:{"label-sm":["Inter"],"body-sm":["Inter"],"body-md":["Inter"],"body-lg":["Inter"],"headline-lg":["Inter"],"headline-sm":["Inter"],"headline-md":["Inter"],"label-md":["Inter"]},fontSize:{"label-sm":["12px",{"lineHeight":"16px","fontWeight":"500"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-lg":["32px",{"lineHeight":"40px","fontWeight":"700"}],"headline-sm":["18px",{"lineHeight":"24px","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"label-md":["14px",{"lineHeight":"20px","fontWeight":"500"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 w-full px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm focus:outline-none" data-path="trang-chu" th:href="@{/patient/dashboard}"><div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[24px]">local_hospital</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary tracking-tight">CareHealth</span><span class="font-label-sm text-label-sm text-secondary -mt-1">Y tế thông minh</span></div></a><nav class="hidden lg:flex items-center gap-space-xs" data-active-classes="bg-surface-container-high text-primary font-label-md"><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="trang-chu" th:href="@{/patient/dashboard}">Trang chủ</a><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="chuyen-khoa" th:href="@{/patient/doctors}">Chuyên khoa</a><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="bac-si" th:href="@{/patient/doctors}">Bác sĩ</a><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="lich-hen-cua-toi" th:href="@{/patient/appointments}">Lịch hẹn của tôi</a></nav></div><div class="flex items-center gap-space-md"><form method="get" th:action="@{/patient/doctors}" class="hidden xl:flex items-center relative w-72"><span class="material-symbols-outlined absolute left-3 text-outline text-[20px]">search</span><input name="keyword" class="w-full bg-surface-container-low text-on-surface font-body-sm text-body-sm pl-10 pr-4 py-space-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest transition-all" placeholder="Tìm bác sĩ, chuyên khoa..." type="search"></form>
+
+    <a class="hidden sm:inline-flex items-center gap-space-xs bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-md py-space-sm rounded-lg shadow-sm transition-all"
+       data-path="dat-lich-kham"
+       th:href="@{/dat-lich-kham(bacSiId=${doctor.doctorId},lichLamViecId=${firstSchedule.scheduleId})}"
+       th:if="${hasAvailableSlots and firstSchedule != null}">
+
+    <span class="material-symbols-outlined text-[18px]">
+        calendar_today
+    </span>
+
+        <span>Đặt lịch khám</span>
+    </a>
+
+    <span class="hidden sm:inline-flex items-center gap-space-xs bg-surface-container text-outline font-label-md text-label-md px-space-md py-space-sm rounded-lg cursor-not-allowed"
+          th:if="${!hasAvailableSlots or firstSchedule == null}">
+
+    <span class="material-symbols-outlined text-[18px]">
+        event_busy
+    </span>
+
+    <span>Chưa có lịch trống</span>
+</span>
+
+    <div class="flex items-center gap-space-sm pl-space-xs">
+        <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+        </div>
+        <div class="hidden md:flex flex-col text-left"><span class="font-label-sm text-label-sm text-on-surface leading-tight" th:text="${benhNhan.hoTen}">Tên bệnh nhân</span><span class="font-body-sm text-[11px] text-secondary leading-tight">Bệnh nhân</span></div></div></div></div></header><main class="w-full pt-20 bg-background"><div class="flex flex-col w-full">
     <!-- Top Breadcrumb Bar -->
     <div class="w-full px-gutter py-space-sm bg-surface-container-low">
         <div class="max-w-7xl mx-auto flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
@@ -84,32 +111,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Stats Ribbon Bento -->
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-space-xs pt-space-xs">
-                            <div class="bg-surface-container p-space-sm rounded-lg flex flex-col justify-center">
-                                <span class="font-body-sm text-body-sm text-on-surface-variant">Kinh nghiệm</span>
-                                <span class="font-headline-sm text-headline-sm text-primary font-bold" th:text='${doctor.experience + " năm"}'>18+ năm</span>
-                                <span class="font-label-sm text-[11px] text-outline">Theo hồ sơ bác sĩ</span>
-                            </div>
-                            <div class="bg-surface-container p-space-sm rounded-lg flex flex-col justify-center">
-                                <span class="font-body-sm text-body-sm text-on-surface-variant">Ca khám sắp tới</span>
-                                <span class="font-headline-sm text-headline-sm text-on-surface font-bold" th:text="${#lists.size(schedules)}">0</span>
-                                <span class="font-label-sm text-[11px] text-status-confirmed">Lấy từ lịch làm việc</span>
-                            </div>
-                            <div class="bg-surface-container p-space-sm rounded-lg flex flex-col justify-center">
-                                <span class="font-body-sm text-body-sm text-on-surface-variant">Đánh giá</span>
-                                <div class="flex items-center gap-1">
-                                    <span class="font-headline-sm text-headline-sm text-on-surface font-bold">—</span>
-                                    <span class="material-symbols-outlined text-[18px] text-status-pending">star_border</span>
-                                </div>
-                                <span class="font-label-sm text-[11px] text-outline">Chưa có dữ liệu đánh giá</span>
-                            </div>
-                            <div class="bg-surface-container p-space-sm rounded-lg flex flex-col justify-center">
-                                <span class="font-body-sm text-body-sm text-on-surface-variant">Hài lòng</span>
-                                <span class="font-headline-sm text-headline-sm text-secondary font-bold">—</span>
-                                <span class="font-label-sm text-[11px] text-outline">Chưa có dữ liệu khảo sát</span>
-                            </div>
-                        </div>
                         <!-- CTA Row on Desktop Banner -->
                         <div class="mt-space-md flex flex-wrap items-center gap-space-sm">
                             <a class="inline-flex items-center gap-space-sm bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-lg py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200" th:href="@{/dat-lich-kham(bacSiId=${doctor.doctorId},lichLamViecId=${firstSchedule.scheduleId})}" th:if="${!#lists.isEmpty(schedules)}">
@@ -150,9 +151,6 @@
                     </button>
                     <button class="tab-btn px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container whitespace-nowrap transition-all" onclick="switchDoctorTab('lich-kham', this)" type="button">
                         Lịch làm việc
-                    </button>
-                    <button class="tab-btn px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container whitespace-nowrap transition-all" onclick="switchDoctorTab('danh-gia', this)" type="button">
-                        Đánh giá
                     </button>
                 </div>
                 <!-- TAB 1: Giới thiệu & Quá trình công tác -->
@@ -267,7 +265,16 @@
                                     <td class="p-space-sm" th:text="${schedule.shiftName}"></td>
                                     <td class="p-space-sm" th:text="${schedule.startTime + ' - ' + schedule.endTime}"></td>
                                     <td class="p-space-sm">
-                                        <a class="text-primary hover:underline font-semibold" th:href="@{/dat-lich-kham(bacSiId=${doctor.doctorId},lichLamViecId=${schedule.scheduleId})}">Đặt lịch</a>
+                                        <a class="text-primary hover:underline font-semibold"
+                                           th:if="${schedule.conCho}"
+                                           th:href="@{/dat-lich-kham(bacSiId=${doctor.doctorId},lichLamViecId=${schedule.scheduleId})}">
+                                            Đặt lịch
+                                        </a>
+
+                                        <span class="text-gray-400"
+                                              th:unless="${schedule.conCho}">
+                                                Không còn giờ đặt
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr th:if="${#lists.isEmpty(schedules)}"><td colspan="4" class="p-5 text-center text-on-surface-variant">Bác sĩ chưa có ca khám sắp tới. Vui lòng quay lại sau hoặc liên hệ cơ sở y tế.</td></tr>
@@ -278,32 +285,6 @@
                             <span class="material-symbols-outlined text-[16px] text-primary">info</span>
                             Chọn một ca khám và khung giờ còn trống. Hệ thống sẽ kiểm tra lại trước khi ghi nhận lịch hẹn.
                         </p>
-                    </div>
-                </div>
-                <!-- TAB 5: Đánh giá từ bệnh nhân thực tế -->
-                <div class="tab-content hidden flex-col gap-space-md" id="tab-danh-gia">
-                    <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
-                        <!-- Summary Rating Box -->
-                        <div class="p-space-md bg-surface-container-low rounded-xl flex flex-col sm:flex-row items-center justify-between gap-space-md mb-space-lg">
-                            <div class="flex items-center gap-space-md text-center sm:text-left">
-                                <div class="text-center">
-                                    <span class="font-headline-lg text-[26px] leading-tight text-primary font-bold">Hồ sơ</span>
-                                    <div class="flex items-center justify-center text-outline"><span class="material-symbols-outlined text-[24px]">info</span></div>
-                                    <span class="font-body-sm text-body-sm text-outline">Đánh giá chưa được kết nối</span>
-                                </div>
-                                <div class="h-14 w-0.5 bg-surface-container hidden sm:block"></div>
-                                <div>
-                                    <h4 class="font-headline-sm text-[16px] text-on-surface font-semibold" th:text="${doctor.specialty}">Chuyên khoa</h4>
-                                    <p class="font-body-sm text-body-sm text-on-surface-variant">Thông tin bác sĩ được lấy từ hồ sơ đã lưu trong hệ thống.</p>
-                                </div>
-                            </div>
-                            <span class="px-space-md py-space-sm bg-surface-container text-on-surface-variant rounded-lg font-label-md text-label-md">Chức năng đánh giá chưa có trong database</span>
-                        </div>
-                        <div class="p-space-lg rounded-xl bg-surface text-center">
-                            <span class="material-symbols-outlined text-4xl text-outline">rate_review</span>
-                            <h3 class="font-headline-sm text-on-surface font-semibold mt-space-sm">Chưa có đánh giá</h3>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Database hiện tại chưa có bảng lưu đánh giá bác sĩ.</p>
-                        </div>
                     </div>
                 </div>
                 <!-- Clinic Location & Infrastructure Highlights -->
@@ -368,18 +349,13 @@
                     <!-- Subtle Top Accent Ribbon -->
                     <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-secondary"></div>
                     <div class="pb-space-md mb-space-md border-b border-surface-container">
-                        <div class="flex items-center justify-between gap-3">
-                            <div>
-                                <span class="font-body-sm text-body-sm text-on-surface-variant block">Giá khám trực tiếp</span>
-                                <div class="flex items-baseline gap-1 mt-1" th:if="${doctor.consultationFee != null}">
-                                    <strong class="font-headline-lg text-[28px] font-bold text-primary" th:text="${#numbers.formatDecimal(doctor.consultationFee, 1, 'POINT', 0, 'COMMA')}">300.000</strong>
-                                    <span class="font-label-sm text-label-sm font-semibold text-primary">VNĐ</span>
-                                </div>
-                                <strong class="font-headline-sm text-[18px] font-bold text-on-surface mt-1 block" th:if="${doctor.consultationFee == null}">Chưa cập nhật</strong>
-                            </div>
-                            <span class="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><span class="material-symbols-outlined text-[24px]">payments</span></span>
-                        </div>
-                        <p class="font-body-sm text-[11px] text-outline mt-2">Phí được hiển thị theo danh mục dịch vụ đã khai báo trong database (nếu có).</p>
+                        <span class="font-headline-sm text-headline-sm text-on-surface font-bold">
+                            Đặt lịch khám
+                        </span>
+
+                        <p class="font-body-sm text-body-sm text-on-surface-variant mt-2">
+                            Chọn ca làm việc và khung giờ còn trống của bác sĩ.
+                        </p>
                     </div>
                     <!-- Thông tin ca khám và khung giờ trống lấy từ lich_lam_viec / lich_hen -->
                     <div class="flex items-center justify-between pb-space-md">
@@ -388,7 +364,15 @@
                             <div class="font-headline-sm text-[20px] font-bold text-primary" th:if="${firstSchedule != null}" th:text="${#dates.format(firstSchedule.workDate, 'dd/MM/yyyy')}">Ngày khám</div>
                             <div class="font-body-sm text-body-sm text-on-surface-variant" th:if="${firstSchedule == null}">Chưa có ca khám</div>
                         </div>
-                        <span class="px-2.5 py-1 rounded-full bg-status-confirmed/15 text-secondary font-label-sm text-label-sm font-semibold" th:if="${firstSchedule != null}">Có lịch sắp tới</span>
+                        <span class="px-2.5 py-1 rounded-full bg-status-confirmed/15 text-secondary font-label-sm text-label-sm font-semibold"
+                              th:if="${hasAvailableSlots}">
+                                Còn giờ đặt
+                        </span>
+
+                        <span class="px-2.5 py-1 rounded-full bg-surface-container text-outline font-label-sm"
+                              th:if="${firstSchedule != null and !hasAvailableSlots}">
+                                Không còn giờ đặt
+                        </span>
                     </div>
                     <div class="bg-surface-container-low p-space-md rounded-xl space-y-space-sm mb-space-md">
                         <div class="flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
@@ -419,7 +403,7 @@
                         </div>
                     </div>
                     <!-- Primary Direct Booking Button -> UI5 -->
-                    <a class="inline-flex items-center gap-space-sm bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-lg py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200" th:href="@{/dat-lich-kham(bacSiId=${doctor.doctorId},lichLamViecId=${firstSchedule.scheduleId})}" th:if="${!#lists.isEmpty(schedules)}">
+                    <a class="inline-flex items-center gap-space-sm bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-lg py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200" th:href="@{/dat-lich-kham(bacSiId=${doctor.doctorId},lichLamViecId=${firstSchedule.scheduleId})}" th:if="${hasAvailableSlots}">
                         <span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
                         <span>Tiến hành Đặt Lịch Khám</span>
                         <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -467,6 +451,27 @@
             if (element) {
                 element.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
                 element.classList.remove('text-on-surface-variant');
+            }
+        }
+
+        // Tự động mở tab lịch làm việc khi truy cập từ nút Đặt lịch khám.
+        if (window.location.hash === "#lich-kham") {
+
+            const nutLichKham = Array.from(
+                document.querySelectorAll(".tab-btn")
+            ).find(nut =>
+                nut.getAttribute("onclick")?.includes("'lich-kham'")
+            );
+
+            if (nutLichKham) {
+
+                switchDoctorTab("lich-kham", nutLichKham);
+
+                document.getElementById("tab-lich-kham")
+                    ?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
             }
         }
 

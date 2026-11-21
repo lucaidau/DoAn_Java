@@ -14,5 +14,5 @@ public interface BacSiRepository extends JpaRepository<BacSi, Long>, JpaSpecific
 
     List<BacSi> findByIdIn(List<Long> danhSachMa);
 
-
+    List<BacSi> findByHoTenContainingOrChuyenKhoa_TenChuyenKhoaContaining(String hoTen, String tenChuyenKhoa);
 }

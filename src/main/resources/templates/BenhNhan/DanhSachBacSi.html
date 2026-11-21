@@ -472,7 +472,7 @@
           "trang-chu": "/patient/dashboard",
           "chuyen-khoa": "/patient/specialties",
           "bac-si": "/patient/doctors",
-          "dat-lich-kham": "/lichhen/tao",
+          "dat-lich-kham": "/patient/doctors",
           "lich-hen-cua-toi": "/patient/appointments"
         };
         document.querySelectorAll("[data-path]").forEach(a => a.setAttribute("href", ROUTES[a.dataset.path] || "#"));
@@ -503,8 +503,8 @@
         }
 
 
-        // Trang dat lich chua co: doi sang duong dan that khi co, vi du "/DatLichKham.html?doctorId="
-        const BOOKING_URL = "/lichhen/tao?bacSiId=";
+        //"/DatLichKham.html?doctorId="
+        const PROFILE_URL = "/ho-so-bac-si/";
         const SIZE = 8;
         const state = { page: 0, dateFrom: "", dateTo: "", seq: 0 };
         const el = {
@@ -569,7 +569,8 @@
           const nextDay = next ? isoDate(next.ngayLamViec) : "";
           const sameDay = (lich || []).filter(l => isoDate(l.ngayLamViec) === nextDay);
           const ca = sameDay.map(l => `${esc(pick(l, "tenCa") || "Ca")} ${esc(hhmm(l.gioBatDau))}${l.gioKetThuc ? " – " + esc(hhmm(l.gioKetThuc)) : ""}`.trim()).join(" · ");
-          const booking = BOOKING_URL ? BOOKING_URL + encodeURIComponent(d.id) : "#";
+          const profile = PROFILE_URL + encodeURIComponent(d.id);
+          const booking = profile + "#lich-kham";
           return `
               <div>
               <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
@@ -591,8 +592,10 @@
                         ${Number(d.soNamKinhNghiem || 0)} năm kinh nghiệm
                       </span>
                     </div>
-                    <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold hover:text-primary transition-colors cursor-pointer" data-toggle-detail>
-                      ${esc(fullName(d))}
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold hover:text-primary transition-colors cursor-pointer">
+                        <a href="${profile}">
+                            ${esc(fullName(d))}
+                         </a>
                     </h3>
                     <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
                       <span class="material-symbols-outlined text-[16px] text-primary">domain</span>
@@ -610,9 +613,10 @@
                     </div>` : ""}
                   </div>
                   <div class="grid grid-cols-2 md:flex md:flex-col gap-2 w-full mt-space-sm">
-                    <button class="py-2 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm text-center transition-colors" type="button" data-toggle-detail>
-                      Xem hồ sơ
-                    </button>
+                    <a class="py-2 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm text-center transition-colors"
+                        href="${profile}">
+                        Xem hồ sơ
+                    </a>
                     <a class="py-2 px-3 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md text-center shadow-sm transition-all flex items-center justify-center gap-1"
                       href="${booking}" data-doctor-id="${esc(d.id)}">
                       <span class="material-symbols-outlined text-[16px]">calendar_add_on</span>
@@ -620,10 +624,6 @@
                     </a>
                   </div>
                 </div>
-              </div>
-              <div class="hidden bg-surface-container-low rounded-xl p-space-md mt-1 font-body-sm text-body-sm text-on-surface-variant space-y-1" data-detail>
-                <p><strong class="text-on-surface">${esc(fullName(d))}</strong> – ${esc(d.chuyenKhoa?.tenChuyenKhoa || "")}, ${Number(d.soNamKinhNghiem || 0)} năm kinh nghiệm.</p>
-                <p>${esc(d.gioiThieu || "Chưa có phần giới thiệu.")}</p>
               </div>
               </div>`;
         }
@@ -736,10 +736,10 @@
           if (!b || b.disabled) return;
           state.page = Number(b.dataset.page); load(); el.feed.scrollIntoView({ behavior: "smooth", block: "start" });
         });
-        document.addEventListener("click", e => {
-          if (e.target.closest("[data-clear-date]")) return clearDate();
-          const t = e.target.closest("[data-toggle-detail]");
-          if (t) t.closest("#doctorFeed > div")?.querySelector("[data-detail]")?.classList.toggle("hidden");
+        document.addEventListener('click', e => {
+          if (e.target.closest("[data-clear-date]")) {
+            clearDate();
+          }
         });
         document.querySelectorAll(".filter-date-btn").forEach(b => b.addEventListener("click", () => {
           const already = state.dateFrom && b.classList.contains("bg-primary");

@@ -55,17 +55,17 @@ public class LichHenService {
 
     public long tongTatCa() {
         Long id = bacSiIdHienTai();
-        return id == null ? lichHenRepo.count() : lichHenRepo.countByBacSiId(id);
+        return id == null ? lichHenRepo.count() : lichHenRepo.countByLichLamViec_BacSiId(id);
     }
 
     public Page<LichHen> danhSach(String search, String status, LocalDate from, LocalDate to, int page) {
-        return lichHenRepo.timKiem(search == null ? "" : search.trim(), status == null || status.isBlank() ? "ALL" : status, from, to, bacSiIdHienTai(), PageRequest.of(Math.max(0, page - 1), 8, Sort.by("ngayKham").descending().and(Sort.by("id").descending())));
+        return lichHenRepo.timKiem(search == null ? "" : search.trim(), status == null || status.isBlank() ? "ALL" : status, from, to, bacSiIdHienTai(), PageRequest.of(Math.max(0, page - 1), 8, Sort.by("ngayKham").descending().and(Sort.by("id").ascending())));
     }
 
     public LichHen chiTiet(Long id) {
         LichHen lich = lichHenRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy lịch hẹn " + id));
         Long bacSiId = bacSiIdHienTai();
-        if (bacSiId != null && (lich.getBacSi() == null || !bacSiId.equals(lich.getBacSi().getId())))
+        if (bacSiId != null && (lich.getLichLamViec().getBacSi() == null || !bacSiId.equals(lich.getLichLamViec().getBacSi().getId())))
             throw new AccessDeniedException("Không có quyền truy cập lịch hẹn của bác sĩ khác");
         return lich;
     }
@@ -91,18 +91,18 @@ public class LichHenService {
     // -- Đếm tất cả lịch hẹn theo trạng thái để đồng bộ số liệu trên các tab --
     public long thongKe(String status) {
         Long id = bacSiIdHienTai();
-        return id == null ? lichHenRepo.countByTrangThai(status) : lichHenRepo.countByBacSiIdAndTrangThai(id, status);
+        return id == null ? lichHenRepo.countByTrangThai(status) : lichHenRepo.countByLichLamViec_BacSiIdAndTrangThai(id, status);
     }
 
     // -- Thống kê riêng số lịch có ngày khám là hôm nay --
     public long tongHomNay() {
         Long id = bacSiIdHienTai();
-        return id == null ? lichHenRepo.countByNgayKham(LocalDate.now()) : lichHenRepo.countByBacSiIdAndNgayKham(id, LocalDate.now());
+        return id == null ? lichHenRepo.countByNgayKham(LocalDate.now()) : lichHenRepo.countByLichLamViec_BacSiIdAndNgayKham(id, LocalDate.now());
     }
 
     public List<LichHen> thongBao() {
         Long id = bacSiIdHienTai();
-        return id == null ? lichHenRepo.findTop10ByOrderByNgayTaoDesc() : lichHenRepo.findTop10ByBacSiIdOrderByNgayTaoDesc(id);
+        return id == null ? lichHenRepo.findTop10ByOrderByNgayTaoDesc() : lichHenRepo.findTop10ByLichLamViec_BacSiIdOrderByNgayTaoDesc(id);
     }
 
     public List<PhongKham> phongKhams() { return phongKhamRepo.findAll(Sort.by("tenPhong")); }
@@ -114,19 +114,21 @@ public class LichHenService {
         Long bacSiDangNhap = bacSiIdHienTai();
         if (bacSiDangNhap != null && !bacSiDangNhap.equals(bacSiId))
             throw new AccessDeniedException("Chỉ được tạo lịch cho bác sĩ đang đăng nhập");
+
         BenhNhan benhNhan = benhNhanRepo.findById(benhNhanId).orElseThrow(() -> new IllegalArgumentException("Bệnh nhân không tồn tại"));
         BacSi bacSi = bacSiRepo.findById(bacSiId).orElseThrow(() -> new IllegalArgumentException("Bác sĩ không tồn tại"));
         LichLamViec ca = caRepo.findById(caId).orElseThrow(() -> new IllegalArgumentException("Ca khám không tồn tại"));
+
         if (!ca.getBacSi().getId().equals(bacSiId) || !ca.getNgayLamViec().equals(ngay)) throw new IllegalArgumentException("Ca khám không thuộc bác sĩ hoặc ngày đã chọn");
-        if (gio == null || !gio.matches("\\d{2}:\\d{2} - \\d{2}:\\d{2}")) throw new IllegalArgumentException("Khung giờ phải có dạng 08:00 - 08:30");
+        if (gio == null || !gio.matches("\\d{2}:\\d{2} - \\d{2}:\\d{2}")) throw new IllegalArgumentException("Khung giờ phải có dạng hh:mm - hh:mm");
         LocalTime batDau = LocalTime.parse(gio.substring(0, 5));
         LocalTime ketThuc = LocalTime.parse(gio.substring(8, 13));
         if (batDau.isBefore(ca.getGioBatDau()) || ketThuc.isAfter(ca.getGioKetThuc()) || !batDau.isBefore(ketThuc)) throw new IllegalArgumentException("Giờ khám nằm ngoài ca làm việc");
         long daDat = lichHenRepo.countByLichLamViecIdAndTrangThaiNot(caId, "DA_HUY");
         if (daDat >= ca.getSoLuongToida()) throw new IllegalArgumentException("Ca khám đã đủ số lượng bệnh nhân");
+
         LichHen lich = new LichHen();
         lich.setBenhNhan(benhNhan);
-        lich.setBacSi(bacSi);
         lich.setLichLamViec(ca);
         lich.setNgayKham(ngay);
         lich.setKhungGioKham(gio);
@@ -140,17 +142,42 @@ public class LichHenService {
     public LichHen taoDayDu(Long benhNhanId, Long bacSiId, Long caId, LocalDate ngay, String gio, String trieuChung, Long phongId, String ghiChu, Integer tamThu, Integer tamTruong, Integer nhipTim, Integer spo2, java.math.BigDecimal canNang, java.math.BigDecimal chieuCao, String tienSu, String giaDinh, String thoiQuen) {
         if (phongId == null) throw new IllegalArgumentException("Phải chọn phòng khám");
         PhongKham phong = phongKhamRepo.findById(phongId).orElseThrow(() -> new IllegalArgumentException("Phòng khám không tồn tại"));
+
         if (spo2 != null && (spo2 < 0 || spo2 > 100)) throw new IllegalArgumentException("SpO2 phải từ 0 đến 100");
         if (canNang != null && canNang.signum() <= 0 || chieuCao != null && chieuCao.signum() <= 0) throw new IllegalArgumentException("Cân nặng và chiều cao phải lớn hơn 0");
+
         LichHen lich = tao(benhNhanId, bacSiId, caId, ngay, gio, trieuChung);
-        lich.setPhongKham(phong);
-        lich.setGhiChuTiepNhan(ghiChu);
-        lichHenRepo.save(lich);
+        // Kiểm tra xem phòng khám truyền vào có khớp với phòng khám của ca trực không
+        if (lich.getLichLamViec().getPhongKham() != null &&
+                !lich.getLichLamViec().getPhongKham().getId().equals(phongId)) {
+            throw new IllegalArgumentException("Phòng khám không khớp với ca làm việc đã chọn");
+        }
+
+        // 4. Cập nhật thêm ghi chú tiếp nhận (nếu có)
+        if (ghiChu != null && !ghiChu.isBlank()) {
+            lich.setGhiChuTiepNhan(ghiChu);
+            lichHenRepo.save(lich); // Lưu lại cập nhật ghi chú
+        }
+
         BenhNhan benhNhan = lich.getBenhNhan();
-        if (tienSu != null && !tienSu.isBlank()) benhNhan.setTienSuBenh(tienSu);
-        if (giaDinh != null && !giaDinh.isBlank()) benhNhan.setTienSuGiaDinh(giaDinh);
-        if (thoiQuen != null && !thoiQuen.isBlank()) benhNhan.setThoiQuenSinhHoat(thoiQuen);
-        benhNhanRepo.save(benhNhan);
+        boolean updateBenhNhan = false;
+        if (tienSu != null && !tienSu.isBlank()) {
+            benhNhan.setTienSuBenh(tienSu);
+            updateBenhNhan = true;
+        }
+        if (giaDinh != null && !giaDinh.isBlank()) {
+            benhNhan.setTienSuGiaDinh(giaDinh);
+            updateBenhNhan = true;
+        }
+        if (thoiQuen != null && !thoiQuen.isBlank()) {
+            benhNhan.setThoiQuenSinhHoat(thoiQuen);
+            updateBenhNhan = true;
+        }
+
+        if(updateBenhNhan)
+        {
+            benhNhanRepo.save(benhNhan);
+        }
         if (tamThu != null || tamTruong != null || nhipTim != null || spo2 != null || canNang != null || chieuCao != null) {
             SinhHieu sh = new SinhHieu();
             sh.setLichHen(lich);
