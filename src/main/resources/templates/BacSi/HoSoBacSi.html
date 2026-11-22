@@ -127,31 +127,17 @@
                     <span class="font-label-sm text-label-sm text-on-surface-variant leading-tight mt-0.5">Cổng Bác Sĩ &amp; Quản Trị</span>
                 </div>
             </div>
-            <div class="px-space-md py-space-sm">
-                <div class="bg-surface-container-low rounded-lg p-space-sm flex items-center justify-between">
-                    <span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Khoa: Tim Mạch</span>
-                    <span class="w-2 h-2 rounded-full bg-status-confirmed"></span>
-                </div>
-            </div>
-            <nav class="flex flex-col gap-1 px-space-md mt-space-sm" data-active-classes="bg-primary text-on-primary font-medium rounded-xl shadow-sm">
-                <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="trang-chu-&amp;-lich-hen" th:href="@{/doctor/dashboard}">
+            <nav id="sidebar-menu" class="flex flex-col gap-1 px-space-md mt-space-sm">
+                <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="trang-chu-&amp;-lich-hen" th:href="@{/lichhen}">
                     <span class="material-symbols-outlined text-[20px]">calendar_today</span>
                     <span>Trang chủ &amp; Lịch hẹn</span>
                 </a>
-                <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="chi-tiet-lich-hen" th:href="@{/doctor/appointments}">
-                    <span class="material-symbols-outlined text-[20px]">schedule</span>
-                    <span>Chi tiết lịch hẹn</span>
-                </a>
-                <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="thong-tin-ca-kham" href="#">
+                <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="thong-tin-ca-kham" th:href="@{/lichhen}">
                     <span class="material-symbols-outlined text-[20px]">clinical_notes</span>
                     <span>Thông tin ca khám</span>
                 </a>
-                <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="bao-cao-&amp;-thong-ke" href="#">
-                    <span class="material-symbols-outlined text-[20px]">bar_chart</span>
-                    <span>Báo cáo &amp; Thống kê</span>
-                </a>
-                <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="ho-so-ca-nhan" th:href="@{/doctor/profile}">
-                    <span class="material-symbols-outlined text-[20px]">person</span>
+                <a class="flex items-center gap-3 px-space-md py-space-sm transition-all bg-primary text-on-primary font-medium rounded-xl shadow-sm" data-path="ho-so-ca-nhan" th:href="@{/doctor/profile}">
+                    <span class="material-symbols-outlined text-[20px] text-on-primary">person</span>
                     <span>Hồ sơ cá nhân</span>
                 </a>
             </nav>
@@ -164,7 +150,7 @@
                     </div>
                     <div class="flex flex-col min-w-0">
                         <span class="font-label-md text-label-md text-on-surface font-semibold truncate" th:text="${tenBacSi}">BS. CKII Nguyễn Văn A</span>
-                        <span class="font-body-sm text-body-sm text-on-surface-variant truncate">Bệnh viện ĐHYD TP.HCM</span>
+                        <span class="font-body-sm text-body-sm text-on-surface-variant truncate">CareHealth</span>
                     </div>
                 </div>
             </div>
@@ -202,7 +188,7 @@
                     </div>
                     <div class="hidden xl:flex flex-col text-left">
                         <span class="font-label-md text-label-md font-semibold text-on-surface leading-none" th:text="${tenBacSi}">BS. CKII Nguyễn Văn A</span>
-                        <span class="font-label-sm text-label-sm text-on-surface-variant leading-tight mt-0.5">Khoa Tim Mạch</span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant leading-tight mt-0.5">CareHealth</span>
                     </div>
                 </div>
             </div>
@@ -228,11 +214,6 @@
                         </div>
                         <!-- Quick Action Shortcuts -->
                         <div class="flex items-center gap-space-sm self-start md:self-auto shrink-0">
-                            <a class="inline-flex items-center gap-2 px-space-md py-2.5 rounded-xl bg-surface-container-lowest text-on-surface hover:bg-surface-container-high transition-colors shadow-sm font-label-md text-label-md" rel="noopener" target="_blank" th:href="@{/bac-si/{id}(id=${bacSi.id})}" th:if="${bacSi != null}">
-                                <span class="material-symbols-outlined text-[18px] text-primary">visibility</span>
-                                <span>Xem trang công khai</span>
-                                <span class="material-symbols-outlined text-[14px] text-on-surface-variant">open_in_new</span>
-                            </a>
                             <button class="inline-flex items-center gap-2 px-space-lg py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary-container transition-all shadow-sm font-label-md text-label-md font-medium" form="profileForm" id="btnSaveTop" type="submit">
                                 <span class="material-symbols-outlined text-[18px]">save</span>
                                 <span>Lưu thay đổi</span>
