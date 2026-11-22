@@ -22,17 +22,40 @@ public class XuLyDatLichKham implements Runnable {
         this.thongTinDatLich = thongTinDatLich;
     }
 
+
     @Override
     public void run() {
 
+        String tenLuong = Thread.currentThread().getName();
+
+        System.out.println("======================================");
+        System.out.println("[BAT DAU] Xu ly dat lich kham");
+        System.out.println("[TEN LUONG] " + tenLuong);
+        System.out.println("[BENH NHAN ID] " + benhNhanId);
+
         try {
+
             maLichHen = datLichKhamService.taoLichHen(
                     benhNhanId, thongTinDatLich);
 
+            System.out.println("[THANH CONG] Dat lich kham");
+            System.out.println("[MA LICH HEN] " + maLichHen);
+            System.out.println("[TEN LUONG] " + tenLuong);
+
         } catch (RuntimeException ex) {
+
             loi = ex;
+
+            System.out.println("[THAT BAI] " + ex.getMessage());
+            System.out.println("[TEN LUONG] " + tenLuong);
+
+        } finally {
+
+            System.out.println("[KET THUC] " + tenLuong);
+            System.out.println("======================================");
         }
     }
+
 
     public Long getMaLichHen() {
         return maLichHen;
