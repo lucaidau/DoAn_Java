@@ -46,8 +46,8 @@
 <body class="bg-background font-body-md text-on-surface antialiased">
   <header
     class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-    <div class="w-full px-space-lg h-20 flex items-center justify-between gap-space-md">
-      <div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm group"
+    <div class="w-full min-w-0 px-space-md h-20 flex items-center justify-between gap-space-sm">
+      <div class="flex items-center gap-space-md shrink-0"><a class="flex items-center gap-space-sm group"
           data-path="trang-chu" href="/patient/dashboard" th:href="@{/patient/dashboard}">
           <div
             class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-sm">
@@ -57,28 +57,28 @@
               class="font-headline-sm text-headline-sm text-primary leading-tight tracking-tight">CareHealth</span><span
               class="font-label-sm text-label-sm text-secondary leading-none">Y tế thông minh</span></div>
         </a>
-        <nav class="hidden xl:flex items-center gap-space-xs"
+        <nav class="hidden xl:flex items-center gap-0 shrink-0"
           data-active-classes="bg-primary-container text-on-primary-container font-label-md"><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            class="whitespace-nowrap px-2 py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
             data-path="trang-chu" href="/patient/dashboard" th:href="@{/patient/dashboard}">Trang chủ</a><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            class="whitespace-nowrap px-2 py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
             data-path="chuyen-khoa" href="/patient/specialties" th:href="@{/patient/specialties}">Chuyên khoa</a><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            class="whitespace-nowrap px-2 py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
             data-path="bac-si" href="/patient/doctors" th:href="@{/patient/doctors}">Bác sĩ</a><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            class="whitespace-nowrap px-2 py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
             data-path="lich-hen-cua-toi" href="/patient/appointments" th:href="@{/patient/appointments}">Lịch hẹn của tôi</a></nav>
       </div>
-      <div class="hidden lg:flex items-center flex-1 max-w-xs xl:max-w-md mx-space-md">
+      <div class="hidden lg:flex items-center flex-1 min-w-0 max-w-56 mx-space-sm">
         <div class="relative w-full"><span
             class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span><input
-            class="w-full pl-10 pr-space-md py-space-sm bg-surface-container-low rounded-xl font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all"
+            class="w-full min-w-0 pl-10 pr-space-sm py-space-sm bg-surface-container-low rounded-xl font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all"
             placeholder="Tìm nhanh bác sĩ, chuyên khoa..." type="text" /></div>
       </div>
       <div class="flex items-center gap-space-md"><a
-          class="hidden sm:inline-flex items-center justify-center gap-space-xs px-space-md py-space-sm bg-primary text-on-primary rounded-xl font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-all shadow-sm"
+          class="hidden sm:inline-flex shrink-0 whitespace-nowrap items-center justify-center gap-space-xs px-space-sm py-space-sm bg-primary text-on-primary rounded-xl font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-all shadow-sm"
           data-path="dat-lich-kham" href="/patient/doctors" th:href="@{/patient/doctors}"><span
             class="material-symbols-outlined text-[18px]">calendar_month</span>Đặt lịch khám</a>
-        <details class="relative border-l border-surface-container-high pl-space-sm">
+        <details class="relative shrink-0 border-l border-surface-container-high pl-space-sm">
           <summary class="flex items-center gap-space-sm cursor-pointer list-none">
             <div class="text-right hidden md:flex flex-col"><span
                 class="font-label-md text-label-md text-on-surface leading-tight" th:text="${benhNhan.hoTen}">Bệnh nhân</span><span
@@ -174,8 +174,7 @@
                   id="specialtySearchInput"
                   placeholder="Tìm kiếm chuyên khoa (ví dụ: Tim mạch, Cơ xương khớp, Thần kinh...)" type="text">
                 <button id="clearSearchBtn" type="button" aria-label="Xóa nội dung tìm kiếm"
-                  class="absolute right-space-md top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors"
-                  onclick="document.getElementById('specialtySearchInput').value=''">
+                  class="absolute right-space-md top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors">
                   <span class="material-symbols-outlined text-[18px]">close</span>
                 </button>
               </div>
@@ -232,19 +231,6 @@
         </div>
       </div>
     </div>
-    <script>
-      // Simple Pill Selection Toggle Micro-interaction
-      document.querySelectorAll('.filter-pill').forEach(btn => {
-        btn.addEventListener('click', function () {
-          document.querySelectorAll('.filter-pill').forEach(b => {
-            b.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
-            b.classList.add('bg-surface-container-low', 'text-on-surface-variant');
-          });
-          this.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
-          this.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
-        });
-      });
-    </script>
   </main>
   <footer class="w-full bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] mt-space-xl">
     <div class="w-full px-gutter py-space-xl">
@@ -409,6 +395,17 @@
         ["bg-secondary-container/30", "bg-secondary-container text-on-secondary-container"], ["bg-tertiary-container/20", "bg-tertiary-fixed-dim text-on-tertiary-fixed"]];
       let timer;
 
+      function setActivePill(keyword) {
+        document.querySelectorAll("#filterPillContainer .filter-pill").forEach(button => {
+          const active = button.dataset.keyword === keyword;
+          button.classList.remove("bg-primary", "text-on-primary", "shadow-sm", "active",
+            "bg-surface-container-low", "text-on-surface-variant");
+          button.classList.add(...(active
+            ? ["bg-primary", "text-on-primary", "shadow-sm", "active"]
+            : ["bg-surface-container-low", "text-on-surface-variant"]));
+        });
+      }
+
       function loadFilterButtons() {
         const container = document.getElementById("filterPillContainer");
 
@@ -425,14 +422,7 @@
         // Gắn sự kiện Click cho TẤT CẢ các nút vừa được tạo
         document.querySelectorAll("#filterPillContainer .filter-pill").forEach(btn => {
           btn.addEventListener("click", function () {
-            // 1. Hiệu ứng đổi màu nút
-            document.querySelectorAll("#filterPillContainer .filter-pill").forEach(b => {
-              b.classList.remove("bg-primary", "text-on-primary", "shadow-sm", "active");
-              b.classList.add("bg-surface-container-low", "text-on-surface-variant");
-            });
-            this.classList.remove("bg-surface-container-low", "text-on-surface-variant");
-            this.classList.add("bg-primary", "text-on-primary", "shadow-sm", "active");
-
+            setActivePill(this.dataset.keyword);
             el.search.value = this.dataset.keyword;
             state.page = 0;
             load();
@@ -523,9 +513,23 @@
     }
     const reload = () => { state.page = 0; load(); };
 
-    el.search.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(reload, 300); });
+    el.search.addEventListener("input", () => {
+      if (!el.search.value.trim()) {
+        clearTimeout(timer);
+        setActivePill("");
+        reload();
+        return;
+      }
+      clearTimeout(timer);
+      timer = setTimeout(reload, 300);
+    });
     el.sort.addEventListener("change", reload);
-    el.clear.addEventListener("click", () => setTimeout(reload, 0));
+    el.clear.addEventListener("click", () => {
+      el.search.value = "";
+      clearTimeout(timer);
+      setActivePill("");
+      reload();
+    });
     el.pager.addEventListener("click", e => {
       const b = e.target.closest("button[data-page]");
       if (!b || b.disabled) return;
