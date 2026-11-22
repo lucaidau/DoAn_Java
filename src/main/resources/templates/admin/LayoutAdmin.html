@@ -172,9 +172,9 @@
                 <span class="material-symbols-outlined text-[20px]">medical_services</span>
                 <span>Quản lý Chuyên khoa</span>
             </a>
-            <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="settings" href="#">
+            <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="settings" th:href="@{/admin/heThong/lichLamViec}">
                 <span class="material-symbols-outlined text-[20px]">settings</span>
-                <span>Cài đặt Hệ thống</span>
+                <span>Quản lí lịch làm việc</span>
             </a>
         </nav>
     </div>
@@ -390,6 +390,92 @@
         </form>
     </div>
 </div>
+
+<!-- ================= MODAL SỬA CHUYÊN KHOA ================= -->
+<div id="editChuyenKhoaModal" style="display: none;"
+     onclick="if (event.target === this) closeSuaChuyenKhoaModal()"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 overflow-y-auto">
+    <div class="bg-surface-container-lowest w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col my-8 max-h-[90vh]">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between px-space-lg py-space-md border-b border-surface-container-low shrink-0">
+            <div class="flex items-center gap-space-sm">
+                <div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center text-primary shrink-0">
+                    <span class="material-symbols-outlined text-[22px]">edit_note</span>
+                </div>
+                <div>
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface">Cập Nhật Chuyên Khoa</h2>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Chỉnh sửa thông tin và phòng khám trực thuộc</p>
+                </div>
+            </div>
+            <button type="button" onclick="closeSuaChuyenKhoaModal()"
+                    class="p-2 rounded-xl text-outline hover:bg-surface-container hover:text-on-surface transition-colors" title="Đóng">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+        </div>
+
+        <!-- Form -->
+        <form th:action="@{/admin/chuyenKhoa/sua}" method="post" class="flex flex-col flex-1 min-h-0">
+            <input type="hidden" id="suaCkId" name="id">
+
+            <div class="p-space-lg overflow-y-auto flex-1 flex flex-col gap-space-md">
+                <div class="flex flex-col gap-1">
+                    <label for="suaCkTen" class="font-label-sm text-label-sm text-on-surface-variant font-medium">
+                        Tên chuyên khoa <span class="text-error">*</span>
+                    </label>
+                    <input type="text" id="suaCkTen" name="tenChuyenKhoa" required maxlength="100"
+                           class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary transition-all">
+                </div>
+
+                <div class="flex flex-col gap-1">
+                    <label for="suaCkMoTa" class="font-label-sm text-label-sm text-on-surface-variant font-medium">
+                        Mô tả chức năng &amp; nhiệm vụ chuyên môn
+                    </label>
+                    <textarea id="suaCkMoTa" name="moTa" rows="3"
+                              class="p-space-md bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary resize-none transition-all"></textarea>
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">
+                        Phòng khám trực thuộc (chỉ hiển thị phòng còn trống hoặc hiện tại)
+                    </label>
+                    <div id="suaCkPhongList" class="max-h-48 overflow-y-auto rounded-xl border border-surface-container bg-surface-container-low/60 p-2.5 flex flex-col gap-1.5">
+                        <label th:each="pk : ${dsPhongKhaDung}"
+                               th:attr="data-ck-id=${pk.chuyenKhoa != null ? pk.chuyenKhoa.id : ''}"
+                               class="phong-kham-item flex items-center gap-2.5 px-3 py-2 rounded-lg bg-surface-container-lowest border border-surface-container cursor-pointer hover:border-primary/40 transition-colors">
+                            <input type="checkbox"
+                                   name="phongKhamIds"
+                                   th:value="${pk.id}"
+                                   class="phong-kham-checkbox rounded text-primary focus:ring-primary">
+                            <span class="text-body-sm font-medium text-on-surface"
+                                  th:text="${pk.tenPhong} + (${pk.khuVuc != null && !#strings.isEmpty(pk.khuVuc) ? ' (' + pk.khuVuc + ')' : ''})">
+                                Phòng khám
+                            </span>
+                            <span th:if="${pk.chuyenKhoa == null}"
+                                  class="ml-auto text-[11px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-medium">
+                                Phòng trống
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="flex items-center justify-end gap-space-sm px-space-lg py-space-md bg-surface-container-low border-t border-surface-container-low shrink-0">
+                <button type="button" onclick="closeSuaChuyenKhoaModal()"
+                        class="px-space-md py-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-md text-label-md border border-outline-variant/40 transition-colors shadow-sm">
+                    Hủy bỏ
+                </button>
+                <button type="submit"
+                        class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md shadow-md transition-all">
+                    <span class="material-symbols-outlined text-[18px]">save</span>
+                    <span>Cập Nhật</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div th:if="${thongBaoThanhCong != null or thongBaoLoi != null}"
      id="flashDialogBackdrop"
      class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[1px] px-4"
@@ -462,11 +548,46 @@
 
     function openChuyenKhoaModal() {
         const modal = document.getElementById('addChuyenKhoaModal');
-        if (modal) modal.style.display = 'flex';
+        if (!modal) return;
+        const form = modal.querySelector('form');
+        if (form) form.reset();
+        modal.style.display = 'flex';
     }
 
     function closeChuyenKhoaModal() {
         const modal = document.getElementById('addChuyenKhoaModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    function openSuaChuyenKhoaModal(btn) {
+        const modal = document.getElementById('editChuyenKhoaModal');
+        if (!modal || !btn) return;
+
+        const ckId = btn.getAttribute('data-id') || '';
+        const ten = btn.getAttribute('data-ten') || '';
+        const moTa = btn.getAttribute('data-mo-ta') || '';
+
+        document.getElementById('suaCkId').value = ckId;
+        document.getElementById('suaCkTen').value = ten;
+        document.getElementById('suaCkMoTa').value = moTa;
+
+        const items = modal.querySelectorAll('.phong-kham-item');
+        items.forEach(item => {
+            const ownerCkId = item.getAttribute('data-ck-id') || '';
+            const checkbox = item.querySelector('.phong-kham-checkbox');
+            const isAvailable = (ownerCkId === '' || ownerCkId === ckId);
+
+            item.style.display = isAvailable ? 'flex' : 'none';
+            if (checkbox) {
+                checkbox.checked = (ownerCkId !== '' && ownerCkId === ckId);
+            }
+        });
+
+        modal.style.display = 'flex';
+    }
+
+    function closeSuaChuyenKhoaModal() {
+        const modal = document.getElementById('editChuyenKhoaModal');
         if (modal) modal.style.display = 'none';
     }
 </script>

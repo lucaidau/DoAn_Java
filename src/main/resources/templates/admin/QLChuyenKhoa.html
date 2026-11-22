@@ -99,25 +99,25 @@
               th:with="rawId=${ck != null ? ck['id'] : null},
              ckId=${rawId != null ? T(java.lang.Long).valueOf(rawId.toString()) : null},
              dsPhong=${(phongKhamMap != null && ckId != null) ? phongKhamMap.get(ckId) : null}">
-            <div th:if="${dsPhong != null && !#lists.isEmpty(dsPhong)}"
-                 class="flex flex-wrap gap-1.5">
-    <span th:each="pk : ${dsPhong}"
-          class="px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface text-body-sm font-medium border border-surface-container"
-          th:text="${pk.tenPhong} + (${pk.khuVuc != null && !#strings.isEmpty(pk.khuVuc) ? ' (' + pk.khuVuc + ')' : ''})">
-      Phòng khám
-    </span>
+            <div th:if="${dsPhong != null && !#lists.isEmpty(dsPhong)}" class="flex flex-wrap gap-1.5">
+                <span th:each="pk : ${dsPhong}"
+                      class="px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface text-body-sm font-medium border border-surface-container"
+                      th:text="${pk.tenPhong} + (${pk.khuVuc != null && !#strings.isEmpty(pk.khuVuc) ? ' (' + pk.khuVuc + ')' : ''})">
+                  Phòng khám
+                </span>
             </div>
-            <span th:unless="${dsPhong != null && !#lists.isEmpty(dsPhong)}"
-                  class="text-body-sm text-outline">
-    Chưa có phòng khám
-  </span>
+              <span th:unless="${dsPhong != null && !#lists.isEmpty(dsPhong)}" class="text-body-sm text-outline">
+                Chưa có phòng khám
+              </span>
           </td>
+
+
 
           <!-- Thao tác -->
           <td class="py-4 px-4 text-right">
             <div class="flex items-center justify-end gap-1 text-on-surface-variant">
               <button type="button"
-                      th:attr="data-id=${ck['id']}, data-ten=${ck['tenChuyenKhoa']}"
+                      th:attr="data-id=${ck['id']}, data-ten=${ck['tenChuyenKhoa']}, data-mo-ta=${ck['moTa']}"
                       onclick="openSuaChuyenKhoaModal(this)"
                       title="Sửa chuyên khoa"
                       class="p-1.5 rounded-lg hover:bg-surface-container hover:text-primary transition-colors">

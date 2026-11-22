@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/LayoutAdmin :: layout(~{::contentFragment})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch Làm Việc &amp; Phân Công Ca Trực - CareHealth</title>
+</head>
+<body>
+
+<div th:fragment="contentFragment" class="flex flex-col gap-space-lg">
+
+    <!-- 1. Breadcrumb & Page Header -->
+    <div class="flex flex-col gap-space-sm">
+        <div class="flex items-center gap-space-xs font-label-sm text-label-sm text-outline">
+            <span>Quản trị hệ thống</span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+            <span>Lịch khám bệnh</span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+            <span class="text-primary font-medium">Lịch làm việc</span>
+        </div>
+
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+            <div>
+                <h1 class="font-headline-md text-headline-md text-on-surface tracking-tight">Lịch Làm Việc &amp; Phân Công Ca Trực</h1>
+                <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">
+                    Phân công bác sĩ vào phòng khám theo từng ca. Bệnh nhân chỉ đặt được lịch khi bác sĩ đã có ca làm việc.
+                </p>
+            </div>
+            <div class="flex items-center flex-wrap gap-space-sm shrink-0">
+                <button type="button" onclick="openTaoCaModal()"
+                        class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md shadow-md transition-all">
+                    <span class="material-symbols-outlined text-[18px]">event_repeat</span>
+                    <span>Tạo Ca Hàng Loạt</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Thanh điều hướng tuần & lọc bác sĩ -->
+    <div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_1px_8px_rgba(0,0,0,0.03)] border border-surface-container flex flex-col lg:flex-row items-center justify-between gap-space-sm">
+
+        <div class="flex items-center gap-2">
+            <a th:href="@{/admin/heThong/lichLamViec(tuan=${tuanTruoc}, bacSiId=${bacSiId})}" title="Tuần trước"
+               class="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface transition-colors">
+                <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+            </a>
+
+            <div class="px-4 py-2 rounded-xl bg-surface-container-low font-label-md text-label-md text-on-surface"
+                 th:text="'Tuần ' + ${#temporals.format(tuNgay, 'dd/MM')} + ' – ' + ${#temporals.format(denNgay, 'dd/MM/yyyy')}">
+                Tuần 17/11 – 23/11/2026
+            </div>
+
+            <a th:href="@{/admin/heThong/lichLamViec(tuan=${tuanSau}, bacSiId=${bacSiId})}" title="Tuần sau"
+               class="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface transition-colors">
+                <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+            </a>
+
+            <a th:href="@{/admin/heThong/lichLamViec(tuan=${tuanNay}, bacSiId=${bacSiId})}"
+               class="px-3 py-2 rounded-xl text-primary hover:bg-primary-fixed font-label-md text-label-md transition-colors">
+                Tuần này
+            </a>
+        </div>
+
+        <form th:action="@{/admin/heThong/lichLamViec}" method="get" class="flex items-center gap-2 w-full lg:w-auto">
+            <input type="hidden" name="tuan" th:value="${tuNgay}">
+            <select name="bacSiId" onchange="this.form.submit()"
+                    class="w-full lg:w-72 px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-on-surface outline-none cursor-pointer">
+                <option value="">Tất cả bác sĩ</option>
+                <option th:each="bs : ${dsBacSi}"
+                        th:value="${bs.id}"
+                        th:text="${bs.hoTen}"
+                        th:selected="${bacSiId != null and bacSiId == bs.id}">Bác sĩ</option>
+            </select>
+        </form>
+    </div>
+
+    <!-- 3. Bảng ca làm việc -->
+    <div class="bg-surface-container-lowest rounded-2xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] border border-surface-container overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                <tr class="bg-surface-container-low/70 border-b border-surface-container text-outline font-label-sm text-label-sm uppercase tracking-wider">
+                    <th class="py-3.5 px-4 min-w-[130px]">NGÀY</th>
+                    <th class="py-3.5 px-4 min-w-[150px]">CA &amp; GIỜ</th>
+                    <th class="py-3.5 px-4 min-w-[220px]">BÁC SĨ</th>
+                    <th class="py-3.5 px-4 min-w-[200px]">PHÒNG KHÁM</th>
+                    <th class="py-3.5 px-4 min-w-[110px]">ĐÃ ĐẶT</th>
+                    <th class="py-3.5 px-4 text-right min-w-[90px]">THAO TÁC</th>
+                </tr>
+                </thead>
+
+                <tbody class="divide-y divide-surface-container-low font-body-md text-body-md">
+                <tr th:each="ca : ${dsCa}" class="hover:bg-surface-container-low/50 transition-colors">
+
+                    <!-- Ngày -->
+                    <td class="py-4 px-4">
+                        <div class="flex flex-col">
+              <span class="font-label-md text-on-surface font-semibold"
+                    th:text="${#temporals.format(ca.ngayLamViec, 'dd/MM/yyyy')}">17/11/2026</span>
+                            <span class="text-body-sm text-outline"
+                                  th:text="${#strings.arraySplit('Chủ nhật,Thứ 2,Thứ 3,Thứ 4,Thứ 5,Thứ 6,Thứ 7', ',')[#temporals.dayOfWeek(ca.ngayLamViec) % 7]}">Thứ 2</span>
+                        </div>
+                    </td>
+
+                    <!-- Ca & giờ -->
+                    <td class="py-4 px-4">
+                        <div class="flex flex-col gap-0.5">
+                            <span class="font-label-md text-on-surface font-semibold" th:text="${ca.tenCa}">Ca sáng</span>
+                            <span class="text-body-sm text-on-surface-variant"
+                                  th:text="${#temporals.format(ca.gioBatDau, 'HH:mm') + ' - ' + #temporals.format(ca.gioKetThuc, 'HH:mm')}">07:30 - 11:30</span>
+                        </div>
+                    </td>
+
+                    <!-- Bác sĩ -->
+                    <td class="py-4 px-4">
+                        <div class="flex flex-col gap-0.5">
+              <span class="font-label-md text-on-surface font-semibold"
+                    th:text="${ca.bacSi != null ? ca.bacSi.hoTen : 'Chưa phân công'}">Tên bác sĩ</span>
+                            <span class="text-body-sm text-outline"
+                                  th:text="${ca.bacSi != null and ca.bacSi.chuyenKhoa != null ? ca.bacSi.chuyenKhoa.tenChuyenKhoa : ''}">Chuyên khoa</span>
+                        </div>
+                    </td>
+
+                    <!-- Phòng khám -->
+                    <td class="py-4 px-4">
+                        <div class="flex flex-col gap-0.5">
+              <span class="font-label-md text-on-surface"
+                    th:text="${ca.phongKham != null ? ca.phongKham.tenPhong : 'Chưa xếp phòng'}">Phòng khám</span>
+                            <span class="text-body-sm text-outline"
+                                  th:if="${ca.phongKham != null and ca.phongKham.khuVuc != null}"
+                                  th:text="${ca.phongKham.khuVuc}">Khu vực</span>
+                        </div>
+                    </td>
+
+                    <!-- Đã đặt / tối đa -->
+                    <td class="py-4 px-4" th:with="daDat=${daDatMap.get(ca.id) ?: 0}">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold"
+                  th:classappend="${daDat ge ca.soLuongToida} ? 'bg-red-50 text-red-700' : 'bg-emerald-50 text-emerald-700'"
+                  th:text="${daDat} + ' / ' + ${ca.soLuongToida}">3 / 10</span>
+                    </td>
+
+                    <!-- Thao tác -->
+                    <td class="py-4 px-4 text-right">
+                        <form th:action="@{/admin/heThong/lichLamViec/xoa/{id}(id=${ca.id}, tuan=${tuNgay}, bacSiId=${bacSiId})}"
+                              method="post" class="inline"
+                              onsubmit="return confirm('Xóa ca làm việc này?');">
+                            <button type="submit" title="Xóa ca"
+                                    class="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-red-600 transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(dsCa)}">
+                    <td colspan="6" class="text-center py-8 text-outline">Tuần này chưa có ca làm việc nào.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="px-space-lg py-space-md border-t border-surface-container-low bg-surface-container-lowest text-body-sm text-on-surface-variant">
+            Tổng số ca trong tuần: <strong class="text-on-surface font-semibold" th:text="${#lists.size(dsCa)}">0</strong>
+        </div>
+    </div>
+
+    <!-- 4. Modal tạo ca hàng loạt -->
+    <div id="taoCaModal" style="display: none;"
+         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-surface-container-lowest w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-8 max-h-[90vh]">
+
+            <!-- Header -->
+            <div class="flex items-center justify-between px-space-lg py-space-md border-b border-surface-container-low shrink-0">
+                <div class="flex items-center gap-space-sm">
+                    <div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center text-primary shrink-0">
+                        <span class="material-symbols-outlined text-[22px]">event_repeat</span>
+                    </div>
+                    <div>
+                        <h2 class="font-headline-sm text-headline-sm text-on-surface">Tạo Ca Làm Việc Hàng Loạt</h2>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant">Hệ thống tự tạo ca cho các ngày được chọn trong khoảng thời gian</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeTaoCaModal()"
+                        class="p-2 rounded-xl text-outline hover:bg-surface-container hover:text-on-surface transition-colors" title="Đóng">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+            </div>
+
+            <form th:action="@{/admin/heThong/lichLamViec/tao}" method="post" class="flex flex-col flex-1 min-h-0">
+                <div class="p-space-lg overflow-y-auto flex-1 flex flex-col gap-space-md">
+
+                    <!-- Bác sĩ & phòng -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                        <div class="flex flex-col gap-1">
+                            <label for="caBacSi" class="font-label-sm text-label-sm text-on-surface-variant font-medium">Bác sĩ <span class="text-error">*</span></label>
+                            <select id="caBacSi" name="bacSiId" required onchange="locPhongTheoBacSi()"
+                                    class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-on-surface outline-none cursor-pointer">
+                                <option value="">-- Chọn bác sĩ --</option>
+                                <option th:each="bs : ${dsBacSi}"
+                                        th:value="${bs.id}"
+                                        th:attr="data-ck=${bs.chuyenKhoa != null ? bs.chuyenKhoa.id : ''}"
+                                        th:text="${bs.hoTen + ' – ' + (bs.chuyenKhoa != null ? bs.chuyenKhoa.tenChuyenKhoa : 'Chưa phân khoa')}">Bác sĩ</option>
+                            </select>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <label for="caPhong" class="font-label-sm text-label-sm text-on-surface-variant font-medium">Phòng khám <span class="text-error">*</span></label>
+                            <select id="caPhong" name="phongKhamId" required
+                                    class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-on-surface outline-none cursor-pointer">
+                                <option value="">-- Chọn bác sĩ trước --</option>
+                                <option th:each="pk : ${dsPhong}"
+                                        th:value="${pk.id}"
+                                        th:attr="data-ck=${pk.chuyenKhoa != null ? pk.chuyenKhoa.id : ''}"
+                                        th:disabled="${pk.trangThai != null and !pk.trangThai}"
+                                        th:text="${pk.tenPhong + (pk.khuVuc != null ? ' (' + pk.khuVuc + ')' : '') + (pk.trangThai != null and !pk.trangThai ? ' - đang bảo trì' : '')}">Phòng</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Khoảng ngày -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                        <div class="flex flex-col gap-1">
+                            <label for="caTuNgay" class="font-label-sm text-label-sm text-on-surface-variant font-medium">Từ ngày <span class="text-error">*</span></label>
+                            <input type="date" id="caTuNgay" name="tuNgay" required th:min="${homNay}" th:value="${homNay}"
+                                   class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label for="caDenNgay" class="font-label-sm text-label-sm text-on-surface-variant font-medium">Đến ngày <span class="text-error">*</span></label>
+                            <input type="date" id="caDenNgay" name="denNgay" required th:min="${homNay}" th:value="${denMacDinh}"
+                                   class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                    </div>
+
+                    <!-- Các thứ trong tuần -->
+                    <div class="flex flex-col gap-1">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Làm việc vào các thứ <span class="text-error">*</span></span>
+                        <div class="flex flex-wrap gap-2">
+                            <label class="cursor-pointer"><input type="checkbox" name="thu" value="1" checked class="peer hidden"><span class="inline-block px-3.5 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm peer-checked:bg-primary peer-checked:text-on-primary transition-colors">Thứ 2</span></label>
+                            <label class="cursor-pointer"><input type="checkbox" name="thu" value="2" checked class="peer hidden"><span class="inline-block px-3.5 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm peer-checked:bg-primary peer-checked:text-on-primary transition-colors">Thứ 3</span></label>
+                            <label class="cursor-pointer"><input type="checkbox" name="thu" value="3" checked class="peer hidden"><span class="inline-block px-3.5 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm peer-checked:bg-primary peer-checked:text-on-primary transition-colors">Thứ 4</span></label>
+                            <label class="cursor-pointer"><input type="checkbox" name="thu" value="4" checked class="peer hidden"><span class="inline-block px-3.5 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm peer-checked:bg-primary peer-checked:text-on-primary transition-colors">Thứ 5</span></label>
+                            <label class="cursor-pointer"><input type="checkbox" name="thu" value="5" checked class="peer hidden"><span class="inline-block px-3.5 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm peer-checked:bg-primary peer-checked:text-on-primary transition-colors">Thứ 6</span></label>
+                            <label class="cursor-pointer"><input type="checkbox" name="thu" value="6" class="peer hidden"><span class="inline-block px-3.5 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm peer-checked:bg-primary peer-checked:text-on-primary transition-colors">Thứ 7</span></label>
+                            <label class="cursor-pointer"><input type="checkbox" name="thu" value="7" class="peer hidden"><span class="inline-block px-3.5 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm peer-checked:bg-primary peer-checked:text-on-primary transition-colors">CN</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Ca làm -->
+                    <div class="flex flex-col gap-1">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Ca làm việc <span class="text-error">*</span></span>
+                        <div class="flex flex-wrap gap-2">
+                            <label class="cursor-pointer"><input type="checkbox" name="caLam" value="SANG" checked class="peer hidden"><span class="inline-block px-3.5 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm peer-checked:bg-primary peer-checked:text-on-primary transition-colors" th:text="'Ca sáng (' + ${gioSang} + ')'">Ca sáng</span></label>
+                            <label class="cursor-pointer"><input type="checkbox" name="caLam" value="CHIEU" class="peer hidden"><span class="inline-block px-3.5 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm peer-checked:bg-primary peer-checked:text-on-primary transition-colors" th:text="'Ca chiều (' + ${gioChieu} + ')'">Ca chiều</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Số lượng tối đa -->
+                    <div class="flex flex-col gap-1 sm:w-1/2">
+                        <label for="caToiDa" class="font-label-sm text-label-sm text-on-surface-variant font-medium">Số bệnh nhân tối đa mỗi ca</label>
+                        <input type="number" id="caToiDa" name="soLuongToiDa" value="10" min="1" max="100"
+                               class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary">
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="flex items-center justify-end gap-space-sm px-space-lg py-space-md bg-surface-container-low border-t border-surface-container-low shrink-0">
+                    <button type="button" onclick="closeTaoCaModal()"
+                            class="px-space-md py-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-md text-label-md border border-outline-variant/40 transition-colors shadow-sm">
+                        Hủy bỏ
+                    </button>
+                    <button type="submit"
+                            class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md shadow-md transition-all">
+                        <span class="material-symbols-outlined text-[18px]">done_all</span>
+                        <span>Tạo Ca</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const taoCaModal = document.getElementById('taoCaModal');
+
+        // Lưu bản gốc danh sách phòng để lọc theo chuyên khoa của bác sĩ
+        const dsPhongGoc = Array.from(document.querySelectorAll('#caPhong option'))
+            .filter(function (o) { return o.value !== ''; })
+            .map(function (o) {
+                return { value: o.value, text: o.textContent, ck: o.dataset.ck, disabled: o.disabled };
+            });
+
+        function locPhongTheoBacSi() {
+            const bs = document.getElementById('caBacSi');
+            const ck = bs.selectedOptions[0] ? (bs.selectedOptions[0].dataset.ck || '') : '';
+            const sel = document.getElementById('caPhong');
+
+            sel.innerHTML = '';
+            const dau = document.createElement('option');
+            dau.value = '';
+            dau.textContent = bs.value ? '-- Chọn phòng --' : '-- Chọn bác sĩ trước --';
+            sel.appendChild(dau);
+            if (!bs.value) return;
+
+            const phongPhuHop = dsPhongGoc.filter(function (p) { return p.ck === ck; });
+            if (phongPhuHop.length === 0) {
+                dau.textContent = 'Khoa này chưa có phòng khám';
+                return;
+            }
+            phongPhuHop.forEach(function (p) {
+                const o = document.createElement('option');
+                o.value = p.value;
+                o.textContent = p.text;
+                o.disabled = p.disabled;
+                sel.appendChild(o);
+            });
+        }
+
+        function openTaoCaModal() {
+            taoCaModal.querySelector('form').reset();
+            locPhongTheoBacSi();
+            taoCaModal.style.display = 'flex';
+        }
+
+        function closeTaoCaModal() {
+            taoCaModal.style.display = 'none';
+        }
+
+        taoCaModal.addEventListener('click', function (e) {
+            if (e.target === taoCaModal) closeTaoCaModal();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeTaoCaModal();
+        });
+    </script>
+
+</div>
+</body>
+</html>
