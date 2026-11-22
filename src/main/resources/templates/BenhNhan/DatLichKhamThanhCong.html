@@ -25,83 +25,77 @@
 <body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col justify-between">
 
 <!-- Top Navigation Header -->
-<header class="bg-white border-b border-gray-100 px-6 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-xs">
+<header class="bg-white border-b border-gray-100 px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3 flex-nowrap sticky top-0 z-50 shadow-xs">
 
     <div class="flex items-center space-x-3">
-        <a class="flex items-center space-x-2" th:href="@{/patient/dashboard}">
-            <div class="bg-blue-600 text-white w-9 h-9 rounded-xl flex items-center justify-center font-bold text-lg shadow-sm">
+        <a class="flex items-center space-x-2 whitespace-nowrap" th:href="@{/patient/dashboard}">
+            <div class="bg-blue-600 text-white w-8 h-8 rounded-xl flex items-center justify-center font-bold text-base shadow-sm">
                 <i class="fa-solid fa-square-plus"></i>
             </div>
 
             <div>
-                <span class="text-lg font-bold text-gray-900 tracking-tight leading-none block">CareHealth</span>
-                <span class="text-[10px] text-gray-500 font-medium tracking-wide block">Hệ thống y tế thông minh</span>
+                <span class="text-base font-bold text-gray-900 tracking-tight leading-none block">CareHealth</span>
+                <span class="text-[9px] text-gray-500 font-medium tracking-wide block">Hệ thống y tế thông minh</span>
             </div>
         </a>
     </div>
 
     <!-- Navigation Menu -->
-    <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
-        <a class="hover:text-blue-600 transition-colors" th:href="@{/patient/dashboard}">Trang chủ</a>
-        <a class="hover:text-blue-600 transition-colors" th:href="@{/patient/specialties}">Chuyên khoa</a>
-        <a class="hover:text-blue-600 transition-colors" th:href="@{/patient/doctors}">Bác sĩ</a>
-        <a class="hover:text-blue-600 transition-colors" th:href="@{/patient/appointments}">Lịch hẹn của tôi</a>
+    <nav class="hidden lg:flex items-center space-x-4 text-sm font-medium text-gray-600 whitespace-nowrap">
+        <a class="hover:text-blue-600 transition-colors whitespace-nowrap" th:href="@{/patient/dashboard}">Trang chủ</a>
+        <a class="hover:text-blue-600 transition-colors whitespace-nowrap" th:href="@{/patient/specialties}">Chuyên khoa</a>
+        <a class="hover:text-blue-600 transition-colors whitespace-nowrap" th:href="@{/patient/doctors}">Bác sĩ</a>
+        <a class="hover:text-blue-600 transition-colors whitespace-nowrap" th:href="@{/patient/appointments}">Lịch hẹn của tôi</a>
     </nav>
 
     <!-- Search Bar & User Profile -->
-    <div class="flex items-center space-x-4">
+    <div class="flex items-center space-x-2 min-w-0">
 
-        <form class="hidden lg:flex items-center bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 w-64 focus-within:bg-white focus-within:border-blue-600 transition-all"
+        <form class="hidden xl:flex items-center bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 w-48 min-w-0 focus-within:bg-white focus-within:border-blue-600 transition-all"
               method="GET"
               th:action="@{/patient/doctors}">
 
             <i class="fa-solid fa-magnifying-glass text-gray-400 text-xs mr-2"></i>
 
-            <input class="bg-transparent text-xs outline-none w-full text-gray-700"
+            <input class="bg-transparent text-xs outline-none w-full min-w-0 text-gray-700"
                    name="keyword"
                    placeholder="Tìm bác sĩ, chuyên khoa..."
                    type="text"/>
         </form>
 
-        <a class="hidden sm:flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm transition-all"
+        <a class="hidden sm:flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 whitespace-nowrap rounded-xl shadow-sm transition-all"
            th:href="@{/patient/doctors}">
             <i class="fa-solid fa-calendar-check"></i>
             Đặt lịch khám
         </a>
 
 
-        <!-- User Profile & Logout -->
-        <div class="flex items-center space-x-3 border-l pl-4 border-gray-200">
-
-            <!-- Avatar -->
-            <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold">
-                <i class="fa-regular fa-user"></i>
+        <!-- User Profile Dropdown -->
+        <details class="relative border-l pl-3 border-gray-200">
+            <summary class="flex items-center gap-2 cursor-pointer list-none whitespace-nowrap">
+                <div class="w-7 h-7 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold">
+                    <i class="fa-regular fa-user"></i>
+                </div>
+                <span class="text-xs font-semibold text-gray-700 hidden lg:inline-block whitespace-nowrap"
+                      th:text="${benhNhan.hoTen}">Tên bệnh nhân</span>
+                <i class="fa-solid fa-chevron-down text-gray-400 text-[10px]"></i>
+            </summary>
+            <div class="absolute right-0 mt-2 w-52 rounded-xl bg-white py-1 shadow-lg border border-gray-100">
+                <a class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                   th:href="@{/patient/profile}">
+                    <i class="fa-regular fa-user text-gray-500"></i>
+                    Xem thông tin bệnh nhân
+                </a>
+                <div class="border-t border-gray-100 my-1"></div>
+                <form th:action="@{/logout}" method="post" class="m-0">
+                    <button type="submit"
+                            class="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Đăng xuất
+                    </button>
+                </form>
             </div>
-
-            <!-- Patient Name -->
-            <span class="text-xs font-semibold text-gray-700 hidden lg:inline-block"
-                  th:text="${benhNhan.hoTen}">
-        Tên bệnh nhân
-    </span>
-
-            <!-- Logout -->
-            <form th:action="@{/logout}" method="post" class="m-0">
-
-                <button type="submit"
-                        class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700 transition-all"
-                        title="Đăng xuất">
-
-                    <i class="fa-solid fa-right-from-bracket"></i>
-
-                    <span class="hidden sm:inline">
-                Đăng xuất
-            </span>
-
-                </button>
-
-            </form>
-
-        </div>
+        </details>
 
 
     </div>
