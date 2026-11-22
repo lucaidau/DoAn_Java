@@ -339,13 +339,12 @@
 
     </div>
 </div>
-
 <!-- ================= MODAL THÊM CHUYÊN KHOA MỚI ================= -->
 <div id="addChuyenKhoaModal" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 overflow-y-auto">
-    <div class="bg-surface-container-lowest w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-8 max-h-[90vh]">
+    <div class="bg-surface-container-lowest w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col my-8 max-h-[90vh]">
 
-        <!-- Modal Header -->
-        <div class="flex items-center justify-between px-space-lg py-space-md border-b border-surface-container-low shrink-0 bg-surface-container-lowest">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-space-lg py-space-md border-b border-surface-container-low shrink-0">
             <div class="flex items-center gap-space-sm">
                 <div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center text-primary shrink-0">
                     <span class="material-symbols-outlined text-[22px]">medical_services</span>
@@ -360,88 +359,35 @@
             </button>
         </div>
 
-        <!-- Modal Body -->
-        <div class="p-space-lg overflow-y-auto flex-1 flex flex-col gap-space-md">
-
-            <!-- Row 1: Mã chuyên khoa & Khối chuyên môn -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+        <!-- Form -->
+        <form th:action="@{/admin/chuyenKhoa/them}" method="post" class="flex flex-col flex-1 min-h-0">
+            <div class="p-space-lg overflow-y-auto flex-1 flex flex-col gap-space-md">
                 <div class="flex flex-col gap-1">
-                    <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Khối chuyên môn <span class="text-error">*</span></label>
-                    <select class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none cursor-pointer">
-                        <option selected>Khối Ngoại &amp; Phục Hồi Chức Năng</option>
-                        <option>Khối Nội Tổng Quát</option>
-                        <option>Khối Cận Lâm Sàng &amp; Xét Nghiệm</option>
-                        <option>Khối Chuyên Sâu &amp; Kỹ Thuật Cao</option>
-                    </select>
+                    <label for="themCkTen" class="font-label-sm text-label-sm text-on-surface-variant font-medium">Tên chuyên khoa <span class="text-error">*</span></label>
+                    <input type="text" id="themCkTen" name="tenChuyenKhoa" required maxlength="100"
+                           placeholder="Ví dụ: Tim mạch"
+                           class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary transition-all">
                 </div>
 
                 <div class="flex flex-col gap-1">
-                    <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Tên chuyên khoa <span class="text-error">*</span></label>
-                    <input type="text" class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary transition-all" value="Khoa Cơ Xương Khớp &amp; Phục Hồi Chức Năng">
+                    <label for="themCkMoTa" class="font-label-sm text-label-sm text-on-surface-variant font-medium">Mô tả chức năng &amp; nhiệm vụ chuyên môn</label>
+                    <textarea id="themCkMoTa" name="moTa" rows="4"
+                              placeholder="Mô tả ngắn về chuyên khoa..."
+                              class="p-space-md bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary resize-none transition-all"></textarea>
                 </div>
             </div>
 
-
-            <!-- Row 2: Biểu tượng & Màu nhận diện khoa -->
-            <div class="flex flex-col gap-1">
-                <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Biểu tượng &amp; Màu nhận diện khoa</label>
-                <div class="flex items-center justify-between p-3 bg-surface-container-low rounded-xl border border-outline-variant/30">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-[22px]">accessibility_new</span>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="font-label-md text-label-md text-on-surface font-semibold">accessibility_new (Cơ xương khớp)</span>
-                            <span class="font-body-sm text-body-sm text-outline">Định dạng icon Google Material Symbols Y tế</span>
-                        </div>
-                    </div>
-                    <button type="button" class="px-3 py-1.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-label-sm border border-outline-variant/40 transition-colors shadow-sm">
-                        Đổi kiểu tượng
-                    </button>
-                </div>
-            </div>
-
-            <!-- Row 3: Trưởng khoa phụ trách -->
-            <div class="flex flex-col gap-1">
-                <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Trưởng khoa phụ trách</label>
-                <select class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none cursor-pointer">
-                    <option selected>PGS. TS. BS. Nguyễn Tuấn Kiệt</option>
-                    <option>GS. TS. BS. Vũ Đình Khoa</option>
-                    <option>BS. CKII. Nguyễn Minh Quân</option>
-                </select>
-            </div>
-
-            <!-- Row 4: Số phòng khám & Khung giá khám -->
-
-                <div class="flex flex-col gap-1">
-                    <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Số phòng khám phân bổ ban đầu</label>
-                    <input type="number" class="px-space-md py-2.5 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none" value="6">
-                </div>
-
-            <!-- Mô tả chức năng & nhiệm vụ chuyên môn -->
-            <div class="flex flex-col gap-1">
-                <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Mô tả chức năng &amp; nhiệm vụ chuyên môn</label>
-                <textarea rows="2" class="p-space-md bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface outline-none resize-none">Khám, tầm soát và điều trị chuyên sâu các bệnh lý về thoái hóa xương khớp, cột sống, chấn thương thể thao và phục hồi chức năng vận động toàn diện.</textarea>
-            </div>
-
-        </div>
-
-        <!-- Modal Footer Actions -->
-        <div class="flex items-center justify-between px-space-lg py-space-md bg-surface-container-low border-t border-surface-container-low shrink-0">
-            <button onclick="closeChuyenKhoaModal()" type="button" class="px-space-md py-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-md text-label-md border border-outline-variant/40 transition-colors shadow-sm">
-                Hủy bỏ
-            </button>
-            <div class="flex items-center gap-space-sm">
-                <button type="button" class="px-space-md py-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-md text-label-md border border-outline-variant/40 transition-colors shadow-sm">
-                    Lưu bản nháp
+            <!-- Footer -->
+            <div class="flex items-center justify-end gap-space-sm px-space-lg py-space-md bg-surface-container-low border-t border-surface-container-low shrink-0">
+                <button type="button" onclick="closeChuyenKhoaModal()" class="px-space-md py-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-md text-label-md border border-outline-variant/40 transition-colors shadow-sm">
+                    Hủy bỏ
                 </button>
-                <button type="button" onclick="alert('Đã khởi tạo chuyên khoa mới thành công!'); closeSpecialtyModal();" class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md shadow-md transition-all">
+                <button type="submit" class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md shadow-md transition-all">
                     <span class="material-symbols-outlined text-[18px]">done_all</span>
-                    <span>Lưu &amp; Khởi Tạo Chuyên Khoa</span>
+                    <span>Lưu Chuyên Khoa</span>
                 </button>
             </div>
-        </div>
-
+        </form>
     </div>
 </div>
 <div th:if="${thongBaoThanhCong != null or thongBaoLoi != null}"
