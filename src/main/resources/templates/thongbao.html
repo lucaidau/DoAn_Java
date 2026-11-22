@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -6,79 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CareHealth - Thông báo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body { min-height: 100vh; background: #f4f7fb; color: #17233c; }
+        .topbar { background: rgba(255,255,255,.94); border-bottom: 1px solid #e8edf5; }
+        .brand-mark { color: #155eef; font-weight: 750; letter-spacing: -.03em; }
+        .nav-link { color: #64748b; font-weight: 600; border-radius: .7rem; }
+        .nav-link:hover, .nav-link.active { color: #155eef; background: #eef4ff; }
+        .page-wrap { max-width: 1120px; }
+        .hero { border: 0; border-radius: 1.25rem; color: white; background: linear-gradient(120deg,#1246a8,#2876e8); box-shadow: 0 16px 38px rgba(21,94,239,.16); }
+        .hero-icon { width: 3.25rem; height: 3.25rem; display: grid; place-items: center; border-radius: 1rem; background: rgba(255,255,255,.16); font-size: 1.5rem; }
+        .notification-list { display: grid; gap: .85rem; }
+        .notification-item { display: flex; align-items: flex-start; gap: 1rem; padding: 1.1rem 1.2rem; border: 1px solid #e8edf5; border-radius: 1rem; background: white; color: inherit; text-decoration: none; box-shadow: 0 6px 20px rgba(25,45,80,.04); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+        .notification-item:hover { transform: translateY(-2px); border-color: #cbd9f5; box-shadow: 0 12px 28px rgba(25,45,80,.09); }
+        .notification-icon { width: 2.8rem; height: 2.8rem; flex: 0 0 auto; display: grid; place-items: center; border-radius: .9rem; color: #155eef; background: #eef4ff; font-size: 1.25rem; }
+        .notification-id { color: #155eef; font-size: .78rem; font-weight: 750; letter-spacing: .04em; }
+        .notification-meta { color: #64748b; font-size: .82rem; }
+        .status { display: inline-flex; align-items: center; border-radius: 999px; padding: .3rem .65rem; font-size: .75rem; font-weight: 700; white-space: nowrap; }
+        .status-pending { color: #9a6700; background: #fff4d6; }
+        .status-confirmed { color: #087443; background: #dcfce7; }
+        .status-cancelled { color: #b42318; background: #fee4e2; }
+        .status-active { color: #175cd3; background: #e0edff; }
+        .empty-state { border: 1px solid #e8edf5; border-radius: 1rem; background: white; padding: 3.5rem 1rem; text-align: center; }
+        .empty-icon { width: 3.5rem; height: 3.5rem; display: grid; place-items: center; margin: 0 auto 1rem; border-radius: 1.1rem; color: #155eef; background: #eef4ff; font-size: 1.5rem; }
+        @media (max-width: 575.98px) { .page-title { font-size: 1.45rem; } .hero { padding: 1.25rem !important; } .notification-item { padding: .9rem; gap: .7rem; } }
+    </style>
 </head>
 <body>
-<!-- -- Thanh điều hướng -- -->
-<nav class="navbar navbar-expand-lg sticky-top mb-4 no-print">
-    <div class="container-fluid px-4 d-flex flex-wrap gap-3">
-        <a class="navbar-brand brand-mark" th:href="@{/lichhen}">
-            ✚ CareHealth
-        </a>
-        <div class="d-flex flex-wrap gap-2">
-            <a class="btn btn-outline-primary btn-sm" th:href="@{/lichhen}">
-                Lịch hẹn
-            </a>
-            <a class="btn btn-outline-primary btn-sm" th:href="@{/lichhen/tao}">
-                Tiếp nhận
-            </a>
-            <a class="btn btn-outline-primary btn-sm" th:href="@{/catruc}">
-                Ca trực
-            </a>
-            <a class="btn btn-outline-primary btn-sm" th:href="@{/thongbao}">
-                Thông báo
-            </a>
+<nav class="navbar navbar-expand-lg topbar sticky-top">
+    <div class="container page-wrap py-2">
+        <a class="navbar-brand brand-mark" th:href="@{/lichhen}">✚ CareHealth</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavigation"
+                aria-controls="mainNavigation" aria-expanded="false" aria-label="Mở menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavigation">
+            <div class="navbar-nav ms-auto gap-1">
+                <a class="nav-link px-3" th:href="@{/lichhen}">Lịch hẹn</a>
+                <a class="nav-link px-3" th:href="@{/catruc}">Quản lý ca trực</a>
+                <a class="nav-link active px-3" aria-current="page" th:href="@{/thongbao}">Thông báo</a>
+            </div>
         </div>
     </div>
 </nav>
 
-<!-- -- Nội dung trang thông báo -- -->
-<div class="container-fluid px-4 pb-5">
-    <!-- -- Thông báo kết quả thao tác -- -->
-    <div
-            th:if="${thanhCong}"
-            class="alert alert-success"
-            th:text="${thanhCong}">
-    </div>
-    <div
-            th:if="${loi}"
-            class="alert alert-danger"
-            th:text="${loi}">
-    </div>
+<main class="container page-wrap py-4 py-lg-5">
+    <div th:if="${thanhCong}" class="alert alert-success border-0 shadow-sm rounded-3" role="status" th:text="${thanhCong}"></div>
+    <div th:if="${loi}" class="alert alert-danger border-0 shadow-sm rounded-3" role="alert" th:text="${loi}"></div>
 
-    <h2 class="page-title mb-4">Thông báo lịch hẹn</h2>
-
-    <!-- -- Danh sách thông báo lịch hẹn -- -->
-    <div class="card">
-        <div class="list-group list-group-flush">
-            <a
-                    class="list-group-item list-group-item-action py-3"
-                    th:each="lich : ${lichHens}"
-                    th:href="@{/lichhen/{id}(id=${lich.id})}">
-
-                <strong
-                        th:text="${'LH-' + lich.id + ' - ' + lich.benhNhan.hoTen}">
-                </strong>
-
-                <span
-                        class="badge text-bg-light ms-2"
-                        th:text="${lich.trangThai}">
-                    </span>
-
-                <div
-                        class="text-secondary small"
-                        th:text="${lich.ngayTao}">
+    <section class="hero p-4 p-lg-5 mb-4">
+        <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="hero-icon" aria-hidden="true">♧</div>
+                <div>
+                    <div class="small text-white-50 mb-1">TRUNG TÂM CẬP NHẬT</div>
+                    <h1 class="page-title h2 fw-bold mb-1">Thông báo lịch hẹn</h1>
+                    <p class="mb-0 text-white-50">Theo dõi các lịch hẹn và mở nhanh thông tin chi tiết.</p>
                 </div>
-            </a>
-
-            <!-- -- Hiển thị khi chưa có lịch hẹn -- -->
-            <div
-                    th:if="${#lists.isEmpty(lichHens)}"
-                    class="p-4">
-                Chưa có lịch hẹn
+            </div>
+            <div class="rounded-3 px-3 py-2 text-center" style="background:rgba(255,255,255,.14)">
+                <div class="h4 fw-bold mb-0" th:text="${#lists.size(lichHens)}">0</div>
+                <div class="small text-white-50">lịch hẹn</div>
             </div>
         </div>
-    </div>
-</div>
+    </section>
+
+    <section aria-label="Danh sách thông báo lịch hẹn">
+        <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+            <div>
+                <h2 class="h5 fw-bold mb-1">Cập nhật gần đây</h2>
+                <p class="text-secondary small mb-0">Chọn một mục để xem chi tiết lịch hẹn.</p>
+            </div>
+            <a class="btn btn-outline-primary rounded-3 fw-semibold" th:href="@{/lichhen}">Tất cả lịch hẹn</a>
+        </div>
+
+        <div class="notification-list" th:if="${!#lists.isEmpty(lichHens)}">
+            <a class="notification-item" th:each="lich : ${lichHens}" th:href="@{/lichhen/{id}(id=${lich.id})}">
+                <div class="notification-icon" aria-hidden="true">◷</div>
+                <div class="flex-grow-1 min-w-0">
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                        <span class="notification-id" th:text="${'LH-' + lich.id}">LH-001</span>
+                        <span class="status"
+                              th:classappend="${lich.trangThai == 'CHO_XAC_NHAN' ? 'status-pending' : (lich.trangThai == 'DA_XAC_NHAN' ? 'status-confirmed' : (lich.trangThai == 'DA_HUY' ? 'status-cancelled' : 'status-active'))}"
+                              th:text="${lich.trangThai == 'CHO_XAC_NHAN' ? 'Chờ xác nhận' : (lich.trangThai == 'DA_XAC_NHAN' ? 'Đã xác nhận' : (lich.trangThai == 'DA_HUY' ? 'Đã hủy' : (lich.trangThai == 'DANG_KHAM' ? 'Đang khám' : (lich.trangThai == 'DA_KHAM' ? 'Đã khám' : lich.trangThai))))}">Trạng thái</span>
+                    </div>
+                    <div class="fw-semibold text-dark" th:text="${lich.benhNhan.hoTen}">Tên bệnh nhân</div>
+                    <div class="notification-meta mt-1">
+                        <span th:if="${lich.ngayKham != null}" th:text="${#temporals.format(lich.ngayKham, 'dd/MM/yyyy')}">Ngày khám</span>
+                        <span th:if="${lich.khungGioKham != null}"> · <span th:text="${lich.khungGioKham}">Giờ khám</span></span>
+                        <span th:if="${lich.ngayTao != null}"> · Tạo lúc <span th:text="${#temporals.format(lich.ngayTao, 'HH:mm dd/MM/yyyy')}">Thời điểm tạo</span></span>
+                    </div>
+                </div>
+                <span class="text-secondary mt-2" aria-hidden="true">›</span>
+            </a>
+        </div>
+
+        <div class="empty-state" th:if="${#lists.isEmpty(lichHens)}">
+            <div class="empty-icon" aria-hidden="true">✓</div>
+            <h3 class="h6 fw-bold">Bạn đã cập nhật</h3>
+            <p class="text-secondary mb-0">Hiện chưa có thông báo lịch hẹn nào.</p>
+        </div>
+    </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
