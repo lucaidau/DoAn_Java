@@ -99,12 +99,20 @@ public class LichHenController {
     }
 
     @GetMapping("/lichhen/{id}")
-    public String chiTiet(@PathVariable Long id, Model model) {
-        LichHen lich = service.chiTiet(id);
+    public String chiTiet(@PathVariable Long id, @RequestParam(required = false) Long fromLichId, Model model) {
+        LichHen lich;
+        if (fromLichId != null) {
+            // Đang xem lịch sử từ một ca hẹn khác của cùng bệnh nhân
+            LichHen lichGoc = service.chiTiet(fromLichId);
+            lich = service.chiTietXemLichSu(id, lichGoc.getBenhNhan().getId());
+            model.addAttribute("fromLichId", fromLichId);
+        } else {
+            lich = service.chiTietXemLichSu(id, null);
+        }
         model.addAttribute("lich", lich);
         model.addAttribute("hoSo", service.hoSo(id).orElse(null));
         model.addAttribute("tuoi", lich.getBenhNhan().getNgaySinh() == null ? null : Math.max(0, Period.between(lich.getBenhNhan().getNgaySinh(), LocalDate.now()).getYears()));
-        model.addAttribute("lichSuKhams", service.lichSuKham(id));
+        model.addAttribute("lichSuKhams", service.lichSuKhamTheoBenhNhan(lich.getBenhNhan().getId(), id));
         model.addAttribute("sinhHieu", service.sinhHieu(id).orElse(null));
 
         model.addAttribute("tenBacSiHienTai", service.tenBacSiHienTai());
@@ -146,6 +154,7 @@ public class LichHenController {
         model.addAttribute("danhMucThuoc", service.thuocs());
         model.addAttribute("sinhHieu", service.sinhHieu(id).orElse(null));
         model.addAttribute("tuoi", lich.getBenhNhan().getNgaySinh() == null ? null : Period.between(lich.getBenhNhan().getNgaySinh(), LocalDate.now()).getYears());
+        model.addAttribute("lichSuKhams", service.lichSuKhamTheoBenhNhan(lich.getBenhNhan().getId(), id));
         model.addAttribute("tenBacSiHienTai", service.tenBacSiHienTai());
         return "CaKhamBenh";
     }

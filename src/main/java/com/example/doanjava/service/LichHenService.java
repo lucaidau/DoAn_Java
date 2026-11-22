@@ -84,6 +84,26 @@ public class LichHenService {
         return lich;
     }
 
+    // Lấy chi tiết lịch hẹn để xem lịch sử khám bệnh (cho phép xem nếu bệnh nhân đó từng khám hoặc đang khám với bác sĩ hiện tại)
+    public LichHen chiTietXemLichSu(Long id, Long benhNhanHienTaiId) {
+        LichHen lich = lichHenRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy lịch hẹn " + id));
+        Long bacSiId = bacSiIdHienTai();
+        if (bacSiId != null) {
+            boolean laCuaMinh = lich.getBacSi() != null && bacSiId.equals(lich.getBacSi().getId());
+            boolean cungBenhNhan = benhNhanHienTaiId != null && lich.getBenhNhan() != null && benhNhanHienTaiId.equals(lich.getBenhNhan().getId());
+            if (!laCuaMinh && !cungBenhNhan) {
+                throw new AccessDeniedException("Không có quyền truy cập lịch hẹn này");
+            }
+        }
+        return lich;
+    }
+
+    // Lấy lịch sử khám theo bệnh nhân id, loại trừ lịch hẹn hiện tại
+    public List<HoSoBenhAn> lichSuKhamTheoBenhNhan(Long benhNhanId, Long lichIdHienTai) {
+        if (benhNhanId == null) return Collections.emptyList();
+        return hoSoRepo.lichSuKham(benhNhanId, lichIdHienTai != null ? lichIdHienTai : -1L);
+    }
+
     public List<BenhNhan> benhNhans() {
         return benhNhanRepo.findAll(Sort.by("hoTen"));
     }
@@ -121,7 +141,16 @@ public class LichHenService {
 
     public List<PhongKham> phongKhams() { return phongKhamRepo.findAll(Sort.by("tenPhong")); }
 
-    public List<DonThuoc> thuocs() { return donThuocRepo.findAll(Sort.by("tenThuoc")); }
+    public List<DonThuoc> thuocs() {
+        List<DonThuoc> list = donThuocRepo.findAll(Sort.by("tenThuoc"));
+        Map<String, DonThuoc> unique = new LinkedHashMap<>();
+        for (DonThuoc d : list) {
+            if (d.getTenThuoc() != null && !d.getTenThuoc().isBlank()) {
+                unique.putIfAbsent(d.getTenThuoc().trim(), d);
+            }
+        }
+        return new ArrayList<>(unique.values());
+    }
 
     @Transactional
     public LichHen tao(Long benhNhanId, Long bacSiId, Long caId, LocalDate ngay, String gio, String trieuChung) {

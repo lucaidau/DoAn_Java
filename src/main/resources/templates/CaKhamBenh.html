@@ -369,6 +369,37 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Lịch sử khám bệnh trước đây của bệnh nhân -->
+                    <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-[20px]">
+                                    manage_history
+                                </span>
+                                <span class="font-label-md text-label-md font-semibold text-on-surface">
+                                    Lịch sử khám bệnh
+                                </span>
+                            </div>
+                            <span class="font-label-sm text-label-sm text-on-surface-variant" th:text="${(lichSuKhams != null ? lichSuKhams.size() : 0) + ' lượt trước'}">
+                            </span>
+                        </div>
+                        <div class="space-y-2 max-h-72 overflow-y-auto pr-1">
+                            <div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col gap-1 border border-outline-variant/30" th:each="ls : ${lichSuKhams}">
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="font-semibold text-primary" th:text="${#temporals.format(ls.lichHen.ngayKham, 'dd/MM/yyyy')}"></span>
+                                    <span class="text-on-surface-variant" th:text="${ls.lichHen.bacSi != null ? ls.lichHen.bacSi.hoTen : 'BS khác'}"></span>
+                                </div>
+                                <p class="text-xs text-on-surface truncate" th:text="${'Chẩn đoán: ' + ls.chanDoan}"></p>
+                                <a class="text-xs text-primary font-medium hover:underline inline-flex items-center gap-0.5 self-start" th:href="@{/lichhen/{id}(id=${ls.lichHen.id},fromLichId=${lich.id})}">
+                                    <span>Xem chi tiết lịch hẹn</span>
+                                    <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                                </a>
+                            </div>
+                            <p class="text-xs text-on-surface-variant py-2 text-center" th:if="${#lists.isEmpty(lichSuKhams)}">
+                                Chưa có lịch sử khám hoàn thành trước đó.
+                            </p>
+                        </div>
+                    </div>
                     <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-2">
                         <h3 class="font-semibold">
                             Cập nhật tiền sử bệnh nhân
@@ -595,8 +626,8 @@
                                         </tr>
                                         </thead>
                                         <tbody class="divide-y-0 text-on-surface font-body-sm text-body-sm">
-                                        <tr class="bg-surface-container-low" th:each="i : ${#numbers.sequence(0,0)}">
-                                            <td class="py-3 px-2 text-center drug-index">
+                                        <tr class="bg-surface-container-low" th:each="i : ${thuocs != null and !#lists.isEmpty(thuocs) ? #numbers.sequence(0, thuocs.size() - 1) : #numbers.sequence(0, 0)}">
+                                            <td class="py-3 px-2 text-center drug-index" th:text="${i + 1}">
                                                 1
                                             </td>
                                             <td class="py-3 px-2">
@@ -604,7 +635,7 @@
                                                     <option value="">
                                                         -- Chọn thuốc --
                                                     </option>
-                                                    <option th:each="thuoc : ${danhMucThuoc}" th:selected="${i &lt; thuocs.size() and thuocs[i].tenThuoc == thuoc.tenThuoc}" th:text="${thuoc.tenThuoc + ' (' + thuoc.donVi + ')'}" th:value="${thuoc.tenThuoc}">
+                                                    <option th:each="thuoc : ${danhMucThuoc}" th:selected="${i &lt; thuocs.size() and thuocs[i].tenThuoc == thuoc.tenThuoc}" th:text="${thuoc.tenThuoc}" th:value="${thuoc.tenThuoc}">
                                                     </option>
                                                 </select>
                                             </td>
