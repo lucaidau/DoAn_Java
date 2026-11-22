@@ -39,8 +39,8 @@
             </div>
         </div>
         <nav id="sidebar-menu" class="flex flex-col gap-1 px-space-md mt-space-sm">
-            <a class="flex items-center gap-3 px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="trang-chu-&amp;-lich-hen" href="#" th:href="@{/lichhen}">
-                        <span class="material-symbols-outlined text-[20px]">
+            <a class="flex items-center gap-3 px-space-md py-space-sm transition-all bg-primary text-on-primary font-medium rounded-xl shadow-sm" data-path="trang-chu-&amp;-lich-hen" href="#" th:href="@{/lichhen}">
+                        <span class="material-symbols-outlined text-[20px] text-on-primary">
                             calendar_today
                         </span>
                 <span>
@@ -185,6 +185,10 @@
                     <span class="font-semibold text-primary bg-primary-fixed text-on-primary-fixed px-2.5 py-0.5 rounded-full font-label-sm text-label-sm" th:text="${'LH-' + lich.id}">
                                 #LH-1001
                             </span>
+                    <a th:if="${fromLichId != null}" th:href="@{/lichhen/{id}(id=${fromLichId})}" class="ml-auto inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface text-sm font-medium transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+                        <span>Quay lại ca khám ban đầu (LH-[[${fromLichId}]])</span>
+                    </a>
                 </nav>
                 <!-- Top Banner Bar -->
                 <div class="relative overflow-hidden bg-surface-container-lowest rounded-xl shadow-sm p-space-lg">
@@ -422,7 +426,7 @@
                                                 </span>
                                     </div>
                                     <div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-1.5">
-                                        <a class="text-primary font-semibold" th:href="@{/lichhen/{id}(id=${ls.lichHen.id})}">
+                                        <a class="text-primary font-semibold hover:underline" th:href="@{/lichhen/{id}(id=${ls.lichHen.id},fromLichId=${fromLichId != null ? fromLichId : lich.id})}">
                                             Xem hồ sơ chi tiết →
                                         </a>
                                         <p class="font-body-md text-body-md text-on-surface" th:text="${'Chẩn đoán: ' + ls.chanDoan + (ls.loiDanBacSi != null ? '. Lời dặn: ' + ls.loiDanBacSi : '')}">
