@@ -1,27 +1,50 @@
 package com.example.doanjava.controller;
 
+import com.example.doanjava.dto.admin.BacSiDTO;
+import com.example.doanjava.dto.admin.SuaBacSiDTO;
 import com.example.doanjava.dto.admin.TaiKhoanDTO;
+import com.example.doanjava.dto.admin.TaoCaDTO;
+import com.example.doanjava.entity.BacSi;
+import com.example.doanjava.entity.ChuyenKhoa;
 import com.example.doanjava.entity.LichHen;
+import com.example.doanjava.entity.LichLamViec;
+import com.example.doanjava.service.BacSiService;
+import com.example.doanjava.service.ChuyenKhoaService;
 import com.example.doanjava.service.LichHenService;
+import com.example.doanjava.service.admin.LichLamViecService;
 import com.example.doanjava.service.admin.TaiKhoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    @Autowired
-    private TaiKhoanService taiKhoanService;
+    private final TaiKhoanService taiKhoanService;
+    private final ChuyenKhoaService chuyenKhoaService;
+    private final BacSiService bacSiService;
+    private final LichLamViecService lichLamViecService;
+    private static final DateTimeFormatter GIO = DateTimeFormatter.ofPattern("HH:mm");
 
-
+    public AdminController(TaiKhoanService tk, ChuyenKhoaService ck, BacSiService bs, LichLamViecService lv)
+    {
+        this.taiKhoanService = tk;
+        this.chuyenKhoaService =ck;
+        this.bacSiService = bs;
+        this.lichLamViecService =lv;
+    }
 
     @GetMapping("/taiKhoan")
     public String QLTaiKhoan(
@@ -41,7 +64,20 @@ public class AdminController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("vaiTro", vaiTro);
         model.addAttribute("trangThai", trangThai);
-        return "admin/QLTaiKhoan";
+        return "/admin/QLTaiKhoan";
+    }
+
+    @PostMapping("/taiKhoan/doiTrangThai/{id}")
+    public String doiTrangThaiTaiKhoan(@PathVariable Long id, RedirectAttributes redirectAttributes)
+    {
+        try {
+            boolean dangHoatDong = taiKhoanService.doiTrangThaiTaiKhoan(id);
+            String thongBao = dangHoatDong ? "Đã mở khóa tài khoản thành công!" : "Đã khóa tài khoản thành công!";
+            redirectAttributes.addFlashAttribute("thongBaoThanhCong", thongBao);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("thongBaoLoi", e.getMessage());
+        }
+        return "redirect:/admin/taiKhoan";
     }
 
     @Autowired
@@ -53,39 +89,233 @@ public class AdminController {
             @RequestParam(required = false, defaultValue = "ALL") String trangThai,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
-            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "0") int page,
             Model model
     )
     {
-        Page<LichHen> pageLichHen = lichHenService.danhSach(search, trangThai, from, to, Math.max(1, page));
+        Page<LichHen> pageLichHen = lichHenService.danhSach(search, trangThai, from, to, page);
 
+        model.addAttribute("pageLichHen", pageLichHen);
         model.addAttribute("dsLichHen", pageLichHen.getContent());
-        model.addAttribute("trangHienTai", Math.max(1, page));
+        model.addAttribute("trangHienTai", page);
         model.addAttribute("tongTrang", pageLichHen.getTotalPages());
 
-        model.addAttribute("timKiem", search);
+        model.addAttribute("search", search);
         model.addAttribute("trangThai", trangThai);
-        model.addAttribute("tuNgay", from);
-        model.addAttribute("denNgay", to);
+        model.addAttribute("from", from);
+        model.addAttribute("to", to);
 
         model.addAttribute("tongHomNay", lichHenService.tongHomNay());
         model.addAttribute("choXacNhan", lichHenService.thongKe("CHO_XAC_NHAN"));
         model.addAttribute("daXacNhan", lichHenService.thongKe("DA_XAC_NHAN"));
         model.addAttribute("daKham", lichHenService.thongKe("DA_KHAM"));
         model.addAttribute("daHuy", lichHenService.thongKe("DA_HUY"));
-        return "admin/QLLichHen";
+        return "/admin/QLLichHen";
+    }
+
+    @GetMapping("/dashboard/chiTiet/{id}")
+    public String chiTietLichHen(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            LichHen lich = lichHenService.chiTiet(id);
+            model.addAttribute("lichHen", lich);
+            model.addAttribute("sinhHieu", lichHenService.sinhHieu(id).orElse(null));
+            lichHenService.hoSo(id).ifPresent(hoSo -> {
+                model.addAttribute("hoSoBenhAn", hoSo);
+                model.addAttribute("dsDonThuoc", lichHenService.donThuoc(hoSo.getId()));
+            });
+
+            return "/admin/ChiTietLichHen";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("thongBaoLoi", e.getMessage());
+            return "redirect:/admin/dashboard";
+        }
     }
 
     @GetMapping("/bacSi")
-    public String QLBacSi()
+    public String QLBacSi(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String chuyenKhoa,
+            @RequestParam(required = false) String hocVi,
+            @RequestParam(required = false) Boolean trangThai,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model
+    )
     {
-        return  "admin/QLBacSi";
+        Page<BacSi> pageBacSi = bacSiService.LayDSHoacTimKiem(search, chuyenKhoa, hocVi, trangThai, page, size);
+        model.addAttribute("dsBacSi", pageBacSi.getContent());
+        model.addAttribute("phongKhamMap", bacSiService.layPhongKhamTheoChuyenKhoa(pageBacSi.getContent()));
+        model.addAttribute("pageBacSi", pageBacSi);
+        model.addAttribute("trangHienTai", pageBacSi.getNumber());
+        model.addAttribute("tongTrang", pageBacSi.getTotalPages());
+        model.addAttribute("tongBacSi", pageBacSi.getTotalElements());
+        model.addAttribute("size", size);
+
+        model.addAttribute("dsChuyenKhoa", bacSiService.layDanhSachChuyenKhoa());
+        model.addAttribute("dsHocVi", bacSiService.layDanhSachHocVi());
+
+        model.addAttribute("search", search);
+        model.addAttribute("chuyenKhoa", chuyenKhoa);
+        model.addAttribute("hocVi", hocVi);
+        model.addAttribute("trangThai", trangThai);
+        return  "/admin/QLBacSi";
+    }
+
+    @PostMapping("/bacSi/them")
+    public String ThemBacSi(@ModelAttribute BacSiDTO dto, RedirectAttributes redirectAttributes)
+    {
+        try {
+            bacSiService.Them(dto);
+            redirectAttributes.addFlashAttribute("thongBaoThanhCong", "Thêm bác sĩ mới thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("thongBaoLoi", "Lỗi khi thêm bác sĩ: " + e.getMessage());
+        }
+        return "redirect:/admin/bacSi";
+    }
+
+    @GetMapping("/bacSi/sua/{id}")
+    public String FormSuaBacSi(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes)
+    {
+        try {
+            model.addAttribute("bacSiDTO", bacSiService.layThongTinSua(id));
+            model.addAttribute("dsChuyenKhoa", bacSiService.layDanhSachChuyenKhoa());
+            return "/admin/FormSuaBacSi";
+        } catch (Exception e)
+        {
+            redirectAttributes.addFlashAttribute("thongBaoLoi", e.getMessage());
+            return "redirect:/admin/bacSi";
+        }
+    }
+
+    @PostMapping("/bacSi/sua")
+    public String SuaBacSi(@ModelAttribute SuaBacSiDTO dto, RedirectAttributes redirectAttributes)
+    {
+        try {
+            bacSiService.capNhatBacSi(dto);
+            redirectAttributes.addFlashAttribute("thongBaoThanhCong", "Cập nhật thông tin bác sĩ thành công");
+        } catch (Exception e)
+        {
+            redirectAttributes.addFlashAttribute("thongBaoLoi", e.getMessage());
+
+        }
+        return "redirect:/admin/bacSi";
     }
 
     @GetMapping("/chuyenKhoa")
-    public String QLChuyenKhoa()
+    public String QLChuyenKhoa(
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+        Page<Map<String,Object>> pageChuyenKhoa =
+                chuyenKhoaService.layDanhSachChuyenKhoaAdmin(search, page, size);
+        model.addAttribute("dsChuyenKhoa", pageChuyenKhoa.getContent());
+        model.addAttribute("phongKhamMap", chuyenKhoaService.layPhongKhamTheoChuyenKhoa());
+        model.addAttribute("dsPhongKhaDung", chuyenKhoaService.layDanhSachPhongTrongChoChuyenKhoa(null));
+
+        model.addAttribute("trangHienTai", pageChuyenKhoa.getNumber());
+        model.addAttribute("tongTrang", pageChuyenKhoa.getTotalPages());
+        model.addAttribute("tongChuyenKhoa", pageChuyenKhoa.getTotalElements());
+        model.addAttribute("size", size);
+        model.addAttribute("pageChuyenKhoa", pageChuyenKhoa);
+
+        model.addAttribute("search", search);
+        return "/admin/QLChuyenKhoa";
+    }
+
+    @PostMapping("/chuyenKhoa/sua")
+    public String suaChuyenKhoa(
+            @RequestParam Long id,
+            @RequestParam String tenChuyenKhoa,
+            @RequestParam(required = false) String moTa,
+            @RequestParam(required = false) List<Long> phongKhamIds,
+            RedirectAttributes redirectAttributes) {
+        try {
+            chuyenKhoaService.capNhatChuyenKhoa(id, tenChuyenKhoa, moTa, phongKhamIds);
+            redirectAttributes.addFlashAttribute("thongBaoThanhCong", "Cập nhật chuyên khoa thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("thongBaoLoi", "Lỗi khi cập nhật chuyên khoa: " + e.getMessage());
+        }
+        return "redirect:/admin/chuyenKhoa";
+    }
+
+    @PostMapping("/chuyenKhoa/them")
+    public String themChuyenKhoa(
+            @RequestParam String tenChuyenKhoa,
+            @RequestParam(required = false) String moTa,
+            RedirectAttributes redirectAttributes) {
+        try {
+            chuyenKhoaService.themChuyenKhoa(tenChuyenKhoa, moTa);
+            redirectAttributes.addFlashAttribute("thongBaoThanhCong", "Thêm chuyên khoa mới thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("thongBaoLoi", "Lỗi khi thêm chuyên khoa: " + e.getMessage());
+        }
+        return "redirect:/admin/chuyenKhoa";
+    }
+
+    @GetMapping("/heThong/lichLamViec")
+    public String danhSach(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate tuan,
+            @RequestParam(required = false) Long bacSiId,
+            Model model)
     {
-        return "admin/QLChuyenKhoa";
+        LocalDate homNay = LocalDate.now();
+        // Một ngày bất kỳ trong tuần => lùi về Thứ 2 của tuần đó
+        LocalDate thuHai = (tuan == null ? homNay : tuan).with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate chuNhat = thuHai.plusDays(6);
+
+        List<LichLamViec> dsCa = lichLamViecService.layTheoTuan(thuHai, chuNhat, bacSiId);
+
+        model.addAttribute("dsCa", dsCa);
+        model.addAttribute("daDatMap", lichLamViecService.demDaDat(dsCa));
+
+        model.addAttribute("tuNgay", thuHai);
+        model.addAttribute("denNgay", chuNhat);
+        model.addAttribute("tuanTruoc", thuHai.minusWeeks(1));
+        model.addAttribute("tuanSau", thuHai.plusWeeks(1));
+        model.addAttribute("tuanNay", homNay.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)));
+        model.addAttribute("bacSiId", bacSiId);
+
+        model.addAttribute("dsBacSi", lichLamViecService.dsBacSi());
+        model.addAttribute("dsPhong", lichLamViecService.dsPhong());
+
+        // Giá trị mặc định cho form tạo ca
+        model.addAttribute("homNay", homNay);
+        model.addAttribute("denMacDinh", homNay.plusWeeks(4).minusDays(1));
+        model.addAttribute("gioSang", LichLamViecService.SANG_BAT_DAU.format(GIO) + " - " + LichLamViecService.SANG_KET_THUC.format(GIO));
+        model.addAttribute("gioChieu", LichLamViecService.CHIEU_BAT_DAU.format(GIO) + " - " + LichLamViecService.CHIEU_KET_THUC.format(GIO));
+
+        return "admin/LichLamViec";
+    }
+
+    @PostMapping("/heThong/lichLamViec/tao")
+    public String tao(@ModelAttribute TaoCaDTO dto, RedirectAttributes redirectAttributes)
+    {
+        try {
+            int soCa = lichLamViecService.taoHangLoat(dto);
+            redirectAttributes.addFlashAttribute("thongBaoThanhCong", "Đã tạo " + soCa + " ca làm việc!");
+            redirectAttributes.addAttribute("tuan", dto.getTuNgay().toString());   // toString() = 2026-11-16
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("thongBaoLoi", e.getMessage());
+        }
+        return "redirect:/admin/heThong/lichLamViec";
+    }
+
+    @PostMapping("/heThong/lichLamViec/xoa/{id}")
+    public String xoa(@PathVariable Long id,
+                      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate tuan,
+                      @RequestParam(required = false) Long bacSiId,
+                      RedirectAttributes redirectAttributes)
+    {
+        try {
+            lichLamViecService.xoa(id);
+            redirectAttributes.addFlashAttribute("thongBaoThanhCong", "Đã xóa ca làm việc!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("thongBaoLoi", e.getMessage());
+        }
+        if (tuan != null) redirectAttributes.addAttribute("tuan", tuan.toString());   // toString() = 2026-11-16
+        if (bacSiId != null) redirectAttributes.addAttribute("bacSiId", bacSiId);
+        return "redirect:/admin/heThong/lichLamViec";
     }
 
 }

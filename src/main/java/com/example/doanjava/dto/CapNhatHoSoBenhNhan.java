@@ -35,6 +35,9 @@ public class CapNhatHoSoBenhNhan {
     @Pattern(regexp = "|A[+-]|B[+-]|AB[+-]|O[+-]", message = "Nhóm máu không hợp lệ.")
     private String nhomMau = "";
 
+    @Pattern(regexp = "|[0-9]{12}", message = "CCCD phải gồm đúng 12 chữ số.")
+    private String soCccd = "";
+
     @Size(max = 255, message = "Địa chỉ không quá 255 ký tự.")
     private String diaChi = "";
 
@@ -52,6 +55,8 @@ public class CapNhatHoSoBenhNhan {
     public void setEmail(String email) { this.email = email; }
     public String getNhomMau() { return nhomMau; }
     public void setNhomMau(String nhomMau) { this.nhomMau = nhomMau; }
+    public String getSoCccd() { return soCccd; }
+    public void setSoCccd(String soCccd) { this.soCccd = soCccd; }
     public String getDiaChi() { return diaChi; }
     public void setDiaChi(String diaChi) { this.diaChi = diaChi; }
     public String getTienSuBenh() { return tienSuBenh; }

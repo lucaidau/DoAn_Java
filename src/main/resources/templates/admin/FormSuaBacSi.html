@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/LayoutAdmin :: layout(~{::contentFragment})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Chỉnh Sửa Bác Sĩ - CareHealth</title>
+</head>
+<body>
+<div th:fragment="contentFragment" class="flex flex-col justify-center gap-space-lg max-w-4xl w-full mx-auto min-h-[calc(100vh-6rem)]">
+
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="font-headline-md text-headline-md text-on-surface tracking-tight">Chỉnh sửa Thông tin Bác sĩ</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Cập nhật hồ sơ chuyên môn và trạng thái hoạt động</p>
+        </div>
+        <a th:href="@{/admin/bacSi}" class="px-4 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/40 text-on-surface font-label-md">
+            Quay lại danh sách
+        </a>
+    </div>
+
+    <form th:action="@{/admin/bacSi/sua}" th:object="${bacSiDTO}" method="post"
+          class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-container flex flex-col gap-5">
+        <input type="hidden" th:field="*{id}"/>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-label-sm text-on-surface-variant mb-1">Họ và tên bác sĩ *</label>
+                <input type="text" th:field="*{hoTen}" required
+                       class="w-full px-3.5 py-2 bg-surface-container-low rounded-xl outline-none">
+            </div>
+
+            <div>
+                <label class="block text-label-sm text-on-surface-variant mb-1">Chuyên khoa *</label>
+                <select th:field="*{chuyenKhoaId}" required
+                        class="w-full px-3.5 py-2 bg-surface-container-low rounded-xl outline-none">
+                    <option value="">-- Chọn chuyên khoa --</option>
+                    <option th:each="ck : ${dsChuyenKhoa}" th:value="${ck.id}" th:text="${ck.tenChuyenKhoa}"></option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-label-sm text-on-surface-variant mb-1">Học hàm / Học vị</label>
+                <select th:field="*{hocHamHocVi}"
+                        class="w-full px-3.5 py-2 bg-surface-container-low rounded-xl outline-none">
+                    <option value="Bác sĩ">Bác sĩ</option>
+                    <option value="Bác sĩ CKI">Bác sĩ CKI</option>
+                    <option value="Bác sĩ CKII">Bác sĩ CKII</option>
+                    <option value="Thạc sĩ, Bác sĩ">Thạc sĩ, Bác sĩ</option>
+                    <option value="Tiến sĩ, Bác sĩ">Tiến sĩ, Bác sĩ</option>
+                    <option value="PGS.TS, Bác sĩ">PGS.TS, Bác sĩ</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-label-sm text-on-surface-variant mb-1">Số năm kinh nghiệm</label>
+                <input type="number" th:field="*{soNamKinhNghiem}" min="0"
+                       class="w-full px-3.5 py-2 bg-surface-container-low rounded-xl outline-none">
+            </div>
+
+            <div>
+                <label class="block text-label-sm text-on-surface-variant mb-1">Trạng thái làm việc</label>
+                <select th:field="*{trangThai}"
+                        class="w-full px-3.5 py-2 bg-surface-container-low rounded-xl outline-none">
+                    <option th:value="true">Đang nhận lịch</option>
+                    <option th:value="false">Tạm nghỉ phép</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-label-sm text-on-surface-variant mb-1">Số điện thoại</label>
+                <input type="text" th:field="*{soDienThoaiMoi}"
+                       class="w-full px-3.5 py-2 bg-surface-container-low rounded-xl outline-none">
+            </div>
+
+            <div>
+                <label class="block text-label-sm text-on-surface-variant mb-1">Email</label>
+                <input type="email" th:field="*{emailMoi}"
+                       class="w-full px-3.5 py-2 bg-surface-container-low rounded-xl outline-none">
+            </div>
+
+            <div>
+                <label class="block text-label-sm text-on-surface-variant mb-1">Mật khẩu mới (bỏ trống nếu giữ nguyên)</label>
+                <input type="password" th:field="*{matKhauMoi}" placeholder="••••••••"
+                       class="w-full px-3.5 py-2 bg-surface-container-low rounded-xl outline-none">
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-label-sm text-on-surface-variant mb-1">Giới thiệu chuyên môn</label>
+            <textarea th:field="*{gioiThieu}" rows="3"
+                      class="w-full px-3.5 py-2 bg-surface-container-low rounded-xl outline-none"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-4 border-t border-surface-container">
+            <a th:href="@{/admin/bacSi}" class="px-4 py-2 rounded-xl bg-surface-container-low text-on-surface font-label-md">Hủy</a>
+            <button type="submit" class="px-5 py-2 rounded-xl bg-primary text-on-primary font-label-md shadow-sm">
+                Lưu thay đổi
+            </button>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>

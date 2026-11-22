@@ -45,46 +45,66 @@
 
 <body class="bg-background font-body-md text-on-surface antialiased">
   <header
-    class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-    <div class="h-20 w-full px-gutter flex items-center justify-between gap-space-md">
-      <div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm focus:outline-none"
-          data-path="trang-chu" href="#">
-          <div
-            class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary shadow-sm">
+    class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="w-full px-space-lg h-20 flex items-center justify-between gap-space-md">
+      <div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm group" data-path="trang-chu"
+          href="/patient/dashboard" th:href="@{/patient/dashboard}">
+          <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-sm">
             <span class="material-symbols-outlined text-[24px]">local_hospital</span>
           </div>
           <div class="flex flex-col"><span
-              class="font-headline-sm text-headline-sm text-primary tracking-tight">CareHealth</span><span
-              class="font-label-sm text-label-sm text-secondary -mt-1">Y tế thông minh</span></div>
+              class="font-headline-sm text-headline-sm text-primary leading-tight tracking-tight">CareHealth</span><span
+              class="font-label-sm text-label-sm text-secondary leading-none">Y tế thông minh</span></div>
         </a>
-        <nav class="hidden lg:flex items-center gap-space-xs"
-          data-active-classes="bg-surface-container-high text-primary font-label-md"><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
-            data-path="trang-chu" href="#">Trang chủ</a><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
-            data-path="chuyen-khoa" href="#">Chuyên khoa</a><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
-            data-path="bac-si" href="#">Bác sĩ</a><a
-            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
-            data-path="lich-hen-cua-toi" href="#">Lịch hẹn của tôi</a></nav>
+        <nav class="hidden xl:flex items-center gap-space-xs"
+          data-active-classes="bg-primary-container text-on-primary-container font-label-md"><a
+            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            data-path="trang-chu" href="/patient/dashboard" th:href="@{/patient/dashboard}">Trang chủ</a><a
+            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            data-path="chuyen-khoa" href="/patient/specialties" th:href="@{/patient/specialties}">Chuyên khoa</a><a
+            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            data-path="bac-si" href="/patient/doctors" th:href="@{/patient/doctors}">Bác sĩ</a><a
+            class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            data-path="lich-hen-cua-toi" href="/patient/appointments" th:href="@{/patient/appointments}">Lịch hẹn của
+            tôi</a></nav>
       </div>
-      <div class="flex items-center gap-space-md">
-        <div class="hidden xl:flex items-center relative w-72"><span
-            class="material-symbols-outlined absolute left-3 text-outline text-[20px]">search</span><input
-            class="w-full bg-surface-container-low text-on-surface font-body-sm text-body-sm pl-10 pr-4 py-space-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest transition-all"
-            placeholder="Tìm bác sĩ, chuyên khoa..." type="text"><span
-            class="absolute right-3 font-label-sm text-label-sm text-outline border border-outline-variant px-1 rounded">⌘K</span>
-        </div><a
-          class="hidden sm:inline-flex items-center gap-space-xs bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-md py-space-sm rounded-lg shadow-sm transition-all"
-          data-path="dat-lich-kham" href="#"><span
-            class="material-symbols-outlined text-[18px]">calendar_today</span><span>Đặt lịch khám</span></a>
-        <div class="flex items-center gap-space-sm pl-space-xs">
-          <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span
-              class="material-symbols-outlined text-on-primary text-[18px]">person</span></div>
-          <div class="hidden md:flex flex-col text-left"><span
-              class="font-label-sm text-label-sm text-on-surface leading-tight">Nguyễn Văn A</span><span
-              class="font-body-sm text-[11px] text-secondary leading-tight">Bệnh nhân VIP</span></div>
-        </div>
+      <div class="hidden lg:flex items-center flex-1 max-w-xs xl:max-w-md mx-space-md">
+        <div class="relative w-full"><span
+            class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span><input
+            class="w-full pl-10 pr-space-md py-space-sm bg-surface-container-low rounded-xl font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all"
+            placeholder="Tìm nhanh bác sĩ, chuyên khoa..." type="text" /></div>
+      </div>
+      <div class="flex items-center gap-space-md"><a
+          class="hidden sm:inline-flex items-center justify-center gap-space-xs px-space-md py-space-sm bg-primary text-on-primary rounded-xl font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-all shadow-sm"
+          data-path="dat-lich-kham" href="/patient/doctors" th:href="@{/patient/doctors}"><span
+            class="material-symbols-outlined text-[18px]">calendar_month</span>Đặt lịch khám</a>
+        <details class="relative border-l border-surface-container-high pl-space-sm">
+          <summary class="flex items-center gap-space-sm cursor-pointer list-none">
+            <div class="text-right hidden md:flex flex-col"><span
+                class="font-label-md text-label-md text-on-surface leading-tight" th:text="${benhNhan.hoTen}">Bệnh
+                nhân</span><span class="font-label-sm text-label-sm text-secondary font-medium leading-none">Bệnh
+                nhân</span></div>
+            <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span
+                class="material-symbols-outlined text-on-primary text-[18px]">person</span></div>
+            <span class="material-symbols-outlined text-outline text-[18px]">expand_more</span>
+          </summary>
+          <div
+            class="absolute right-0 mt-2 w-56 rounded-lg bg-surface-container-lowest py-1 shadow-lg ring-1 ring-outline-variant/50">
+            <a class="flex items-center gap-2 px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container transition-colors"
+              th:href="@{/patient/profile}">
+              <span class="material-symbols-outlined text-[18px]">person</span>
+              Xem thông tin bệnh nhân
+            </a>
+            <div class="border-t border-surface-container-high my-1"></div>
+            <form th:action="@{/logout}" method="post">
+              <button type="submit"
+                class="flex items-center gap-2 w-full px-4 py-2 font-label-md text-label-md text-error hover:bg-error-container transition-colors">
+                <span class="material-symbols-outlined text-[18px]">logout</span>
+                Đăng xuất
+              </button>
+            </form>
+          </div>
+        </details>
       </div>
     </div>
   </header>
@@ -131,11 +151,6 @@
                 <span class="font-body-sm text-body-sm text-on-surface-variant">Chuyên khoa</span>
               </div>
             </div>
-            <div class="flex items-center gap-space-sm text-on-surface-variant">
-              <span class="material-symbols-outlined text-status-confirmed text-[20px]"
-                style="font-variation-settings: 'FILL' 1;">verified</span>
-              <span class="font-label-sm text-label-sm">Được chứng nhận &amp; cấp phép bởi Bộ Y Tế Việt Nam</span>
-            </div>
           </div>
           <!-- Hero Visual Composition -->
           <div class="lg:col-span-5 relative flex justify-center items-center">
@@ -145,18 +160,6 @@
                 data-alt="A confident smiling Asian female medical doctor wearing a modern white coat and stethoscope in a bright futuristic hospital clinic with ambient medical blue lighting and soft interior reflections"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDafXE9RntGDBo7HnixMrs6pMQr8LtOrAH1kV-KgMGz9p9DAxewMZ_Iai8xdLeZAF16HlAa_2-Bqk9KAiu9l4c6u-OnzsGC0YELx5vkpGudHz4ghb0A98FrJnPyIEl2PB1WoI8uifMXwmouC4zWnZcAATHCtisigRovFnOPyA9dAwkfEcmN1SJOPoB1pzsevXCMocX2XtcNjZ2hSvkB6AS8xsGMppY45zmCJoWkn5jyq3U5vljeeSQRyw">
               <div class="absolute inset-0 bg-gradient-to-t from-on-surface/70 via-transparent to-transparent"></div>
-              <!-- Floating Status Badge -->
-              <div
-                class="absolute bottom-6 left-6 right-6 p-space-md rounded-xl bg-surface-container-lowest/90 backdrop-blur-md shadow-md flex items-center gap-space-md">
-                <div class="w-12 h-12 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
-                  <span class="material-symbols-outlined text-[28px]"
-                    style="font-variation-settings: 'FILL' 1;">support_agent</span>
-                </div>
-                <div>
-                  <p class="font-label-md text-label-md text-on-surface font-semibold">Tư vấn trực tuyến 24/7</p>
-                  <p class="font-body-sm text-body-sm text-secondary">Phản hồi trung bình &lt; 3 phút</p>
-                </div>
-              </div>
             </div>
             <!-- Ambient decorative shapes -->
             <div class="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-secondary-container/40 blur-3xl -z-10">
@@ -324,68 +327,6 @@
           </div>
         </div>
       </section>
-      <!-- Telemedicine & Hotline Consultation Banner -->
-      <section class="max-w-7xl mx-auto w-full px-gutter mb-space-xl">
-        <div
-          class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary to-primary-container p-space-xl lg:p-14 text-on-primary shadow-xl">
-          <!-- Decorative background rings -->
-          <div
-            class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-surface-container-lowest/10 blur-2xl pointer-events-none">
-          </div>
-          <div
-            class="absolute -left-16 -bottom-16 w-80 h-80 rounded-full bg-secondary-container/10 blur-2xl pointer-events-none">
-          </div>
-          <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
-            <div class="lg:col-span-8 flex flex-col items-start">
-              <div
-                class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-lowest/20 backdrop-blur-md mb-space-md">
-                <span class="material-symbols-outlined text-[16px]">call_quality</span>
-                <span class="font-label-sm text-label-sm font-semibold tracking-wide">Trực Tuyến &amp; Khẩn Cấp</span>
-              </div>
-              <h2
-                class="font-headline-lg text-headline-lg lg:text-[38px] lg:leading-[46px] font-bold text-on-primary mb-space-sm">
-                Bạn cần tư vấn sức khỏe ngay bây giờ?
-              </h2>
-              <p class="font-body-lg text-body-lg text-on-primary/90 max-w-2xl leading-relaxed">
-                Kết nối video trực tiếp cùng bác sĩ chuyên khoa hoặc gọi ngay tổng đài y tế CareHealth để được hướng dẫn
-                xử lý triệu chứng kịp thời.
-              </p>
-            </div>
-            <div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-space-md w-full justify-center">
-              <!-- Hotline Button -->
-              <a class="flex items-center justify-between p-space-md rounded-xl bg-surface-container-lowest text-on-surface shadow-md hover:bg-surface-container transition-all"
-                href="tel:19006868">
-                <div class="flex items-center gap-space-md">
-                  <div class="w-12 h-12 rounded-lg bg-error-container text-error flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[24px]"
-                      style="font-variation-settings: 'FILL' 1;">phone_in_talk</span>
-                  </div>
-                  <div class="text-left">
-                    <span class="font-label-sm text-label-sm text-on-surface-variant block">Tổng đài y tế 24/7</span>
-                    <span class="font-headline-sm text-headline-sm text-primary font-bold">1900 6868</span>
-                  </div>
-                </div>
-                <span class="material-symbols-outlined text-outline">arrow_forward_ios</span>
-              </a>
-              <!-- Online Consult Button -->
-              <a class="flex items-center justify-between p-space-md rounded-xl bg-secondary-fixed text-on-secondary-fixed shadow-md hover:bg-secondary-container transition-all"
-                data-path="kham-truc-tuyen" href="#">
-                <div class="flex items-center gap-space-md">
-                  <div
-                    class="w-12 h-12 rounded-lg bg-surface-container-lowest text-secondary flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[24px]">videocam</span>
-                  </div>
-                  <div class="text-left">
-                    <span class="font-headline-sm text-headline-sm font-bold block">Khám Trực Tuyến</span>
-                    <span class="font-body-sm text-body-sm opacity-80">Video Call HD với Bác sĩ</span>
-                  </div>
-                </div>
-                <span class="material-symbols-outlined">arrow_forward</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
     <script>
       // Simple micro-interaction for date input prefill
@@ -496,9 +437,9 @@
   <script th:inline="javascript">
     window.homePageData = {
       thongKe: /*[[${thongKe}]]*/ {},
-      chuyenKhoa: /*[[${chuyenKhoa}]]*/ [],
+      chuyenKhoa: /*[[${chuyenKhoa}]]*/[],
       thongKeChuyenKhoa: /*[[${thongKeChuyenKhoa}]]*/ {},
-      bacSiNoiBat: /*[[${bacSiNoiBat}]]*/ []
+      bacSiNoiBat: /*[[${bacSiNoiBat}]]*/[]
     };
   </script>
   <script th:inline="none">
@@ -528,7 +469,7 @@
       // Bieu tuong theo ten chuyen khoa (giu dung bo icon cua thiet ke goc)
       function iconFor(name) {
         const n = noMark(name);
-        const map = [ ["tim mach", "cardiology"], ["rang", "dentistry"], ["mat", "visibility"], ["tai mui", "hearing"], ["nhi", "child_care"],
+        const map = [["tim mach", "cardiology"], ["rang", "dentistry"], ["mat", "visibility"], ["tai mui", "hearing"], ["nhi", "child_care"],
         ["xuong", "personal_injury"], ["da lieu", "spa"], ["than kinh", "psychology"], ["noi", "stethoscope"], ["san", "pregnant_woman"],
         ["ung buou", "oncology"], ["tieu hoa", "gastroenterology"], ["phoi", "pulmonology"], ["hinh anh", "radiology"]];
         return (map.find(([k]) => n.includes(k)) || [0, "medical_services"])[1];
