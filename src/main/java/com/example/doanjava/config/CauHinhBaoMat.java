@@ -22,7 +22,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class CauHinhBaoMat {
     @Bean
     public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder(12);
         return NoOpPasswordEncoder.getInstance();
     }
 
@@ -74,7 +73,10 @@ public class CauHinhBaoMat {
                 .authenticationProvider(authenticationProvider)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/xac-thuc-dang-nhap", "/register", "/error", "/css/**", "/js/**", "/images/**", "/bac-si/**").permitAll()
+                        // Đặt trước anyRequest(): chặn cả GET/POST, chi tiết, ca khám và xuất CSV.
+                        .requestMatchers("/lichhen", "/lichhen/**", "/thongbao", "/catruc").hasAnyRole("BAC_SI", "ADMIN")
                         .requestMatchers("/patient/**").hasRole("BENH_NHAN")
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/doctor/profile").hasAnyRole("BAC_SI", "ADMIN")
                         .requestMatchers("/doctor/**").hasRole("BAC_SI")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
@@ -90,7 +92,7 @@ public class CauHinhBaoMat {
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID"))
-                .exceptionHandling(ex -> ex.accessDeniedPage("/access-denied"))
+                .exceptionHandling(ex -> ex.accessDeniedHandler((request, response, denied) -> response.sendError(403)))
                 .headers(headers -> headers.cacheControl(cache -> {}))
                 .sessionManagement(session -> session
                         .sessionFixation(fixation -> fixation.migrateSession()));

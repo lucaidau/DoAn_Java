@@ -5,18 +5,20 @@ import com.example.doanjava.repository.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
 import java.time.*;
 import java.util.*;
 @Service
 public class LichHenService {
     private final LichHenRepository lichHenRepo;
     @org.springframework.beans.factory.annotation.Autowired private PhongKhamRepository phongKhamRepo;
-    @org.springframework.beans.factory.annotation.Autowired private DichVuKhamRepository dichVuKhamRepo;
-    @org.springframework.beans.factory.annotation.Autowired private ThuocRepository thuocRepo;
+
     @org.springframework.beans.factory.annotation.Autowired
     private SinhHieuRepository sinhHieuRepo;
     @org.springframework.beans.factory.annotation.Autowired
-    private ThanhToanRepository thanhToanRepo;
+
     private final BenhNhanRepository benhNhanRepo;
     private final BacSiRepository bacSiRepo;
     private final LichLamViecRepository caRepo;
@@ -31,12 +33,75 @@ public class LichHenService {
         this.donThuocRepo = donThuocRepo;
     }
 
+    @org.springframework.beans.factory.annotation.Autowired
+    private TaiKhoanRepository taiKhoanRepo;
+
+    // Lấy họ tên bác sĩ đang đăng nhập để hiển thị trên UI
+    public String tenBacSiHienTai() {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth == null) return "Hệ thống";
+            boolean admin = auth.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+            if (admin) return "Quản trị viên";
+            TaiKhoan tk = taiKhoanRepo.findByTenDangNhapIgnoreCase(auth.getName()).orElse(null);
+            if (tk == null) return auth.getName();
+            return bacSiRepo.findByTaiKhoanId(tk.getId()).map(BacSi::getHoTen).orElse(auth.getName());
+        } catch (Exception e) {
+            return "Bác sĩ";
+        }
+    }
+
+    // ADMIN xem tất cả; BAC_SI chỉ xem lịch hẹn được phân công.
+    // Không dùng bacSiId lấy từ URL/form để quyết định phạm vi dữ liệu.
+    public Long bacSiIdHienTai() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) throw new AccessDeniedException("Chưa đăng nhập");
+        boolean admin = auth.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+        if (admin) return null;
+        boolean bacSi = auth.getAuthorities().stream().anyMatch(a -> "ROLE_BAC_SI".equals(a.getAuthority()));
+        if (!bacSi) throw new AccessDeniedException("Không có quyền quản lý lịch hẹn");
+        TaiKhoan tk = taiKhoanRepo.findByTenDangNhapIgnoreCase(auth.getName())
+                .orElseThrow(() -> new AccessDeniedException("Không tìm thấy tài khoản"));
+        return bacSiRepo.findByTaiKhoanId(tk.getId())
+                .orElseThrow(() -> new AccessDeniedException("Tài khoản chưa liên kết hồ sơ bác sĩ"))
+                .getId();
+    }
+
+    public long tongTatCa() {
+        Long id = bacSiIdHienTai();
+        return id == null ? lichHenRepo.count() : lichHenRepo.countByBacSiId(id);
+    }
+
     public Page<LichHen> danhSach(String search, String status, LocalDate from, LocalDate to, int page) {
-        return lichHenRepo.timKiem(search == null ? "" : search.trim(), status == null || status.isBlank() ? "ALL" : status, from, to, PageRequest.of(Math.max(0, page - 1), 8, Sort.by("ngayKham").descending().and(Sort.by("id").descending())));
+        return lichHenRepo.timKiem(search == null ? "" : search.trim(), status == null || status.isBlank() ? "ALL" : status, from, to, bacSiIdHienTai(), PageRequest.of(Math.max(0, page - 1), 8, Sort.by("ngayKham").descending().and(Sort.by("id").descending())));
     }
 
     public LichHen chiTiet(Long id) {
-        return lichHenRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy lịch hẹn " + id));
+        LichHen lich = lichHenRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy lịch hẹn " + id));
+        Long bacSiId = bacSiIdHienTai();
+        if (bacSiId != null && (lich.getBacSi() == null || !bacSiId.equals(lich.getBacSi().getId())))
+            throw new AccessDeniedException("Không có quyền truy cập lịch hẹn của bác sĩ khác");
+        return lich;
+    }
+
+    // Lấy chi tiết lịch hẹn để xem lịch sử khám bệnh (cho phép xem nếu bệnh nhân đó từng khám hoặc đang khám với bác sĩ hiện tại)
+    public LichHen chiTietXemLichSu(Long id, Long benhNhanHienTaiId) {
+        LichHen lich = lichHenRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy lịch hẹn " + id));
+        Long bacSiId = bacSiIdHienTai();
+        if (bacSiId != null) {
+            boolean laCuaMinh = lich.getBacSi() != null && bacSiId.equals(lich.getBacSi().getId());
+            boolean cungBenhNhan = benhNhanHienTaiId != null && lich.getBenhNhan() != null && benhNhanHienTaiId.equals(lich.getBenhNhan().getId());
+            if (!laCuaMinh && !cungBenhNhan) {
+                throw new AccessDeniedException("Không có quyền truy cập lịch hẹn này");
+            }
+        }
+        return lich;
+    }
+
+    // Lấy lịch sử khám theo bệnh nhân id, loại trừ lịch hẹn hiện tại
+    public List<HoSoBenhAn> lichSuKhamTheoBenhNhan(Long benhNhanId, Long lichIdHienTai) {
+        if (benhNhanId == null) return Collections.emptyList();
+        return hoSoRepo.lichSuKham(benhNhanId, lichIdHienTai != null ? lichIdHienTai : -1L);
     }
 
     public List<BenhNhan> benhNhans() {
@@ -59,24 +124,39 @@ public class LichHenService {
 
     // -- Đếm tất cả lịch hẹn theo trạng thái để đồng bộ số liệu trên các tab --
     public long thongKe(String status) {
-        return lichHenRepo.countByTrangThai(status);
+        Long id = bacSiIdHienTai();
+        return id == null ? lichHenRepo.countByTrangThai(status) : lichHenRepo.countByBacSiIdAndTrangThai(id, status);
     }
 
     // -- Thống kê riêng số lịch có ngày khám là hôm nay --
     public long tongHomNay() {
-        return lichHenRepo.countByNgayKham(LocalDate.now());
+        Long id = bacSiIdHienTai();
+        return id == null ? lichHenRepo.countByNgayKham(LocalDate.now()) : lichHenRepo.countByBacSiIdAndNgayKham(id, LocalDate.now());
     }
 
     public List<LichHen> thongBao() {
-        return lichHenRepo.findTop10ByOrderByNgayTaoDesc();
+        Long id = bacSiIdHienTai();
+        return id == null ? lichHenRepo.findTop10ByOrderByNgayTaoDesc() : lichHenRepo.findTop10ByBacSiIdOrderByNgayTaoDesc(id);
     }
 
     public List<PhongKham> phongKhams() { return phongKhamRepo.findAll(Sort.by("tenPhong")); }
-    public List<DichVuKham> dichVuKhams() { return dichVuKhamRepo.findAll(Sort.by("tenDichVu")); }
-    public List<Thuoc> thuocs() { return thuocRepo.findAll(Sort.by("tenThuoc")); }
+
+    public List<DonThuoc> thuocs() {
+        List<DonThuoc> list = donThuocRepo.findAll(Sort.by("tenThuoc"));
+        Map<String, DonThuoc> unique = new LinkedHashMap<>();
+        for (DonThuoc d : list) {
+            if (d.getTenThuoc() != null && !d.getTenThuoc().isBlank()) {
+                unique.putIfAbsent(d.getTenThuoc().trim(), d);
+            }
+        }
+        return new ArrayList<>(unique.values());
+    }
 
     @Transactional
     public LichHen tao(Long benhNhanId, Long bacSiId, Long caId, LocalDate ngay, String gio, String trieuChung) {
+        Long bacSiDangNhap = bacSiIdHienTai();
+        if (bacSiDangNhap != null && !bacSiDangNhap.equals(bacSiId))
+            throw new AccessDeniedException("Chỉ được tạo lịch cho bác sĩ đang đăng nhập");
         BenhNhan benhNhan = benhNhanRepo.findById(benhNhanId).orElseThrow(() -> new IllegalArgumentException("Bệnh nhân không tồn tại"));
         BacSi bacSi = bacSiRepo.findById(bacSiId).orElseThrow(() -> new IllegalArgumentException("Bác sĩ không tồn tại"));
         LichLamViec ca = caRepo.findById(caId).orElseThrow(() -> new IllegalArgumentException("Ca khám không tồn tại"));
@@ -100,15 +180,13 @@ public class LichHenService {
     }
 
     @Transactional
-    public LichHen taoDayDu(Long benhNhanId, Long bacSiId, Long caId, LocalDate ngay, String gio, String trieuChung, Long phongId, Long dichVuId, String ghiChu, Integer tamThu, Integer tamTruong, Integer nhipTim, Integer spo2, java.math.BigDecimal canNang, java.math.BigDecimal chieuCao, String tienSu, String giaDinh, String thoiQuen) {
-        if (phongId == null || dichVuId == null) throw new IllegalArgumentException("Phải chọn phòng khám và dịch vụ khám");
+    public LichHen taoDayDu(Long benhNhanId, Long bacSiId, Long caId, LocalDate ngay, String gio, String trieuChung, Long phongId, String ghiChu, Integer tamThu, Integer tamTruong, Integer nhipTim, Integer spo2, java.math.BigDecimal canNang, java.math.BigDecimal chieuCao, String tienSu, String giaDinh, String thoiQuen) {
+        if (phongId == null) throw new IllegalArgumentException("Phải chọn phòng khám");
         PhongKham phong = phongKhamRepo.findById(phongId).orElseThrow(() -> new IllegalArgumentException("Phòng khám không tồn tại"));
-        DichVuKham dichVu = dichVuKhamRepo.findById(dichVuId).orElseThrow(() -> new IllegalArgumentException("Dịch vụ không tồn tại"));
         if (spo2 != null && (spo2 < 0 || spo2 > 100)) throw new IllegalArgumentException("SpO2 phải từ 0 đến 100");
         if (canNang != null && canNang.signum() <= 0 || chieuCao != null && chieuCao.signum() <= 0) throw new IllegalArgumentException("Cân nặng và chiều cao phải lớn hơn 0");
         LichHen lich = tao(benhNhanId, bacSiId, caId, ngay, gio, trieuChung);
         lich.setPhongKham(phong);
-        lich.setDichVuKham(dichVu);
         lich.setGhiChuTiepNhan(ghiChu);
         lichHenRepo.save(lich);
         BenhNhan benhNhan = lich.getBenhNhan();
@@ -128,11 +206,6 @@ public class LichHenService {
             sh.setThoiGianDo(LocalDateTime.now());
             sinhHieuRepo.save(sh);
         }
-        ThanhToan thanhToan = new ThanhToan();
-        thanhToan.setLichHen(lich);
-        thanhToan.setSoTien(dichVu.getGiaKham() == null ? java.math.BigDecimal.ZERO : dichVu.getGiaKham());
-        thanhToan.setTrangThai("CHUA_THANH_TOAN");
-        thanhToanRepo.save(thanhToan);
         return lich;
     }
 
@@ -171,9 +244,7 @@ public class LichHenService {
         return sinhHieuRepo.findByLichHenId(lichId);
     }
 
-    public Optional<ThanhToan> thanhToan(Long lichId) {
-        return thanhToanRepo.findByLichHenId(lichId);
-    }
+
 
     public Optional<HoSoBenhAn> hoSo(Long lichId) {
         return hoSoRepo.findByLichHenId(lichId);

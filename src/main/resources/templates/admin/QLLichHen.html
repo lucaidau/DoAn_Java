@@ -142,8 +142,13 @@
                         <!-- Bác sĩ -->
                         <td class="py-space-md px-space-md">
                             <div class="flex flex-col">
-                                <span class="font-label-md text-label-md font-medium" th:text="${lh.bacSi != null ? lh.bacSi.hoTen : 'Chưa phân công'}">Tên bác sĩ</span>
-                                <span class="font-body-sm text-body-sm text-outline" th:text="${lh.bacSi != null ? lh.bacSi.chuyenKhoa.tenChuyenKhoa : ''}">Chuyên khoa</span>
+                            <span class="font-label-md text-label-md font-medium"
+                                  th:text="${lh.lichLamViec.bacSi != null ? lh.lichLamViec.bacSi.hoTen : 'Chưa phân công'}">
+                                Tên bác sĩ
+                            </span>
+                            <span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+            <span th:text="${lh.lichLamViec.phongKham != null ? lh.lichLamViec.phongKham.tenPhong : 'Chưa xếp phòng'}">Phòng khám</span>
+        </span>
                             </div>
                         </td>
 
@@ -173,7 +178,7 @@
                         <!-- Thao tác -->
                         <td class="py-space-md px-space-md text-right">
                             <div class="flex items-center justify-end gap-1">
-                                <a th:href="@{'/admin/lichHen/chiTiet/' + ${lh.id}}" class="p-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Xem chi tiết hồ sơ">
+                                <a th:href="@{'/admin/dashboard/chiTiet/' + ${lh.id}}" class="p-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Xem chi tiết hồ sơ">
                                     <span class="material-symbols-outlined text-[18px]">visibility</span>
                                 </a>
                             </div>
@@ -190,28 +195,43 @@
             </div>
 
             <!-- Table Footer / Pagination -->
-            <div class="px-space-md py-space-sm bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant">
-                <div></div>
-                <div class="flex items-center gap-1">
-                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest text-outline hover:text-on-surface transition-colors" disabled>
-                        <span class="material-symbols-outlined text-[18px]">first_page</span>
-                    </button>
-                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest text-outline hover:text-on-surface transition-colors" disabled>
-                        <span class="material-symbols-outlined text-[18px]">chevron_left</span>
-                    </button>
-                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-primary text-on-primary font-label-sm text-label-sm font-semibold">1</button>
-                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container font-label-sm text-label-sm text-on-surface transition-colors">2</button>
-                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container font-label-sm text-label-sm text-on-surface transition-colors">3</button>
-                    <span class="px-1 text-outline">...</span>
-                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container font-label-sm text-label-sm text-on-surface transition-colors">10</button>
-                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container text-on-surface transition-colors">
-                        <span class="material-symbols-outlined text-[18px]">chevron_right</span>
-                    </button>
-                    <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container text-on-surface transition-colors">
-                        <span class="material-symbols-outlined text-[18px]">last_page</span>
-                    </button>
+            <div class="px-space-md py-space-sm bg-surface-container-low/50 border-t border-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant">
+                <div class="font-body-sm text-body-sm">
+                    Trang <strong class="text-on-surface" th:text="${trangHienTai + 1}">1</strong>
+                    / <strong class="text-on-surface" th:text="${tongTrang == 0 ? 1 : tongTrang}">1</strong>
+                </div>
+
+                <div class="flex items-center gap-1" th:if="${tongTrang > 0}">
+                    <!-- Nút "Trước" -->
+                    <a th:href="@{/admin/dashboard(page=${trangHienTai - 1}, trangThai=${trangThai}, search=${search}, from=${from}, to=${to})}"
+                       class="px-space-sm py-1 rounded-lg bg-surface-container-lowest border border-outline-variant/40 text-on-surface font-label-sm text-label-sm flex items-center gap-1 hover:bg-surface-container transition-colors"
+                       th:classappend="${trangHienTai == 0} ? 'opacity-50 pointer-events-none' : ''">
+                        <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+                        <span>Trước</span>
+                    </a>
+
+                    <!-- Các nút số trang -->
+                    <div class="flex items-center gap-1">
+                        <th:block th:each="i : ${#numbers.sequence(0, tongTrang - 1)}">
+                            <a th:href="@{/admin/dashboard(page=${i}, trangThai=${trangThai}, search=${search}, from=${from}, to=${to})}"
+                               th:text="${i + 1}"
+                               class="w-8 h-8 rounded-lg flex items-center justify-center font-label-sm text-label-sm font-semibold transition-colors border"
+                               th:classappend="${i == trangHienTai} ? 'bg-primary text-on-primary border-primary shadow-sm' : 'bg-surface-container-lowest hover:bg-surface-container border-outline-variant/40 text-on-surface'">
+                                1
+                            </a>
+                        </th:block>
+                    </div>
+
+                    <!-- Nút "Tiếp theo" -->
+                    <a th:href="@{/admin/dashboard(page=${trangHienTai + 1}, trangThai=${trangThai}, search=${search}, from=${from}, to=${to})}"
+                       class="px-space-sm py-1 rounded-lg bg-surface-container-lowest border border-outline-variant/40 text-on-surface font-label-sm text-label-sm flex items-center gap-1 hover:bg-surface-container transition-colors"
+                       th:classappend="${trangHienTai + 1 >= tongTrang} ? 'opacity-50 pointer-events-none' : ''">
+                        <span>Tiếp theo</span>
+                        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                    </a>
                 </div>
             </div>
+        </div>
         </div>
 
     </div>

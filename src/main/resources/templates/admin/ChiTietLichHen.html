@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/LayoutAdmin :: layout(~{::contentFragment})}">
+<head>
+  <title>Chi Tiết Lịch Hẹn - CareHealth</title>
+</head>
+<body>
+<div th:fragment="contentFragment" class="flex flex-col gap-space-md w-full">
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="font-headline-md text-headline-md text-on-surface tracking-tight"
+            th:text="'Chi Tiết Lịch Hẹn #' + ${lichHen.id}">
+          Chi Tiết Lịch Hẹn
+        </h1>
+        <span class="px-3 py-1 rounded-full font-label-sm text-label-sm font-medium bg-surface-container text-primary"
+              th:text="${lichHen.trangThai == 'CHO_XAC_NHAN' ? 'Chờ xác nhận' : (lichHen.trangThai == 'DA_XAC_NHAN' ? 'Đã xác nhận' : (lichHen.trangThai == 'DANG_KHAM' ? 'Đang khám' : (lichHen.trangThai == 'DA_KHAM' ? 'Đã khám' : 'Đã hủy')))}">
+                    Trạng thái
+                </span>
+      </div>
+      <p class="font-body-sm text-body-sm text-outline mt-0.5"
+         th:text="${lichHen.ngayTao != null ? 'Tạo lúc: ' + #temporals.format(lichHen.ngayTao, 'dd/MM/yyyy HH:mm') : ''}">
+        Ngày tạo
+      </p>
+    </div>
+
+    <a th:href="@{/admin/dashboard}"
+       class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-container-lowest hover:bg-surface-container border border-outline-variant/40 text-on-surface font-label-md text-label-md transition-colors">
+      <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+      <span>Quay lại</span>
+    </a>
+  </div>
+
+  <!-- Grid 2 cột: Lịch hẹn/Phòng khám & Bệnh nhân -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
+
+    <!-- Cột trái: Lịch hẹn, Bác sĩ, Phòng khám -->
+    <div class="lg:col-span-6 bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col gap-3">
+      <h2 class="font-label-md text-label-md font-semibold text-on-surface uppercase tracking-wider">
+        Thông tin lịch hẹn &amp; phòng khám
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <div>
+          <span class="text-outline block">Ngày khám</span>
+          <span class="font-medium text-on-surface" th:text="${lichHen.ngayKham}">-</span>
+        </div>
+        <div>
+          <span class="text-outline block">Khung giờ</span>
+          <span class="font-medium text-primary" th:text="${lichHen.khungGioKham}">-</span>
+        </div>
+        <div>
+          <span class="text-outline block">Bác sĩ phụ trách</span>
+          <span class="font-medium text-on-surface"
+                th:text="${lichHen.lichLamViec != null && lichHen.lichLamViec.bacSi != null ? lichHen.lichLamViec.bacSi.hoTen : 'Chưa phân công'}">-</span>
+        </div>
+        <div>
+          <span class="text-outline block">Chuyên khoa</span>
+          <span class="font-medium text-on-surface"
+                th:text="${lichHen.lichLamViec != null && lichHen.lichLamViec.bacSi != null && lichHen.lichLamViec.bacSi.chuyenKhoa != null ? lichHen.lichLamViec.bacSi.chuyenKhoa.tenChuyenKhoa : '-'}">-</span>
+        </div>
+        <div class="sm:col-span-2">
+          <span class="text-outline block">Phòng khám</span>
+          <span class="font-medium text-on-surface"
+                th:if="${lichHen.lichLamViec != null && lichHen.lichLamViec.phongKham != null}"
+                th:text="${lichHen.lichLamViec.phongKham.tenPhong} + (${lichHen.lichLamViec.phongKham.khuVuc != null ? ' (' + lichHen.lichLamViec.phongKham.khuVuc + ')' : ''})">-</span>
+          <span class="text-outline"
+                th:if="${lichHen.lichLamViec == null || lichHen.lichLamViec.phongKham == null}">Chưa gán phòng</span>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-surface-container-low text-sm">
+        <span class="text-outline block">Triệu chứng ban đầu</span>
+        <p class="text-on-surface mt-0.5" th:text="${lichHen.trieuChungBenh != null && !#strings.isEmpty(lichHen.trieuChungBenh) ? lichHen.trieuChungBenh : 'Không có'}">-</p>
+      </div>
+
+      <div class="text-sm" th:if="${lichHen.ghiChuTiepNhan != null && !#strings.isEmpty(lichHen.ghiChuTiepNhan)}">
+        <span class="text-outline block">Ghi chú tiếp nhận</span>
+        <p class="text-on-surface mt-0.5" th:text="${lichHen.ghiChuTiepNhan}">-</p>
+      </div>
+    </div>
+
+    <!-- Cột phải: Bệnh nhân & Tiền sử -->
+    <div class="lg:col-span-6 bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col gap-3">
+      <h2 class="font-label-md text-label-md font-semibold text-on-surface uppercase tracking-wider">
+        Thông tin bệnh nhân
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <div>
+          <span class="text-outline block">Họ và tên</span>
+          <span class="font-medium text-on-surface"
+                th:text="${lichHen.benhNhan != null ? lichHen.benhNhan.hoTen : 'N/A'}">-</span>
+        </div>
+        <div>
+          <span class="text-outline block">Giới tính &amp; SĐT</span>
+          <span class="font-medium text-on-surface"
+                th:text="${lichHen.benhNhan != null ? lichHen.benhNhan.gioiTinh + ' - ' + (lichHen.benhNhan.taiKhoan != null ? lichHen.benhNhan.taiKhoan.soDienThoai : '') : '-'}">-</span>
+        </div>
+        <div class="sm:col-span-2">
+          <span class="text-outline block">Tiền sử bệnh</span>
+          <span class="text-on-surface"
+                th:text="${lichHen.benhNhan != null && lichHen.benhNhan.tienSuBenh != null ? lichHen.benhNhan.tienSuBenh : 'Chưa ghi nhận'}">-</span>
+        </div>
+        <div>
+          <span class="text-outline block">Tiền sử gia đình</span>
+          <span class="text-on-surface"
+                th:text="${lichHen.benhNhan != null && lichHen.benhNhan.tienSuGiaDinh != null ? lichHen.benhNhan.tienSuGiaDinh : 'Chưa ghi nhận'}">-</span>
+        </div>
+        <div>
+          <span class="text-outline block">Thói quen sinh hoạt</span>
+          <span class="text-on-surface"
+                th:text="${lichHen.benhNhan != null && lichHen.benhNhan.thoiQuenSinhHoat != null ? lichHen.benhNhan.thoiQuenSinhHoat : 'Chưa ghi nhận'}">-</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Khối Sinh hiệu (nếu có) -->
+  <div th:if="${sinhHieu != null}" class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md">
+    <h2 class="font-label-md text-label-md font-semibold text-on-surface uppercase tracking-wider mb-3">
+      Chỉ số sinh hiệu
+    </h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-sm">
+      <div class="bg-surface-container-low/60 p-3 rounded-xl">
+        <span class="text-outline text-xs block">Huyết áp</span>
+        <span class="font-semibold text-on-surface"
+              th:text="${(sinhHieu.huyetApTamThu != null ? sinhHieu.huyetApTamThu : '-') + '/' + (sinhHieu.huyetApTamTruong != null ? sinhHieu.huyetApTamTruong : '-') + ' mmHg'}">-</span>
+      </div>
+      <div class="bg-surface-container-low/60 p-3 rounded-xl">
+        <span class="text-outline text-xs block">Nhịp tim</span>
+        <span class="font-semibold text-on-surface" th:text="${sinhHieu.nhipTim != null ? sinhHieu.nhipTim + ' bpm' : '-'}">-</span>
+      </div>
+      <div class="bg-surface-container-low/60 p-3 rounded-xl">
+        <span class="text-outline text-xs block">SpO2</span>
+        <span class="font-semibold text-on-surface" th:text="${sinhHieu.spo2 != null ? sinhHieu.spo2 + '%' : '-'}">-</span>
+      </div>
+      <div class="bg-surface-container-low/60 p-3 rounded-xl">
+        <span class="text-outline text-xs block">Cân nặng</span>
+        <span class="font-semibold text-on-surface" th:text="${sinhHieu.canNang != null ? sinhHieu.canNang + ' kg' : '-'}">-</span>
+      </div>
+      <div class="bg-surface-container-low/60 p-3 rounded-xl">
+        <span class="text-outline text-xs block">Chiều cao</span>
+        <span class="font-semibold text-on-surface" th:text="${sinhHieu.chieuCao != null ? sinhHieu.chieuCao + ' cm' : '-'}">-</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Khối Hồ sơ bệnh án & Đơn thuốc (nếu đã có hồ sơ) -->
+  <div th:if="${hoSoBenhAn != null}" class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col gap-3">
+    <h2 class="font-label-md text-label-md font-semibold text-on-surface uppercase tracking-wider">
+      Hồ sơ khám bệnh &amp; đơn thuốc
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+      <div>
+        <span class="text-outline block">Chẩn đoán chính</span>
+        <span class="font-medium text-on-surface" th:text="${hoSoBenhAn.chanDoan}">-</span>
+      </div>
+      <div>
+        <span class="text-outline block">Chẩn đoán phụ</span>
+        <span class="text-on-surface" th:text="${hoSoBenhAn.chanDoanPhu != null ? hoSoBenhAn.chanDoanPhu : '-'}">-</span>
+      </div>
+      <div>
+        <span class="text-outline block">Hướng điều trị</span>
+        <span class="text-on-surface" th:text="${hoSoBenhAn.huongDieuTri != null ? hoSoBenhAn.huongDieuTri : '-'}">-</span>
+      </div>
+      <div>
+        <span class="text-outline block">Lời dặn bác sĩ</span>
+        <span class="text-on-surface" th:text="${hoSoBenhAn.loiDanBacSi != null ? hoSoBenhAn.loiDanBacSi : '-'}">-</span>
+      </div>
+    </div>
+
+    <div th:if="${dsDonThuoc != null && !#lists.isEmpty(dsDonThuoc)}" class="overflow-x-auto pt-2">
+      <table class="w-full text-left border-collapse text-sm">
+        <thead>
+        <tr class="bg-surface-container-low text-on-surface-variant text-xs uppercase">
+          <th class="py-2 px-3">Tên thuốc</th>
+          <th class="py-2 px-3">Liều lượng</th>
+          <th class="py-2 px-3">Số lượng</th>
+          <th class="py-2 px-3">Hướng dẫn sử dụng</th>
+        </tr>
+        </thead>
+        <tbody class="divide-y divide-surface-container-low">
+        <tr th:each="dt : ${dsDonThuoc}">
+          <td class="py-2 px-3 font-medium" th:text="${dt.tenThuoc}">-</td>
+          <td class="py-2 px-3" th:text="${dt.lieuLuong}">-</td>
+          <td class="py-2 px-3" th:text="${dt.soLuong}">-</td>
+          <td class="py-2 px-3" th:text="${dt.huongDanSuDung}">-</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

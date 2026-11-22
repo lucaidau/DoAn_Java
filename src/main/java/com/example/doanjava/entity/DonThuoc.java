@@ -21,6 +21,9 @@ public class DonThuoc {
     @JoinColumn(name = "ho_so_benh_an_id")
     private HoSoBenhAn hoSoBenhAn;
 
+    @Transient
+    private String donVi;
+
     public Long getId() {
         return id;
     }
@@ -69,4 +72,11 @@ public class DonThuoc {
         this.hoSoBenhAn = hoSoBenhAn;
     }
 
+    public String getDonVi() {
+        return donVi;
+    }
+
+    public void setDonVi(String donVi) {
+        this.donVi = donVi;
+    }
 }

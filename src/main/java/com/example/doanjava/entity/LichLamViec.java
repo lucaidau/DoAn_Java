@@ -22,6 +22,9 @@ public class LichLamViec {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "bac_si_id")
     private BacSi bacSi;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "phong_kham_id")
+    private PhongKham phongKham;
 
     public Long getId() {
         return id;
@@ -29,6 +32,14 @@ public class LichLamViec {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public PhongKham getPhongKham() {
+        return phongKham;
+    }
+
+    public void setPhongKham(PhongKham phongKham) {
+        this.phongKham = phongKham;
     }
 
     public LocalDate getNgayLamViec() {

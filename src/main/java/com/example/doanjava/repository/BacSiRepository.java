@@ -1,10 +1,19 @@
 package com.example.doanjava.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.example.doanjava.entity.BacSi;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
-public interface BacSiRepository extends JpaRepository<BacSi, Long> {
+public interface BacSiRepository extends JpaRepository<BacSi, Long>, JpaSpecificationExecutor<BacSi> {
     Optional<BacSi> findByTaiKhoanId(Long taiKhoanId);
+
+    List<BacSi> findTop8ByOrderBySoNamKinhNghiemDesc();
+
+    List<BacSi> findByIdIn(List<Long> danhSachMa);
+
+    List<BacSi> findByHoTenContainingOrChuyenKhoa_TenChuyenKhoaContaining(String hoTen, String tenChuyenKhoa);
 }

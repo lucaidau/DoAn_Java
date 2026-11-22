@@ -1,36 +1,31 @@
 package com.example.doanjava.entity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = "phong_kham")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PhongKham {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "ten_phong")
     private String tenPhong;
+
     @Column(name = "khu_vuc")
     private String khuVuc;
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(name = "trang_thai")
+    private Boolean trangThai;
 
-    public String getTenPhong() {
-        return tenPhong;
-    }
-
-    public void setTenPhong(String tenPhong) {
-        this.tenPhong = tenPhong;
-    }
-
-    public String getKhuVuc() {
-        return khuVuc;
-    }
-
-    public void setKhuVuc(String khuVuc) {
-        this.khuVuc = khuVuc;
-    }
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "chuyen_khoa_id")
+    private ChuyenKhoa chuyenKhoa;
 }

@@ -214,6 +214,11 @@
                         </div>
                         <!-- Quick Action Shortcuts -->
                         <div class="flex items-center gap-space-sm self-start md:self-auto shrink-0">
+                            <a class="inline-flex items-center gap-2 px-space-md py-2.5 rounded-xl bg-surface-container-lowest text-on-surface hover:bg-surface-container-high transition-colors shadow-sm font-label-md text-label-md" rel="noopener" target="_blank" th:href="@{/bac-si/{id}(id=${bacSi.id})}" th:if="${bacSi != null}">
+                                <span class="material-symbols-outlined text-[18px] text-primary">visibility</span>
+                                <span>Xem trang công khai</span>
+                                <span class="material-symbols-outlined text-[14px] text-on-surface-variant">open_in_new</span>
+                            </a>
                             <button class="inline-flex items-center gap-2 px-space-lg py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary-container transition-all shadow-sm font-label-md text-label-md font-medium" form="profileForm" id="btnSaveTop" type="submit">
                                 <span class="material-symbols-outlined text-[18px]">save</span>
                                 <span>Lưu thay đổi</span>
