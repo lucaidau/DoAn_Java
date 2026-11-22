@@ -3,11 +3,15 @@ package com.example.doanjava.controller;
 import com.example.doanjava.dto.admin.BacSiDTO;
 import com.example.doanjava.dto.admin.SuaBacSiDTO;
 import com.example.doanjava.dto.admin.TaiKhoanDTO;
+import com.example.doanjava.dto.admin.TaoCaDTO;
 import com.example.doanjava.entity.BacSi;
+import com.example.doanjava.entity.ChuyenKhoa;
 import com.example.doanjava.entity.LichHen;
+import com.example.doanjava.entity.LichLamViec;
 import com.example.doanjava.service.BacSiService;
 import com.example.doanjava.service.ChuyenKhoaService;
 import com.example.doanjava.service.LichHenService;
+import com.example.doanjava.service.admin.LichLamViecService;
 import com.example.doanjava.service.admin.TaiKhoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,7 +21,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -25,13 +35,15 @@ public class AdminController {
     private final TaiKhoanService taiKhoanService;
     private final ChuyenKhoaService chuyenKhoaService;
     private final BacSiService bacSiService;
+    private final LichLamViecService lichLamViecService;
+    private static final DateTimeFormatter GIO = DateTimeFormatter.ofPattern("HH:mm");
 
-
-    public AdminController(TaiKhoanService tk, ChuyenKhoaService ck, BacSiService bs)
+    public AdminController(TaiKhoanService tk, ChuyenKhoaService ck, BacSiService bs, LichLamViecService lv)
     {
         this.taiKhoanService = tk;
         this.chuyenKhoaService =ck;
         this.bacSiService = bs;
+        this.lichLamViecService =lv;
     }
 
     @GetMapping("/taiKhoan")
@@ -190,10 +202,120 @@ public class AdminController {
     }
 
     @GetMapping("/chuyenKhoa")
-    public String QLChuyenKhoa(Model model)
-    {
-        model.addAttribute("dsChuyenKhoa", chuyenKhoaService.layDanhSachChuyenKhoa());
+    public String QLChuyenKhoa(
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+        Page<Map<String,Object>> pageChuyenKhoa =
+                chuyenKhoaService.layDanhSachChuyenKhoaAdmin(search, page, size);
+        model.addAttribute("dsChuyenKhoa", pageChuyenKhoa.getContent());
+        model.addAttribute("phongKhamMap", chuyenKhoaService.layPhongKhamTheoChuyenKhoa());
+        model.addAttribute("dsPhongKhaDung", chuyenKhoaService.layDanhSachPhongTrongChoChuyenKhoa(null));
+
+        model.addAttribute("trangHienTai", pageChuyenKhoa.getNumber());
+        model.addAttribute("tongTrang", pageChuyenKhoa.getTotalPages());
+        model.addAttribute("tongChuyenKhoa", pageChuyenKhoa.getTotalElements());
+        model.addAttribute("size", size);
+        model.addAttribute("pageChuyenKhoa", pageChuyenKhoa);
+
+        model.addAttribute("search", search);
         return "/admin/QLChuyenKhoa";
+    }
+
+    @PostMapping("/chuyenKhoa/sua")
+    public String suaChuyenKhoa(
+            @RequestParam Long id,
+            @RequestParam String tenChuyenKhoa,
+            @RequestParam(required = false) String moTa,
+            @RequestParam(required = false) List<Long> phongKhamIds,
+            RedirectAttributes redirectAttributes) {
+        try {
+            chuyenKhoaService.capNhatChuyenKhoa(id, tenChuyenKhoa, moTa, phongKhamIds);
+            redirectAttributes.addFlashAttribute("thongBaoThanhCong", "Cập nhật chuyên khoa thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("thongBaoLoi", "Lỗi khi cập nhật chuyên khoa: " + e.getMessage());
+        }
+        return "redirect:/admin/chuyenKhoa";
+    }
+
+    @PostMapping("/chuyenKhoa/them")
+    public String themChuyenKhoa(
+            @RequestParam String tenChuyenKhoa,
+            @RequestParam(required = false) String moTa,
+            RedirectAttributes redirectAttributes) {
+        try {
+            chuyenKhoaService.themChuyenKhoa(tenChuyenKhoa, moTa);
+            redirectAttributes.addFlashAttribute("thongBaoThanhCong", "Thêm chuyên khoa mới thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("thongBaoLoi", "Lỗi khi thêm chuyên khoa: " + e.getMessage());
+        }
+        return "redirect:/admin/chuyenKhoa";
+    }
+
+    @GetMapping("/heThong/lichLamViec")
+    public String danhSach(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate tuan,
+            @RequestParam(required = false) Long bacSiId,
+            Model model)
+    {
+        LocalDate homNay = LocalDate.now();
+        // Một ngày bất kỳ trong tuần => lùi về Thứ 2 của tuần đó
+        LocalDate thuHai = (tuan == null ? homNay : tuan).with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate chuNhat = thuHai.plusDays(6);
+
+        List<LichLamViec> dsCa = lichLamViecService.layTheoTuan(thuHai, chuNhat, bacSiId);
+
+        model.addAttribute("dsCa", dsCa);
+        model.addAttribute("daDatMap", lichLamViecService.demDaDat(dsCa));
+
+        model.addAttribute("tuNgay", thuHai);
+        model.addAttribute("denNgay", chuNhat);
+        model.addAttribute("tuanTruoc", thuHai.minusWeeks(1));
+        model.addAttribute("tuanSau", thuHai.plusWeeks(1));
+        model.addAttribute("tuanNay", homNay.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)));
+        model.addAttribute("bacSiId", bacSiId);
+
+        model.addAttribute("dsBacSi", lichLamViecService.dsBacSi());
+        model.addAttribute("dsPhong", lichLamViecService.dsPhong());
+
+        // Giá trị mặc định cho form tạo ca
+        model.addAttribute("homNay", homNay);
+        model.addAttribute("denMacDinh", homNay.plusWeeks(4).minusDays(1));
+        model.addAttribute("gioSang", LichLamViecService.SANG_BAT_DAU.format(GIO) + " - " + LichLamViecService.SANG_KET_THUC.format(GIO));
+        model.addAttribute("gioChieu", LichLamViecService.CHIEU_BAT_DAU.format(GIO) + " - " + LichLamViecService.CHIEU_KET_THUC.format(GIO));
+
+        return "admin/LichLamViec";
+    }
+
+    @PostMapping("/heThong/lichLamViec/tao")
+    public String tao(@ModelAttribute TaoCaDTO dto, RedirectAttributes redirectAttributes)
+    {
+        try {
+            int soCa = lichLamViecService.taoHangLoat(dto);
+            redirectAttributes.addFlashAttribute("thongBaoThanhCong", "Đã tạo " + soCa + " ca làm việc!");
+            redirectAttributes.addAttribute("tuan", dto.getTuNgay().toString());   // toString() = 2026-11-16
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("thongBaoLoi", e.getMessage());
+        }
+        return "redirect:/admin/heThong/lichLamViec";
+    }
+
+    @PostMapping("/heThong/lichLamViec/xoa/{id}")
+    public String xoa(@PathVariable Long id,
+                      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate tuan,
+                      @RequestParam(required = false) Long bacSiId,
+                      RedirectAttributes redirectAttributes)
+    {
+        try {
+            lichLamViecService.xoa(id);
+            redirectAttributes.addFlashAttribute("thongBaoThanhCong", "Đã xóa ca làm việc!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("thongBaoLoi", e.getMessage());
+        }
+        if (tuan != null) redirectAttributes.addAttribute("tuan", tuan.toString());   // toString() = 2026-11-16
+        if (bacSiId != null) redirectAttributes.addAttribute("bacSiId", bacSiId);
+        return "redirect:/admin/heThong/lichLamViec";
     }
 
 }

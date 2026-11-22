@@ -14,8 +14,11 @@ public interface LichHenRepository extends JpaRepository<LichHen, Long> {
     Page<LichHen> timKiem(@Param("search") String search, @Param("status") String status, @Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate, @Param("bacSiId") Long bacSiId, Pageable pageable);
 
     long countByBacSiId(Long bacSiId);
+
     long countByBacSiIdAndTrangThai(Long bacSiId, String trangThai);
+
     long countByBacSiIdAndNgayKham(Long bacSiId, LocalDate ngay);
+
     List<LichHen> findTop10ByBacSiIdOrderByNgayTaoDesc(Long bacSiId);
 
     long countByNgayKham(LocalDate ngay);
@@ -29,4 +32,7 @@ public interface LichHenRepository extends JpaRepository<LichHen, Long> {
     boolean existsByNgayKhamAndKhungGioKhamAndTrangThaiNotAndIdNot(LocalDate ngay, String gio, String trangThai, Long id);
 
     List<LichHen> findTop10ByOrderByNgayTaoDesc();
+
+    long countByLichLamViecId(Long caId);
+
 }
