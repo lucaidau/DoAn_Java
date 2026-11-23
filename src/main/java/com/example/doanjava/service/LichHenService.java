@@ -244,6 +244,47 @@ public class LichHenService {
         return sinhHieuRepo.findByLichHenId(lichId);
     }
 
+    @Transactional
+    public SinhHieu luuSinhHieu(Long lichId, Integer tamThu, Integer tamTruong,
+                                 Integer nhipTim, Integer spo2,
+                                 java.math.BigDecimal canNang,
+                                 java.math.BigDecimal chieuCao) {
+        LichHen lich = chiTiet(lichId);
+        if (!"DANG_KHAM".equals(lich.getTrangThai())) {
+            throw new IllegalArgumentException("Chỉ ca đang khám mới được cập nhật sinh hiệu");
+        }
+        if (tamThu != null && tamThu <= 0) {
+            throw new IllegalArgumentException("Huyết áp tâm thu không hợp lệ");
+        }
+        if (tamTruong != null && tamTruong <= 0) {
+            throw new IllegalArgumentException("Huyết áp tâm trương không hợp lệ");
+        }
+        if (nhipTim != null && nhipTim <= 0) {
+            throw new IllegalArgumentException("Nhịp tim không hợp lệ");
+        }
+        if (spo2 != null && (spo2 < 0 || spo2 > 100)) {
+            throw new IllegalArgumentException("SpO2 phải từ 0 đến 100");
+        }
+        if (canNang != null && canNang.signum() <= 0) {
+            throw new IllegalArgumentException("Cân nặng phải lớn hơn 0");
+        }
+        if (chieuCao != null && chieuCao.signum() <= 0) {
+            throw new IllegalArgumentException("Chiều cao phải lớn hơn 0");
+        }
+
+        SinhHieu sinhHieu = sinhHieuRepo.findByLichHenId(lichId)
+                .orElseGet(SinhHieu::new);
+        sinhHieu.setLichHen(lich);
+        sinhHieu.setHuyetApTamThu(tamThu);
+        sinhHieu.setHuyetApTamTruong(tamTruong);
+        sinhHieu.setNhipTim(nhipTim);
+        sinhHieu.setSpo2(spo2);
+        sinhHieu.setCanNang(canNang);
+        sinhHieu.setChieuCao(chieuCao);
+        sinhHieu.setThoiGianDo(LocalDateTime.now());
+        return sinhHieuRepo.save(sinhHieu);
+    }
+
 
 
     public Optional<HoSoBenhAn> hoSo(Long lichId) {

@@ -159,6 +159,24 @@ public class LichHenController {
         return "CaKhamBenh";
     }
 
+    @PostMapping("/lichhen/{id}/sinhhieu")
+    public String luuSinhHieu(@PathVariable Long id,
+                              @RequestParam(required = false) Integer tamThu,
+                              @RequestParam(required = false) Integer tamTruong,
+                              @RequestParam(required = false) Integer nhipTim,
+                              @RequestParam(required = false) Integer spo2,
+                              @RequestParam(required = false) java.math.BigDecimal canNang,
+                              @RequestParam(required = false) java.math.BigDecimal chieuCao,
+                              RedirectAttributes flash) {
+        try {
+            service.luuSinhHieu(id, tamThu, tamTruong, nhipTim, spo2, canNang, chieuCao);
+            flash.addFlashAttribute("thanhCong", "Đã lưu sinh hiệu");
+        } catch (Exception e) {
+            flash.addFlashAttribute("loi", e.getMessage());
+        }
+        return "redirect:/lichhen/" + id + "/khambenh";
+    }
+
     @PostMapping("/lichhen/{id}/luukham")
     public String luuKham(@PathVariable Long id, @RequestParam String chanDoan, @RequestParam(defaultValue = "") String loiDan, @RequestParam(required = false) String[] tenThuoc, @RequestParam(required = false) String[] lieuLuong, @RequestParam(required = false) Integer[] soLuong, @RequestParam(required = false) String[] huongDan, @RequestParam(defaultValue = "false") boolean hoanThanh, @RequestParam(defaultValue = "") String timMach, @RequestParam(defaultValue = "") String hoHap, @RequestParam(defaultValue = "") String tieuHoa, @RequestParam(defaultValue = "") String chanDoanPhu, @RequestParam(defaultValue = "") String canLamSang, @RequestParam(defaultValue = "") String huongDieuTri, @RequestParam(defaultValue = "") String tienSu, @RequestParam(defaultValue = "") String giaDinh, @RequestParam(defaultValue = "") String thoiQuen, RedirectAttributes flash) {
         service.chiTiet(id);
