@@ -248,81 +248,75 @@
                         <!-- Allergy Alert Banner -->
                     </div>
                     <!-- Live Clinical Vitals Panel -->
-                    <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-3">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                        <span class="material-symbols-outlined text-primary text-[20px]">
-                                            vital_signs
-                                        </span>
-                                <span class="font-label-md text-label-md font-semibold text-on-surface">
-                                            Sinh hiệu tại phòng khám
-                                        </span>
-                            </div>
-                            <span class="font-label-sm text-label-sm text-on-surface-variant">
-                                    </span>
+                    <form class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-3"
+                          method="post" th:action="@{/lichhen/{id}/sinhhieu(id=${lich.id})}">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-[20px]">vital_signs</span>
+                            <span class="font-label-md text-label-md font-semibold text-on-surface">
+                                Sinh hiệu tại phòng khám
+                            </span>
                         </div>
                         <div class="grid grid-cols-2 gap-2.5">
-                            <!-- Blood Pressure -->
                             <div class="bg-surface-container-low p-3 rounded-lg flex flex-col">
-                                        <span class="font-label-sm text-label-sm text-on-surface-variant">
-                                            Huyết áp (HA)
-                                        </span>
-                                <div class="flex items-baseline gap-1 mt-1">
-                                            <span class="font-headline-sm text-headline-sm font-bold text-on-surface" th:text="${sinhHieu != null and sinhHieu.huyetApTamThu != null and sinhHieu.huyetApTamTruong != null ? sinhHieu.huyetApTamThu + '/' + sinhHieu.huyetApTamTruong : '--/--'}">
-                                            </span>
-                                    <span class="font-body-sm text-body-sm text-on-surface-variant">
-                                                mmHg
-                                            </span>
+                                <label class="font-label-sm text-label-sm text-on-surface-variant" for="tamThu">Huyết áp (HA)</label>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <input class="w-full min-w-0 p-2 rounded-lg bg-surface-container-lowest text-on-surface font-body-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                           id="tamThu" name="tamThu" type="number" min="1" step="1" placeholder="--"
+                                           aria-label="Huyết áp tâm thu" th:value="${sinhHieu != null ? sinhHieu.huyetApTamThu : ''}"
+                                           th:disabled="${lich.trangThai == 'DA_KHAM'}"/>
+                                    <span class="text-on-surface-variant">/</span>
+                                    <input class="w-full min-w-0 p-2 rounded-lg bg-surface-container-lowest text-on-surface font-body-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                           id="tamTruong" name="tamTruong" type="number" min="1" step="1" placeholder="--"
+                                           aria-label="Huyết áp tâm trương" th:value="${sinhHieu != null ? sinhHieu.huyetApTamTruong : ''}"
+                                           th:disabled="${lich.trangThai == 'DA_KHAM'}"/>
                                 </div>
-                                <span class="font-label-sm text-label-sm text-status-confirmed font-medium mt-0.5 flex items-center gap-1">
-                                        </span>
+                                <span class="font-body-sm text-body-sm text-on-surface-variant mt-1">mmHg</span>
                             </div>
-                            <!-- Heart Rate -->
                             <div class="bg-surface-container-low p-3 rounded-lg flex flex-col">
-                                        <span class="font-label-sm text-label-sm text-on-surface-variant">
-                                            Nhịp tim (Mạch)
-                                        </span>
-                                <div class="flex items-baseline gap-1 mt-1">
-                                            <span class="font-headline-sm text-headline-sm font-bold text-on-surface" th:text="${sinhHieu != null and sinhHieu.nhipTim != null ? sinhHieu.nhipTim : '--'}">
-                                            </span>
-                                    <span class="font-body-sm text-body-sm text-on-surface-variant">
-                                                bpm
-                                            </span>
-                                </div>
-                                <span class="font-label-sm text-label-sm text-status-confirmed font-medium mt-0.5 flex items-center gap-1">
-                                        </span>
+                                <label class="font-label-sm text-label-sm text-on-surface-variant" for="nhipTim">Nhịp tim (Mạch)</label>
+                                <input class="w-full mt-1 p-2 rounded-lg bg-surface-container-lowest text-on-surface font-body-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                       id="nhipTim" name="nhipTim" type="number" min="1" step="1" placeholder="--"
+                                       th:value="${sinhHieu != null ? sinhHieu.nhipTim : ''}"
+                                       th:disabled="${lich.trangThai == 'DA_KHAM'}"/>
+                                <span class="font-body-sm text-body-sm text-on-surface-variant mt-1">bpm</span>
                             </div>
-                            <!-- Temp & SpO2 -->
                             <div class="bg-surface-container-low p-3 rounded-lg flex flex-col">
-                                        <span class="font-label-sm text-label-sm text-on-surface-variant">
-                                            SpO2
-                                        </span>
-                                <div class="flex items-baseline gap-2 mt-1">
-                                            <span class="font-headline-sm text-headline-sm font-bold text-on-surface" th:text="${sinhHieu != null and sinhHieu.spo2 != null ? sinhHieu.spo2 : '--'}">
-                                            </span>
-                                    <span>
-                                                %
-                                            </span>
-                                </div>
+                                <label class="font-label-sm text-label-sm text-on-surface-variant" for="spo2">SpO2</label>
+                                <input class="w-full mt-1 p-2 rounded-lg bg-surface-container-lowest text-on-surface font-body-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                       id="spo2" name="spo2" type="number" min="0" max="100" step="1" placeholder="--"
+                                       th:value="${sinhHieu != null ? sinhHieu.spo2 : ''}"
+                                       th:disabled="${lich.trangThai == 'DA_KHAM'}"/>
+                                <span class="font-body-sm text-body-sm text-on-surface-variant mt-1">%</span>
                             </div>
-                            <!-- Height Weight BMI -->
                             <div class="bg-surface-container-low p-3 rounded-lg flex flex-col">
-                                        <span class="font-label-sm text-label-sm text-on-surface-variant">
-                                            Thể trạng &amp; BMI
-                                        </span>
+                                <span class="font-label-sm text-label-sm text-on-surface-variant">Thể trạng &amp; BMI</span>
                                 <div class="flex items-baseline gap-1 mt-1">
-                                            <span class="font-headline-sm text-headline-sm font-bold text-on-surface" th:text="${sinhHieu != null and sinhHieu.bmi != null ? sinhHieu.bmi : '--'}">
-                                            </span>
-                                    <span class="font-body-sm text-body-sm text-on-surface-variant">
-                                                BMI
-                                            </span>
+                                    <span class="font-headline-sm text-headline-sm font-bold text-on-surface"
+                                          th:text="${sinhHieu != null and sinhHieu.bmi != null ? sinhHieu.bmi : '--'}"></span>
+                                    <span class="font-body-sm text-body-sm text-on-surface-variant">BMI</span>
                                 </div>
-                                <span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5" th:text="${sinhHieu != null ? (sinhHieu.canNang != null ? sinhHieu.canNang : '--') + ' kg • ' + (sinhHieu.chieuCao != null ? sinhHieu.chieuCao : '--') + ' cm' : 'Chưa đo'}">
-                                        </span>
+                                <div class="grid grid-cols-2 gap-1 mt-1">
+                                    <label class="text-[11px] text-on-surface-variant" for="canNang">Cân nặng (kg)</label>
+                                    <label class="text-[11px] text-on-surface-variant" for="chieuCao">Chiều cao (cm)</label>
+                                    <input class="w-full min-w-0 p-2 rounded-lg bg-surface-container-lowest text-on-surface text-xs focus:outline-none focus:ring-2 focus:ring-primary"
+                                           id="canNang" name="canNang" type="number" min="0.01" step="0.01" placeholder="--"
+                                           th:value="${sinhHieu != null ? sinhHieu.canNang : ''}"
+                                           th:disabled="${lich.trangThai == 'DA_KHAM'}"/>
+                                    <input class="w-full min-w-0 p-2 rounded-lg bg-surface-container-lowest text-on-surface text-xs focus:outline-none focus:ring-2 focus:ring-primary"
+                                           id="chieuCao" name="chieuCao" type="number" min="0.01" step="0.01" placeholder="--"
+                                           th:value="${sinhHieu != null ? sinhHieu.chieuCao : ''}"
+                                           th:disabled="${lich.trangThai == 'DA_KHAM'}"/>
+                                </div>
                             </div>
                         </div>
-                        <!-- Inline Vitals Mini Sparkline SVG Graph -->
-                    </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs text-on-surface-variant">Để trống chỉ số chưa đo.</span>
+                            <button class="px-3 py-2 rounded-lg bg-primary text-on-primary text-sm font-medium hover:opacity-90 disabled:opacity-50"
+                                    type="submit" th:disabled="${lich.trangThai == 'DA_KHAM'}">
+                                Lưu sinh hiệu
+                            </button>
+                        </div>
+                    </form>
                     <!-- Medical History Accordion Block -->
                     <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-3">
                         <div class="flex items-center gap-2">
