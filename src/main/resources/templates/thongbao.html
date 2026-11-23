@@ -75,7 +75,6 @@
                 <h2 class="h5 fw-bold mb-1">Cập nhật gần đây</h2>
                 <p class="text-secondary small mb-0">Chọn một mục để xem chi tiết lịch hẹn.</p>
             </div>
-            <a class="btn btn-outline-primary rounded-3 fw-semibold" th:href="@{/lichhen}">Tất cả lịch hẹn</a>
         </div>
 
         <div class="notification-list" th:if="${!#lists.isEmpty(lichHens)}">
@@ -87,6 +86,8 @@
                         <span class="status"
                               th:classappend="${lich.trangThai == 'CHO_XAC_NHAN' ? 'status-pending' : (lich.trangThai == 'DA_XAC_NHAN' ? 'status-confirmed' : (lich.trangThai == 'DA_HUY' ? 'status-cancelled' : 'status-active'))}"
                               th:text="${lich.trangThai == 'CHO_XAC_NHAN' ? 'Chờ xác nhận' : (lich.trangThai == 'DA_XAC_NHAN' ? 'Đã xác nhận' : (lich.trangThai == 'DA_HUY' ? 'Đã hủy' : (lich.trangThai == 'DANG_KHAM' ? 'Đang khám' : (lich.trangThai == 'DA_KHAM' ? 'Đã khám' : lich.trangThai))))}">Trạng thái</span>
+                        <span class="status status-cancelled"
+                              th:if="${lich.id == lichHenBiHuyQuaHanId}">Quá khung giờ khám</span>
                     </div>
                     <div class="fw-semibold text-dark" th:text="${lich.benhNhan.hoTen}">Tên bệnh nhân</div>
                     <div class="notification-meta mt-1">
