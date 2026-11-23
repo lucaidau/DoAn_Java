@@ -146,11 +146,6 @@
                                 <span class="material-symbols-outlined text-[20px] text-outline">share</span>
                                 <span>Chia sẻ hồ sơ</span>
                             </button>
-                            <button id="save-doctor-btn" class="inline-flex items-center gap-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md px-space-md py-3 rounded-xl transition-colors" type="button" aria-pressed="false"
-                                    th:attr="data-doctor-id=${doctor.doctorId},data-doctor-name=${doctor.doctorName},data-doctor-specialty=${doctor.specialty}" onclick="toggleSavedDoctor()">
-                                <span id="save-doctor-icon" class="material-symbols-outlined text-[20px] text-status-cancelled">favorite_border</span>
-                                <span id="save-doctor-label">Lưu bác sĩ</span>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -168,7 +163,7 @@
                         Giới thiệu &amp; Quá trình
                     </button>
                     <button class="tab-btn px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container whitespace-nowrap transition-all" onclick="switchDoctorTab('bang-cap', this)" type="button">
-                        Bằng cấp &amp; Chứng chỉ
+                        Bằng cấp
                     </button>
                     <button class="tab-btn px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container whitespace-nowrap transition-all" onclick="switchDoctorTab('chuyen-sau', this)" type="button">
                         Lĩnh vực chuyên sâu
@@ -221,21 +216,30 @@
                             <div class="w-8 h-8 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
                                 <span class="material-symbols-outlined text-[20px]">school</span>
                             </div>
-                            <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Bằng cấp &amp; Chứng chỉ hành nghề</h2>
+                            <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Bằng cấp</h2></h2>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                        <div class="grid grid-cols-1 gap-space-md">
                             <div class="p-space-md rounded-xl bg-surface-container-low flex gap-space-md items-start">
-                                <div class="w-12 h-12 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary shadow-sm flex-shrink-0"><span class="material-symbols-outlined text-[26px]">workspace_premium</span></div>
-                                <div><span class="font-label-sm text-[11px] text-primary uppercase font-bold tracking-wider">Thông tin đã lưu</span>
-                                    <h3 class="font-headline-sm text-[16px] text-on-surface font-semibold" th:text="${doctor.degree}">Bác sĩ</h3>
-                                    <p class="font-body-sm text-body-sm text-on-surface-variant" th:text="${doctor.specialty}">Chuyên khoa</p>
-                                </div></div>
-                            <div class="p-space-md rounded-xl bg-surface-container-low flex gap-space-md items-start">
-                                <div class="w-12 h-12 rounded-lg bg-surface-container-lowest flex items-center justify-center text-secondary shadow-sm flex-shrink-0"><span class="material-symbols-outlined text-[26px]">info</span></div>
-                                <div><span class="font-label-sm text-[11px] text-secondary uppercase font-bold tracking-wider">Chưa có dữ liệu</span>
-                                    <h3 class="font-headline-sm text-[16px] text-on-surface font-semibold">Chứng chỉ hành nghề</h3>
-                                    <p class="font-body-sm text-body-sm text-on-surface-variant">Database hiện tại chưa lưu thông tin chứng chỉ chi tiết.</p>
-                                </div></div>
+                                <div class="w-12 h-12 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary shadow-sm flex-shrink-0">
+                                    <span class="material-symbols-outlined text-[26px]">workspace_premium</span>
+                                </div>
+
+                                <div>
+            <span class="font-label-sm text-[11px] text-primary uppercase font-bold tracking-wider">
+                Bằng cấp
+            </span>
+
+                                    <h3 class="font-headline-sm text-[16px] text-on-surface font-semibold"
+                                        th:text="${doctor.degree}">
+                                        Bác sĩ
+                                    </h3>
+
+                                    <p class="font-body-sm text-body-sm text-on-surface-variant"
+                                       th:text="${doctor.specialty}">
+                                        Chuyên khoa
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -554,64 +558,11 @@
             }
         }
 
-        const SAVED_DOCTORS_KEY = 'carehealth_saved_doctors';
 
-        function getSavedDoctors() {
-            try {
-                const parsed = JSON.parse(localStorage.getItem(SAVED_DOCTORS_KEY) || '[]');
-                return Array.isArray(parsed) ? parsed : [];
-            } catch (error) {
-                return [];
-            }
-        }
 
-        function updateSaveDoctorButton() {
-            const button = document.getElementById('save-doctor-btn');
-            if (!button) return;
 
-            const doctorId = String(button.dataset.doctorId || '');
-            const saved = getSavedDoctors().some(item => String(item.id) === doctorId);
-            const label = document.getElementById('save-doctor-label');
-            const icon = document.getElementById('save-doctor-icon');
-            button.setAttribute('aria-pressed', String(saved));
-            button.classList.toggle('bg-primary/10', saved);
-            button.classList.toggle('text-primary', saved);
-            if (label) label.textContent = saved ? 'Đã lưu bác sĩ' : 'Lưu bác sĩ';
-            if (icon) icon.textContent = saved ? 'favorite' : 'favorite_border';
-        }
 
-        function toggleSavedDoctor() {
-            const button = document.getElementById('save-doctor-btn');
-            if (!button) return;
 
-            const doctor = {
-                id: String(button.dataset.doctorId || ''),
-                name: button.dataset.doctorName || '',
-                specialty: button.dataset.doctorSpecialty || '',
-                profileUrl: window.location.pathname
-            };
-            if (!doctor.id) return;
-
-            const savedDoctors = getSavedDoctors();
-            const index = savedDoctors.findIndex(item => String(item.id) === doctor.id);
-            if (index >= 0) {
-                savedDoctors.splice(index, 1);
-            } else {
-                savedDoctors.push(doctor);
-            }
-
-            try {
-                localStorage.setItem(SAVED_DOCTORS_KEY, JSON.stringify(savedDoctors));
-                alert(index >= 0
-                    ? 'Đã bỏ lưu bác sĩ khỏi danh sách yêu thích.'
-                    : 'Đã lưu bác sĩ vào danh sách yêu thích trên trình duyệt này.');
-                updateSaveDoctorButton();
-            } catch (error) {
-                alert('Trình duyệt không cho phép lưu dữ liệu cục bộ. Vui lòng kiểm tra cài đặt trình duyệt.');
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', updateSaveDoctorButton);
 
         async function shareDoctorProfile() {
             const shareData = { title: document.title, text: 'Thông tin bác sĩ CareHealth', url: window.location.href };

@@ -1,80 +1,125 @@
-
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CareHealth - Ca trực</title>
+    <title>CareHealth - Quản lý ca trực</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body { min-height: 100vh; background: #f4f7fb; color: #17233c; }
+        .topbar { background: rgba(255,255,255,.94); border-bottom: 1px solid #e8edf5; }
+        .brand-mark { color: #155eef; font-weight: 750; letter-spacing: -.03em; }
+        .nav-link { color: #64748b; font-weight: 600; border-radius: .7rem; }
+        .nav-link:hover, .nav-link.active { color: #155eef; background: #eef4ff; }
+        .page-wrap { max-width: 1440px; }
+        .hero { border: 0; border-radius: 1.25rem; color: white; background: linear-gradient(120deg,#1246a8,#2876e8); box-shadow: 0 16px 38px rgba(21,94,239,.16); }
+        .hero-icon { width: 3.25rem; height: 3.25rem; display: grid; place-items: center; border-radius: 1rem; background: rgba(255,255,255,.16); font-size: 1.55rem; }
+        .summary-card, .schedule-card { border: 1px solid #e8edf5; border-radius: 1rem; background: white; box-shadow: 0 6px 20px rgba(25,45,80,.04); }
+        .summary-value { color: #155eef; font-size: 1.75rem; font-weight: 750; }
+        .table thead th { padding: 1rem; background: #f7f9fc; color: #64748b; font-size: .73rem; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; border-bottom-color: #e8edf5; }
+        .table tbody td { padding: 1rem; vertical-align: middle; border-color: #eef1f6; }
+        .doctor-name { color: #17233c; font-weight: 650; }
+        .shift-badge { display: inline-flex; align-items: center; gap: .4rem; border-radius: 999px; padding: .38rem .7rem; color: #155eef; background: #eef4ff; font-size: .8rem; font-weight: 650; }
+        .empty-state { padding: 3rem 1rem; text-align: center; }
+        .empty-icon { width: 3.5rem; height: 3.5rem; display: grid; place-items: center; margin: 0 auto 1rem; border-radius: 1.1rem; color: #155eef; background: #eef4ff; font-size: 1.6rem; }
+        @media (max-width: 575.98px) { .page-title { font-size: 1.45rem; } .hero { padding: 1.25rem !important; } }
+    </style>
 </head>
 <body>
-<!-- -- Thanh điều hướng -- -->
-<nav class="navbar navbar-expand-lg sticky-top mb-4 no-print">
-    <div class="container-fluid px-4 d-flex flex-wrap gap-3">
-        <a class="navbar-brand brand-mark" th:href="@{/lichhen}">
-            ✚ CareHealth
-        </a>
-        <div class="d-flex flex-wrap gap-2">
-            <a class="btn btn-outline-primary btn-sm" th:href="@{/lichhen}">
-                Lịch hẹn
-            </a>
-            <a class="btn btn-outline-primary btn-sm" th:href="@{/lichhen/tao}">
-                Tiếp nhận
-            </a>
-            <a class="btn btn-outline-primary btn-sm" th:href="@{/catruc}">
-                Ca trực
-            </a>
-            <a class="btn btn-outline-primary btn-sm" th:href="@{/thongbao}">
-                Thông báo
-            </a>
+<nav class="navbar navbar-expand-lg topbar sticky-top">
+    <div class="container page-wrap py-2">
+        <a class="navbar-brand brand-mark" th:href="@{/lichhen}">✚ CareHealth</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavigation"
+                aria-controls="mainNavigation" aria-expanded="false" aria-label="Mở menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavigation">
+            <div class="navbar-nav ms-auto gap-1">
+                <a class="nav-link px-3" th:href="@{/lichhen}">Lịch hẹn</a>
+                <a class="nav-link active px-3" aria-current="page" th:href="@{/catruc}">Quản lý ca trực</a>
+                <a class="nav-link px-3" th:href="@{/thongbao}">Thông báo</a>
+            </div>
         </div>
     </div>
 </nav>
 
-<!-- -- Nội dung trang ca trực -- -->
-<div class="container-fluid px-4 pb-5">
-    <!-- -- Thông báo kết quả thao tác -- -->
-    <div
-            th:if="${thanhCong}"
-            class="alert alert-success"
-            th:text="${thanhCong}">
-    </div>
-    <div
-            th:if="${loi}"
-            class="alert alert-danger"
-            th:text="${loi}">
-    </div>
+<main class="container page-wrap py-4 py-lg-5">
+    <div th:if="${thanhCong}" class="alert alert-success border-0 shadow-sm rounded-3" role="status" th:text="${thanhCong}"></div>
+    <div th:if="${loi}" class="alert alert-danger border-0 shadow-sm rounded-3" role="alert" th:text="${loi}"></div>
 
-    <!-- -- Danh sách lịch làm việc bác sĩ -- -->
-    <h2 class="page-title mb-4">Lịch làm việc bác sĩ</h2>
+    <section class="hero p-4 p-lg-5 mb-4">
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="hero-icon" aria-hidden="true">▦</div>
+                <div>
+                    <div class="small text-white-50 mb-1">LỊCH LÀM VIỆC</div>
+                    <h1 class="page-title h2 fw-bold mb-1">Quản lý ca trực</h1>
+                    <p class="mb-0 text-white-50">Theo dõi lịch làm việc và khung giờ của đội ngũ bác sĩ.</p>
+                </div>
+            </div>
+            <a class="btn btn-light rounded-3 px-3 fw-semibold" th:href="@{/lichhen}">
+                <span aria-hidden="true">←</span> Trở về lịch hẹn
+            </a>
+        </div>
+    </section>
 
-    <div class="card">
-        <div class="table-responsive">
+    <section class="summary-card p-3 p-md-4 mb-4">
+        <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+            <div>
+                <h2 class="h5 fw-bold mb-1">Tổng quan ca làm việc</h2>
+                <p class="text-secondary mb-0 small">Danh sách lịch trực được phân công trong hệ thống.</p>
+            </div>
+            <div class="d-flex align-items-center gap-3 px-3 py-2 rounded-3" style="background:#f7f9fc">
+                <span class="summary-value" th:text="${#lists.size(caKhams)}">0</span>
+                <span class="small text-secondary">ca trực<br>được ghi nhận</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="schedule-card overflow-hidden">
+        <div class="d-flex align-items-center justify-content-between gap-2 p-3 p-md-4 border-bottom">
+            <div>
+                <h2 class="h5 fw-bold mb-1">Lịch làm việc bác sĩ</h2>
+                <p class="text-secondary small mb-0">Thông tin ngày trực, khung giờ và sức chứa từng ca.</p>
+            </div>
+            <span class="badge rounded-pill text-bg-light border px-3 py-2"
+                  th:text="${#lists.size(caKhams) + ' ca'}">0 ca</span>
+        </div>
+        <div class="table-responsive" th:if="${!#lists.isEmpty(caKhams)}">
             <table class="table table-hover mb-0">
                 <thead>
                 <tr>
                     <th>Bác sĩ</th>
-                    <th>Ngày</th>
-                    <th>Ca</th>
-                    <th>Bắt đầu</th>
-                    <th>Kết thúc</th>
-                    <th>Số lượng tối đa</th>
+                    <th>Ngày làm việc</th>
+                    <th>Ca trực</th>
+                    <th>Thời gian</th>
+                    <th class="text-end">Số lượng tối đa</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="ca : ${caKhams}">
-                    <td th:text="${ca.bacSi.hoTen}"></td>
-                    <td th:text="${ca.ngayLamViec}"></td>
-                    <td th:text="${ca.tenCa}"></td>
-                    <td th:text="${ca.gioBatDau}"></td>
-                    <td th:text="${ca.gioKetThuc}"></td>
-                    <td th:text="${ca.soLuongToida}"></td>
+                    <td><span class="doctor-name" th:text="${ca.bacSi.hoTen}">Tên bác sĩ</span></td>
+                    <td>
+                        <span class="fw-semibold" th:text="${ca.ngayLamViec}">Ngày</span>
+                    </td>
+                    <td><span class="shift-badge"><span aria-hidden="true">◷</span><span th:text="${ca.tenCa}">Ca sáng</span></span></td>
+                    <td>
+                        <span class="fw-semibold" th:text="${ca.gioBatDau}">08:00</span>
+                        <span class="text-secondary mx-1">–</span>
+                        <span class="fw-semibold" th:text="${ca.gioKetThuc}">12:00</span>
+                    </td>
+                    <td class="text-end fw-semibold" th:text="${ca.soLuongToida}">0</td>
                 </tr>
                 </tbody>
             </table>
         </div>
-    </div>
-</div>
+        <div class="empty-state" th:if="${#lists.isEmpty(caKhams)}">
+            <div class="empty-icon" aria-hidden="true">▦</div>
+            <h3 class="h6 fw-bold">Chưa có ca trực</h3>
+            <p class="text-secondary mb-0">Hiện chưa có lịch làm việc nào được phân công.</p>
+        </div>
+    </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
