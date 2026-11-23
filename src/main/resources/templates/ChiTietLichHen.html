@@ -421,9 +421,10 @@
                                                 <span class="font-label-md text-label-md font-semibold" th:text="${#temporals.format(ls.lichHen.ngayKham, 'dd/MM/yyyy')}">
                                                     -- ngày khám --
                                                 </span>
-                                        <span class="font-body-sm text-body-sm text-on-surface-variant" th:text="${ls.lichHen.bacSi.hoTen + ' • ' + ls.lichHen.bacSi.chuyenKhoa.tenChuyenKhoa}">
-                                                    -- bác sĩ --
-                                                </span>
+                                        <span class="font-body-sm text-body-sm text-on-surface-variant"
+                                              th:text="${(ls.lichHen?.bacSi?.hoTen ?: 'Chưa rõ bác sĩ') + ' • ' + (ls.lichHen?.bacSi?.chuyenKhoa?.tenChuyenKhoa ?: 'Chưa rõ chuyên khoa')}">
+                                            -- bác sĩ --
+                                        </span>
                                     </div>
                                     <div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-1.5">
                                         <a class="text-primary font-semibold hover:underline" th:href="@{/lichhen/{id}(id=${ls.lichHen.id},fromLichId=${fromLichId != null ? fromLichId : lich.id})}">
