@@ -35,4 +35,15 @@ public interface LichHenRepository extends JpaRepository<LichHen, Long> {
 
     long countByLichLamViecId(Long caId);
 
+    boolean existsByBenhNhanIdAndLichLamViec_BacSiIdAndTrangThaiNot(Long benhNhanId, Long bacSiId, String trangThai);
+
+    @Query("select distinct l.bacSi.id from LichHen l " +
+            "where l.benhNhan.id = :benhNhanId and l.trangThai <> :trangThaiHuy and l.bacSi is not null")
+    List<Long> timIdBacSiCoLichHen(@Param("benhNhanId") Long benhNhanId,
+                                   @Param("trangThaiHuy") String trangThaiHuy);
+
+    @Query("select distinct l.benhNhan.id from LichHen l " +
+            "where l.bacSi.id = :bacSiId and l.trangThai <> :trangThaiHuy and l.benhNhan is not null")
+    List<Long> timIdBenhNhanCoLichHen(@Param("bacSiId") Long bacSiId,
+                                      @Param("trangThaiHuy") String trangThaiHuy);
 }

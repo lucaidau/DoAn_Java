@@ -1,5 +1,6 @@
 package com.example.doanjava.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,4 +20,10 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, Long>, JpaSp
     boolean existsBySoDienThoai(String soDienThoai);
 
     Page<TaiKhoan> findByTenDangNhapContainingOrEmailContaining(String tenDangNhap, String email, Pageable pageable);
+
+    List<TaiKhoan> findByVaiTroIgnoreCase(String vaiTro);
+
+    List<TaiKhoan> findByBacSi_IdIn(Collection<Long> bacSiIds);
+
+    List<TaiKhoan> findByBenhNhan_IdIn(Collection<Long> benhNhanIds);
 }

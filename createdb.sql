@@ -151,3 +151,33 @@ CREATE TABLE sinh_hieu (
     CONSTRAINT CK_sinhhieu_cannang CHECK (can_nang > 0)
 );
 GO
+
+-- 9. Bảng CUOC_TRO_CHUYEN (mỗi cặp tài khoản chỉ có đúng một cuộc trò chuyện)
+CREATE TABLE cuoc_tro_chuyen (
+    id                   BIGINT   IDENTITY (1, 1) PRIMARY KEY,
+    tai_khoan_nho_hon_id BIGINT   NOT NULL,   -- id nhỏ hơn trong hai người
+    tai_khoan_lon_hon_id BIGINT   NOT NULL,   -- id lớn hơn trong hai người
+    ngay_tao             DATETIME DEFAULT GETDATE(),
+    CONSTRAINT UQ_cuoc_tro_chuyen UNIQUE (tai_khoan_nho_hon_id, tai_khoan_lon_hon_id),
+    CONSTRAINT CK_cuoc_tro_chuyen_thu_tu CHECK (tai_khoan_nho_hon_id < tai_khoan_lon_hon_id),
+    FOREIGN KEY (tai_khoan_nho_hon_id) REFERENCES tai_khoan (id) ON DELETE NO ACTION,
+    FOREIGN KEY (tai_khoan_lon_hon_id) REFERENCES tai_khoan (id) ON DELETE NO ACTION
+);
+GO
+
+-- 10. Bảng TIN_NHAN
+CREATE TABLE tin_nhan (
+    id                 BIGINT          IDENTITY (1, 1) PRIMARY KEY,
+    cuoc_tro_chuyen_id BIGINT          NOT NULL,
+    nguoi_gui_id       BIGINT          NOT NULL,
+    noi_dung           NVARCHAR (1000) NOT NULL,
+    thoi_gian_gui      DATETIME2       DEFAULT SYSDATETIME(),
+    da_doc             BIT             DEFAULT 0,   -- 0 = người nhận chưa đọc
+    FOREIGN KEY (cuoc_tro_chuyen_id) REFERENCES cuoc_tro_chuyen (id) ON DELETE CASCADE,
+    FOREIGN KEY (nguoi_gui_id) REFERENCES tai_khoan (id) ON DELETE NO ACTION
+);
+GO
+
+-- Tăng tốc việc lấy tin mới nhất của một cuộc trò chuyện
+CREATE INDEX IX_tin_nhan_cuoi ON tin_nhan (cuoc_tro_chuyen_id, thoi_gian_gui DESC);
+GO
