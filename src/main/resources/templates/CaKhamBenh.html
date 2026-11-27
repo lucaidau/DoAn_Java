@@ -662,57 +662,14 @@
                                                 6
                                             </span>
                                     <h2 class="font-headline-sm text-headline-sm text-on-surface">
-                                        Lời dặn bác sĩ &amp; Kế hoạch hẹn tái khám
+                                        Ghi chú bác sĩ
                                     </h2>
                                 </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
-                                    <!-- Lời dặn -->
-                                    <div class="flex flex-col gap-2">
-                                        <label class="font-label-sm text-label-sm font-semibold text-on-surface">
-                                            Chế độ sinh hoạt &amp; Lời dặn điều trị
-                                        </label>
-                                        <textarea class="w-full p-3 rounded-xl bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none leading-relaxed" name="loiDan" rows="4" th:text="${hoSo != null ? hoSo.loiDanBacSi : ''}">
-                                                </textarea>
-                                    </div>
-                                    <!-- Hẹn tái khám & Thông báo -->
-                                    <div class="flex flex-col justify-between gap-3 bg-surface-container-low p-space-md rounded-xl">
-                                        <div class="flex flex-col gap-2">
-                                                    <span class="font-label-sm text-label-sm font-semibold text-on-surface flex items-center gap-1.5">
-                                                        <span class="material-symbols-outlined text-primary text-[18px]">
-                                                            event
-                                                        </span>
-                                                        Lịch hẹn tái khám
-                                                    </span>
-                                            <div class="flex items-center gap-2 bg-surface-container-lowest p-3 rounded-xl shadow-sm">
-                                                <div class="w-10 h-10 rounded-lg bg-primary-fixed flex flex-col items-center justify-center text-on-primary-fixed">
-                                                            <span class="font-label-sm text-label-sm leading-none font-bold">
-                                                                T3
-                                                            </span>
-                                                    <span class="font-headline-sm text-headline-sm leading-none font-bold">
-                                                                14
-                                                            </span>
-                                                </div>
-                                                <div class="flex flex-col">
-                                                            <span class="font-label-md text-label-md font-semibold text-on-surface">
-                                                                Lịch tái khám được quản lý trong hệ thống lịch hẹn
-                                                            </span>
-                                                    <span class="font-body-sm text-body-sm text-on-surface-variant">
-                                                            </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Reminder Checkbox -->
-                                        <label class="flex items-center gap-2.5 p-2 rounded-lg bg-surface-container-lowest cursor-pointer hover:bg-surface-container-high transition-colors">
-                                            <input class="w-4 h-4 text-primary rounded focus:ring-primary accent-primary" disabled="disabled" type="checkbox"/>
-                                            <div class="flex flex-col">
-                                                        <span class="font-label-sm text-label-sm font-semibold text-on-surface">
-                                                            Gửi tin nhắn SMS nhắc lịch &amp; mã đơn thuốc điện tử
-                                                        </span>
-                                                <span class="font-body-sm text-body-sm text-on-surface-variant">
-                                                        </span>
-                                            </div>
-                                        </label>
-                                    </div>
+                                <div class="flex flex-col gap-2">
+                                    <label class="font-label-sm text-label-sm font-semibold text-on-surface" for="loiDan">
+                                        Nội dung ghi chú
+                                    </label>
+                                    <textarea class="w-full p-3 rounded-xl bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none leading-relaxed" id="loiDan" name="loiDan" rows="4" th:text="${hoSo != null ? hoSo.loiDanBacSi : ''}"></textarea>
                                 </div>
                             </section>
                         </fieldset>
@@ -722,7 +679,7 @@
                     <!-- Section 3: Chẩn đoán xác định & Mã bệnh ICD-10 -->
                     <!-- Section 4: Chỉ định cận lâm sàng thực hiện thêm -->
                     <!-- Section 5: Kê đơn thuốc điều trị ngoại trú -->
-                    <!-- Section 6: Lời dặn bác sĩ & Hẹn tái khám -->
+                    <!-- Section 6: Ghi chú bác sĩ -->
                     <!-- Bottom Floating / Footer Action Bar in Form -->
                     <div class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
                         <div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">

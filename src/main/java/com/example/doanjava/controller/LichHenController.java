@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpSession;
 import java.time.*;
 import java.util.*;
 @Controller
@@ -120,11 +121,17 @@ public class LichHenController {
     }
 
     @PostMapping("/lichhen/{id}/{hanhDong:duyet|tuchoi|batdaukham}")
-    public String trangThai(@PathVariable Long id, @PathVariable String hanhDong, RedirectAttributes flash) {
+    public String trangThai(@PathVariable Long id, @PathVariable String hanhDong, RedirectAttributes flash, HttpSession session) {
         service.chiTiet(id);
         try {
-            service.doiTrangThai(id, hanhDong);
-            flash.addFlashAttribute("thanhCong", "Cập nhật trạng thái thành công");
+            LichHenService.KetQuaDoiTrangThai ketQua = service.doiTrangThai(id, hanhDong);
+            if (ketQua == LichHenService.KetQuaDoiTrangThai.TU_DONG_HUY_QUA_HAN) {
+                session.setAttribute("lichHenBiHuyQuaHanId", id);
+                flash.addFlashAttribute("loi", "Lịch hẹn không thể duyệt vì quá khung giờ khám.");
+            }
+            else {
+                flash.addFlashAttribute("thanhCong", "Cập nhật trạng thái thành công");
+            }
         } catch (Exception e) {
             flash.addFlashAttribute("loi", e.getMessage());
         }
@@ -190,8 +197,11 @@ public class LichHenController {
     }
 
     @GetMapping("/thongbao")
-    public String thongBao(Model model) {
-        model.addAttribute("lichHens", service.thongBao());
+    public String thongBao(HttpSession session, Model model) {
+        Object id = session.getAttribute("lichHenBiHuyQuaHanId");
+        Long lichHenBiHuyQuaHanId = id instanceof Long ? (Long) id : null;
+        model.addAttribute("lichHens", service.thongBao(lichHenBiHuyQuaHanId));
+        model.addAttribute("lichHenBiHuyQuaHanId", lichHenBiHuyQuaHanId);
         return "thongbao";
     }
 

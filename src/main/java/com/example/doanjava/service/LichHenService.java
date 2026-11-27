@@ -9,9 +9,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.access.AccessDeniedException;
 import java.time.*;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 @Service
 public class LichHenService {
+    public enum KetQuaDoiTrangThai {
+        CAP_NHAT,
+        TU_DONG_HUY_QUA_HAN
+    }
+
     private final LichHenRepository lichHenRepo;
     @org.springframework.beans.factory.annotation.Autowired private PhongKhamRepository phongKhamRepo;
 
@@ -134,9 +140,19 @@ public class LichHenService {
         return id == null ? lichHenRepo.countByNgayKham(LocalDate.now()) : lichHenRepo.countByBacSiIdAndNgayKham(id, LocalDate.now());
     }
 
-    public List<LichHen> thongBao() {
-        Long id = bacSiIdHienTai();
-        return id == null ? lichHenRepo.findTop10ByOrderByNgayTaoDesc() : lichHenRepo.findTop10ByBacSiIdOrderByNgayTaoDesc(id);
+    public List<LichHen> thongBao(Long lichHenBiHuyQuaHanId) {
+        Long bacSiId = bacSiIdHienTai();
+        List<LichHen> lichHens = new ArrayList<>(bacSiId == null
+                ? lichHenRepo.findTop10ByOrderByNgayTaoDesc()
+                : lichHenRepo.findTop10ByBacSiIdOrderByNgayTaoDesc(bacSiId));
+        if (lichHenBiHuyQuaHanId == null) return lichHens;
+
+        LichHen lich = chiTiet(lichHenBiHuyQuaHanId);
+        if ("DA_HUY".equals(lich.getTrangThai())
+                && lichHens.stream().noneMatch(item -> lichHenBiHuyQuaHanId.equals(item.getId()))) {
+            lichHens.add(0, lich);
+        }
+        return lichHens;
     }
 
     public List<PhongKham> phongKhams() { return phongKhamRepo.findAll(Sort.by("tenPhong")); }
@@ -210,9 +226,15 @@ public class LichHenService {
     }
 
     @Transactional
-    public void doiTrangThai(Long id, String hanhDong) {
+    public KetQuaDoiTrangThai doiTrangThai(Long id, String hanhDong) {
         LichHen lich = chiTiet(id);
         String hienTai = lich.getTrangThai();
+        if ("duyet".equals(hanhDong) && "CHO_XAC_NHAN".equals(hienTai) && daQuaKhungGio(lich)) {
+            lich.setTrangThai("DA_HUY");
+            lichHenRepo.save(lich);
+            return KetQuaDoiTrangThai.TU_DONG_HUY_QUA_HAN;
+        }
+
         String moi = switch (hanhDong) {
             case "duyet" -> "CHO_XAC_NHAN".equals(hienTai) ? "DA_XAC_NHAN" : null;
             case "tuchoi" -> "CHO_XAC_NHAN".equals(hienTai) ? "DA_HUY" : null;
@@ -222,6 +244,22 @@ public class LichHenService {
         if (moi == null) throw new IllegalArgumentException("Không thể thực hiện thao tác với trạng thái hiện tại");
         lich.setTrangThai(moi);
         lichHenRepo.save(lich);
+        return KetQuaDoiTrangThai.CAP_NHAT;
+    }
+
+    private boolean daQuaKhungGio(LichHen lich) {
+        String khungGio = lich.getKhungGioKham();
+        if (lich.getNgayKham() == null || khungGio == null || !khungGio.matches("\\d{2}:\\d{2} - \\d{2}:\\d{2}")) {
+            throw new IllegalArgumentException("Không thể xác định ngày hoặc khung giờ khám để duyệt lịch");
+        }
+
+        try {
+            String gioKetThuc = khungGio.substring(8);
+            LocalDateTime ketThuc = LocalDateTime.of(lich.getNgayKham(), LocalTime.parse(gioKetThuc));
+            return !LocalDateTime.now().isBefore(ketThuc);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Khung giờ khám không hợp lệ");
+        }
     }
 
     @Transactional
