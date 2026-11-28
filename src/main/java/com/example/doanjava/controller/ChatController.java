@@ -48,7 +48,8 @@ public class ChatController {
         this.messagingTemplate = messagingTemplate;
     }
 
-    public record GuiTinNhanReq(Long idTroChuyen, String noiDung) { }
+    public record GuiTinNhanReq(Long idTroChuyen, String noiDung) { }   // gửi qua WebSocket
+    public record GuiTinHttpReq(String noiDung) { }                     // gửi qua HTTP (id cuộc trò chuyện nằm trên đường dẫn)
     public record BatDauReq(Long doiPhuongId) { }
 
     // =====================================================================
@@ -62,9 +63,16 @@ public class ChatController {
     @MessageMapping("/chat.gui")
     public void guiTinNhan(GuiTinNhanReq yeuCau, Principal principal) {
         Long idNguoiGui = layIdTuWebSocket(principal);
+        luuVaDayTin(idNguoiGui, yeuCau.idTroChuyen(), yeuCau.noiDung());
+    }
 
+    /**
+     * Lưu một tin nhắn rồi đẩy tới cả hai người qua WebSocket. Cả hai cách gửi (WebSocket và HTTP) đều dùng hàm này.
+     * Trả về bản tin dành cho người gửi.
+     */
+    private TinNhanDTO luuVaDayTin(Long idNguoiGui, Long idTroChuyen, String noiDung) {
         // Lưu tin (đã kiểm tra: nội dung, người gửi có thuộc cuộc trò chuyện, người nhận không bị khóa)
-        TinNhan tinNhan = tinNhanService.guiTinNhan(idNguoiGui, yeuCau.idTroChuyen(), yeuCau.noiDung());
+        TinNhan tinNhan = tinNhanService.guiTinNhan(idNguoiGui, idTroChuyen, noiDung);
 
         CuocTroChuyen cuoc = tinNhan.getCuocTroChuyen();
         TaiKhoan nguoiGui = cuoc.layNguoiDung(idNguoiGui);
@@ -72,8 +80,10 @@ public class ChatController {
         String tenNguoiGui = tinNhanService.layTenHienThi(nguoiGui.getId());
 
         // Mỗi người nhận một bản DTO riêng, vì "laCuaToi" phụ thuộc vào người đang xem
-        guiChoNguoiDung(nguoiGui.getId(), TinNhanDTO.tuEntity(tinNhan, nguoiGui.getId(), tenNguoiGui));
+        TinNhanDTO banChoNguoiGui = TinNhanDTO.tuEntity(tinNhan, nguoiGui.getId(), tenNguoiGui);
+        guiChoNguoiDung(nguoiGui.getId(), banChoNguoiGui);
         guiChoNguoiDung(nguoiNhan.getId(), TinNhanDTO.tuEntity(tinNhan, nguoiNhan.getId(), tenNguoiGui));
+        return banChoNguoiGui;
     }
 
     /** Có lỗi khi gửi (ví dụ tin trống, người nhận bị khóa): báo lại riêng cho người gửi ở /user/queue/loi. */
@@ -147,7 +157,17 @@ public class ChatController {
         }).toList();
     }
 
-
+    /**
+     * Gửi tin bằng HTTP POST. Dùng khi WebSocket chưa kết nối được (và để tương thích với giao diện cũ).
+     * Tin vẫn được đẩy realtime tới người nhận nếu họ đang online.
+     */
+    @PostMapping("/api/cuocTroChuyen/{idTroChuyen}/tinNhan")
+    public TinNhanDTO guiBangHttp(@PathVariable Long idTroChuyen,
+                                  @RequestBody GuiTinHttpReq yeuCau,
+                                  Principal principal) {
+        Long idNguoiGui = layTaiKhoanHienTai(principal).getId();
+        return luuVaDayTin(idNguoiGui, idTroChuyen, yeuCau.noiDung());
+    }
 
     /** Đánh dấu các tin của đối phương trong cuộc trò chuyện này là đã đọc. */
     @PostMapping("/api/cuocTroChuyen/{idTroChuyen}/daDoc")
