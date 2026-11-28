@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+  Widget chat nổi dùng chung cho admin, bác sĩ, bệnh nhân.
+  Cách dùng: chèn đúng 1 dòng này vào layout, ngay trước thẻ </body>:
+      <div th:replace="~{fragments/ChatWidget :: chatWidget}"></div>
+  - Gửi tin và nhận tin mới: qua WebSocket (ws://.../ws-chat).
+  - Tải danh sách, lịch sử, số tin chưa đọc: qua HTTP (/chat/api/...).
+  Widget tự ẩn nếu chưa đăng nhập (gọi API thất bại thì không hiện nút).
+-->
+<div th:fragment="chatWidget" id="cw-root" style="display: none;"
+     th:attr="data-base=@{/chat/api}, data-ws=@{/ws-chat}, data-csrf-token=${_csrf != null ? _csrf.token : ''}, data-csrf-header=${_csrf != null ? _csrf.headerName : 'X-CSRF-TOKEN'}"
+     class="fixed bottom-5 right-5 z-40 flex flex-col items-end">
+
+    <!-- ================= KHUNG CHAT ================= -->
+    <div id="cw-panel"
+         class="hidden mb-3 w-[calc(100vw-2.5rem)] sm:w-96 h-[32rem] max-h-[75vh] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden">
+
+        <!-- Thanh tiêu đề -->
+        <div class="flex items-center gap-1 px-3 py-3 bg-blue-600 text-white shrink-0">
+            <button type="button" id="cw-back" class="hidden p-1.5 rounded-lg hover:bg-blue-700" aria-label="Quay lại">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <div id="cw-title" class="flex-1 px-1 font-semibold truncate">Tin nhắn</div>
+            <button type="button" id="cw-new" class="p-1.5 rounded-lg hover:bg-blue-700" aria-label="Cuộc trò chuyện mới" title="Cuộc trò chuyện mới">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            </button>
+            <button type="button" id="cw-close" class="p-1.5 rounded-lg hover:bg-blue-700" aria-label="Đóng">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <!-- Màn hình 1: danh sách cuộc trò chuyện -->
+        <div id="cw-view-list" class="flex-1 overflow-y-auto min-h-0">
+            <div id="cw-list" class="divide-y divide-gray-100"></div>
+        </div>
+
+        <!-- Màn hình 2: chọn người để bắt đầu trò chuyện -->
+        <div id="cw-view-contacts" class="hidden flex-1 flex flex-col min-h-0">
+            <div class="p-3 border-b border-gray-100 shrink-0">
+                <input type="text" id="cw-search" autocomplete="off" placeholder="Tìm theo tên..."
+                       class="w-full rounded-full bg-gray-100 px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div id="cw-contacts" class="flex-1 overflow-y-auto min-h-0 divide-y divide-gray-100"></div>
+        </div>
+
+        <!-- Màn hình 3: nội dung một cuộc trò chuyện -->
+        <div id="cw-view-chat" class="hidden flex-1 flex flex-col min-h-0">
+            <div id="cw-messages" class="flex-1 overflow-y-auto min-h-0 p-3 space-y-2 bg-gray-50"></div>
+            <p id="cw-error" class="hidden px-3 pt-2 text-xs text-red-600"></p>
+            <form id="cw-form" class="flex items-center gap-2 p-3 border-t border-gray-200 shrink-0">
+                <input type="text" id="cw-input" maxlength="1000" autocomplete="off" placeholder="Nhập tin nhắn..."
+                       class="flex-1 rounded-full bg-gray-100 px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                <button type="submit" id="cw-send"
+                        class="w-9 h-9 shrink-0 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 disabled:opacity-50"
+                        aria-label="Gửi">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= NÚT NỔI ================= -->
+    <button type="button" id="cw-fab"
+            class="relative w-14 h-14 rounded-full bg-blue-600 text-white shadow-xl flex items-center justify-center hover:bg-blue-700 transition-colors"
+            aria-label="Mở tin nhắn">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 01-4-.8L3 20l1.3-3.9A7.6 7.6 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        <span id="cw-badge"
+              class="hidden absolute -top-1 -right-1 min-w-[1.25rem] h-5 px-1 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center"></span>
+    </button>
+
+    <!-- Thư viện STOMP để nói chuyện với WebSocket của Spring -->
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+
+    <script>
+        (function () {
+            'use strict';
+
+            var goc = document.getElementById('cw-root');
+            if (!goc) { return; }
+
+            var DUONG_DAN_API = goc.dataset.base;
+            var DUONG_DAN_WS = goc.dataset.ws;
+            var CSRF_TOKEN = goc.dataset.csrfToken;
+            var CSRF_HEADER = goc.dataset.csrfHeader;
+            var CHU_KY_CAP_NHAT_MS = 4000;
+
+            // ----- Các phần tử trên giao diện -----
+            var nutNoi = document.getElementById('cw-fab');
+            var huyHieu = document.getElementById('cw-badge');
+            var khungChat = document.getElementById('cw-panel');
+            var tieuDe = document.getElementById('cw-title');
+            var nutQuayLai = document.getElementById('cw-back');
+            var nutCuocMoi = document.getElementById('cw-new');
+            var nutDong = document.getElementById('cw-close');
+
+            var manHinhDanhSach = document.getElementById('cw-view-list');
+            var manHinhLienHe = document.getElementById('cw-view-contacts');
+            var manHinhChat = document.getElementById('cw-view-chat');
+
+            var danhSachCuocEl = document.getElementById('cw-list');
+            var oTimLienHe = document.getElementById('cw-search');
+            var danhSachLienHeEl = document.getElementById('cw-contacts');
+            var khungTinNhan = document.getElementById('cw-messages');
+            var thongBaoLoi = document.getElementById('cw-error');
+            var bieuMauGui = document.getElementById('cw-form');
+            var oNhapTin = document.getElementById('cw-input');
+
+            // ----- Trạng thái hiện tại của widget -----
+            var trangThai = {
+                dangMo: false,
+                manHinh: 'danhSach',     // 'danhSach' | 'lienHe' | 'chat'
+                cuocId: null,            // cuộc trò chuyện đang mở
+                tinCuoiId: null,         // id tin cuối đang hiển thị
+                soTinDangHien: 0,
+                idTinDaHien: {}          // các id tin đã hiển thị (để không hiện trùng một tin hai lần)
+            };
+
+            // ----- WebSocket -----
+            var ketNoiWs = null;       // đối tượng kết nối STOMP
+            var daKetNoiWs = false;    // true khi đang kết nối: lúc đó chỉ làm mới thưa (polling dự phòng)
+            var noiDungVuaGui = '';    // nhớ lại để trả vào ô nhập nếu server báo lỗi
+
+            // =========================================================
+            // HÀM TIỆN ÍCH
+            // =========================================================
+
+            /** Gọi API HTTP. Trả về dữ liệu JSON, hoặc ném lỗi có chứa câu thông báo. */
+            function goiApi(phuongThuc, duongDan, duLieuGui) {
+                var tieuDeYeuCau = { 'Accept': 'application/json' };
+                if (phuongThuc !== 'GET') {
+                    tieuDeYeuCau['Content-Type'] = 'application/json';
+                    if (CSRF_TOKEN) { tieuDeYeuCau[CSRF_HEADER] = CSRF_TOKEN; }
+                }
+
+                return fetch(DUONG_DAN_API + duongDan, {
+                    method: phuongThuc,
+                    headers: tieuDeYeuCau,
+                    credentials: 'same-origin',
+                    body: duLieuGui ? JSON.stringify(duLieuGui) : undefined
+                }).then(function (phanHoi) {
+                    // Chưa đăng nhập (bị chuyển sang trang đăng nhập hoặc bị từ chối): ẩn luôn widget
+                    if (phanHoi.redirected || phanHoi.status === 401 || phanHoi.status === 403) {
+                        goc.style.display = 'none';
+                        throw new Error('Chưa đăng nhập');
+                    }
+                    return phanHoi.json().catch(function () { return {}; }).then(function (duLieu) {
+                        if (!phanHoi.ok) { throw new Error(duLieu.loi || 'Có lỗi xảy ra'); }
+                        return duLieu;
+                    });
+                });
+            }
+
+            /** Tạo một phần tử HTML. Nội dung luôn đặt bằng textContent nên không bị tấn công XSS. */
+            function taoPhanTu(tenThe, tenClass, noiDung) {
+                var phanTu = document.createElement(tenThe);
+                if (tenClass) { phanTu.className = tenClass; }
+                if (noiDung !== undefined && noiDung !== null) { phanTu.textContent = noiDung; }
+                return phanTu;
+            }
+
+            function xoaHetCon(phanTu) {
+                while (phanTu.firstChild) { phanTu.removeChild(phanTu.firstChild); }
+            }
+
+            function layChuCaiDau(ten) {
+                var tenSach = (ten || '?').replace('Quản trị viên (', '').trim();
+                return tenSach.charAt(0).toUpperCase() || '?';
+            }
+
+            /** Server có thể trả thời gian dạng chữ "2026-11-25T14:35:12" hoặc dạng mảng [2026,11,25,14,35,12]. */
+            function chuyenThanhNgay(giaTri) {
+                if (!giaTri) { return null; }
+                if (Array.isArray(giaTri)) {
+                    return new Date(giaTri[0], giaTri[1] - 1, giaTri[2], giaTri[3] || 0, giaTri[4] || 0, giaTri[5] || 0);
+                }
+                var ngay = new Date(giaTri);
+                return isNaN(ngay.getTime()) ? null : ngay;
+            }
+
+            /** Hôm nay chỉ hiện giờ (14:35). Ngày khác hiện ngày/tháng (24/11), thêm giờ nếu luonCoGio = true. */
+            function dinhDangThoiGian(giaTri, luonCoGio) {
+                var ngay = chuyenThanhNgay(giaTri);
+                if (!ngay) { return ''; }
+                var la2Chu = function (so) { return (so < 10 ? '0' : '') + so; };
+                var gio = la2Chu(ngay.getHours()) + ':' + la2Chu(ngay.getMinutes());
+                if (ngay.toDateString() === new Date().toDateString()) { return gio; }
+                var ngayThang = la2Chu(ngay.getDate()) + '/' + la2Chu(ngay.getMonth() + 1);
+                return luonCoGio ? ngayThang + ' ' + gio : ngayThang;
+            }
+
+            function hienLoi(thongBao) {
+                thongBaoLoi.textContent = thongBao;
+                thongBaoLoi.classList.remove('hidden');
+            }
+
+            function anLoi() {
+                thongBaoLoi.classList.add('hidden');
+            }
+
+            // =========================================================
+            // CHUYỂN MÀN HÌNH
+            // =========================================================
+
+            function hienManHinh(tenManHinh) {
+                trangThai.manHinh = tenManHinh;
+                manHinhDanhSach.classList.toggle('hidden', tenManHinh !== 'danhSach');
+                manHinhLienHe.classList.toggle('hidden', tenManHinh !== 'lienHe');
+                manHinhChat.classList.toggle('hidden', tenManHinh !== 'chat');
+
+                nutQuayLai.classList.toggle('hidden', tenManHinh === 'danhSach');
+                nutCuocMoi.classList.toggle('hidden', tenManHinh !== 'danhSach');
+
+                if (tenManHinh === 'danhSach') { tieuDe.textContent = 'Tin nhắn'; }
+                if (tenManHinh === 'lienHe') { tieuDe.textContent = 'Cuộc trò chuyện mới'; }
+            }
+
+            function moKhung() {
+                trangThai.dangMo = true;
+                khungChat.classList.remove('hidden');
+                hienManHinh('danhSach');
+                taiDanhSachCuoc();
+            }
+
+            function dongKhung() {
+                trangThai.dangMo = false;
+                khungChat.classList.add('hidden');
+            }
+
+            // =========================================================
+            // HUY HIỆU SỐ TIN CHƯA ĐỌC
+            // =========================================================
+
+            /** Trả về true nếu đã đăng nhập (gọi API thành công), false nếu chưa. */
+            function capNhatHuyHieu() {
+                return goiApi('GET', '/chuaDoc').then(function (ketQua) {
+                    goc.style.display = 'flex';   // gọi API thành công nghĩa là đã đăng nhập, hiện nút nổi
+                    var tong = ketQua.tong || 0;
+                    huyHieu.textContent = tong > 99 ? '99+' : String(tong);
+                    huyHieu.classList.toggle('hidden', tong === 0);
+                    return true;
+                }).catch(function () {
+                    return false;                 // chưa đăng nhập hoặc mất mạng (im lặng, không báo lỗi)
+                });
+            }
+
+            // =========================================================
+            // MÀN HÌNH 1: DANH SÁCH CUỘC TRÒ CHUYỆN
+            // =========================================================
+
+            function taiDanhSachCuoc() {
+                return goiApi('GET', '/cuocTroChuyen').then(veDanhSachCuoc).catch(function () {});
+            }
+
+            function veDanhSachCuoc(danhSach) {
+                xoaHetCon(danhSachCuocEl);
+
+                if (danhSach.length === 0) {
+                    danhSachCuocEl.appendChild(taoPhanTu('p', 'p-6 text-center text-sm text-gray-500',
+                        'Chưa có cuộc trò chuyện nào. Bấm dấu + ở góc trên để bắt đầu.'));
+                    return;
+                }
+
+                danhSach.forEach(function (cuoc) {
+                    var dong = taoPhanTu('button', 'w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50');
+                    dong.type = 'button';
+
+                    dong.appendChild(taoPhanTu('div',
+                        'w-10 h-10 shrink-0 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center',
+                        layChuCaiDau(cuoc.tenDoiPhuong)));
+
+                    var phanChu = taoPhanTu('div', 'flex-1 min-w-0');
+                    var dongTren = taoPhanTu('div', 'flex items-center justify-between gap-2');
+                    dongTren.appendChild(taoPhanTu('span', 'font-semibold text-sm text-gray-900 truncate', cuoc.tenDoiPhuong));
+                    if (cuoc.tinCuoi) {
+                        dongTren.appendChild(taoPhanTu('span', 'text-xs text-gray-400 shrink-0', dinhDangThoiGian(cuoc.thoiGianCuoi, false)));
+                    }
+                    phanChu.appendChild(dongTren);
+
+                    var dongDuoi = taoPhanTu('div', 'flex items-center justify-between gap-2');
+                    var noiDungXemTruoc = cuoc.tinCuoi ? cuoc.tinCuoi : cuoc.vaiTroDoiPhuong + ' · Chưa có tin nhắn';
+                    var kieuChu = cuoc.soChuaDoc > 0 ? 'text-xs text-gray-900 font-semibold truncate' : 'text-xs text-gray-500 truncate';
+                    dongDuoi.appendChild(taoPhanTu('span', kieuChu, noiDungXemTruoc));
+                    if (cuoc.soChuaDoc > 0) {
+                        dongDuoi.appendChild(taoPhanTu('span',
+                            'shrink-0 min-w-[1.25rem] h-5 px-1 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center',
+                            String(cuoc.soChuaDoc)));
+                    }
+                    phanChu.appendChild(dongDuoi);
+
+                    dong.appendChild(phanChu);
+                    dong.addEventListener('click', function () { moCuocTroChuyen(cuoc.cuocId, cuoc.tenDoiPhuong); });
+                    danhSachCuocEl.appendChild(dong);
+                });
+            }
+
+            // =========================================================
+            // MÀN HÌNH 2: CHỌN NGƯỜI ĐỂ BẮT ĐẦU TRÒ CHUYỆN
+            // =========================================================
+
+            function taiLienHe(tuKhoa) {
+                var duongDan = '/lienHe?q=' + encodeURIComponent(tuKhoa || '');
+                return goiApi('GET', duongDan).then(veLienHe).catch(function (loi) {
+                    xoaHetCon(danhSachLienHeEl);
+                    danhSachLienHeEl.appendChild(taoPhanTu('p', 'p-6 text-center text-sm text-red-600', loi.message));
+                });
+            }
+
+            function veLienHe(danhSach) {
+                xoaHetCon(danhSachLienHeEl);
+
+                if (danhSach.length === 0) {
+                    danhSachLienHeEl.appendChild(taoPhanTu('p', 'p-6 text-center text-sm text-gray-500',
+                        'Không có ai để nhắn tin. Bạn chỉ nhắn được với người đã có lịch hẹn với bạn hoặc quản trị viên.'));
+                    return;
+                }
+
+                danhSach.forEach(function (nguoi) {
+                    var dong = taoPhanTu('button', 'w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50');
+                    dong.type = 'button';
+                    dong.appendChild(taoPhanTu('div',
+                        'w-9 h-9 shrink-0 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-sm',
+                        layChuCaiDau(nguoi.ten)));
+                    var phanChu = taoPhanTu('div', 'min-w-0');
+                    phanChu.appendChild(taoPhanTu('div', 'text-sm font-semibold text-gray-900 truncate', nguoi.ten));
+                    phanChu.appendChild(taoPhanTu('div', 'text-xs text-gray-500', nguoi.vaiTro));
+                    dong.appendChild(phanChu);
+                    dong.addEventListener('click', function () { batDauCuocTroChuyen(nguoi.id, nguoi.ten); });
+                    danhSachLienHeEl.appendChild(dong);
+                });
+            }
+
+            function batDauCuocTroChuyen(idDoiPhuong, tenDoiPhuong) {
+                goiApi('POST', '/cuocTroChuyen/batDau', { doiPhuongId: idDoiPhuong })
+                    .then(function (ketQua) { moCuocTroChuyen(ketQua.cuocId, tenDoiPhuong); })
+                    .catch(function (loi) {
+                        xoaHetCon(danhSachLienHeEl);
+                        danhSachLienHeEl.appendChild(taoPhanTu('p', 'p-6 text-center text-sm text-red-600', loi.message));
+                    });
+            }
+
+            // =========================================================
+            // MÀN HÌNH 3: MỘT CUỘC TRÒ CHUYỆN
+            // =========================================================
+
+            function moCuocTroChuyen(cuocId, tenDoiPhuong) {
+                trangThai.cuocId = cuocId;
+                trangThai.tinCuoiId = null;
+                trangThai.soTinDangHien = 0;
+                trangThai.idTinDaHien = {};
+                xoaHetCon(khungTinNhan);
+                anLoi();
+                oNhapTin.value = '';
+
+                hienManHinh('chat');
+                tieuDe.textContent = tenDoiPhuong;
+                taiTinNhan(true);
+                oNhapTin.focus();
+            }
+
+            /** Một "bong bóng" tin nhắn. Tin của mình nằm bên phải (xanh), tin của đối phương nằm bên trái (trắng). */
+            function taoHangTinNhan(tin) {
+                var hang = taoPhanTu('div', tin.laCuaToi ? 'flex justify-end' : 'flex justify-start');
+                var kieuBongBong = tin.laCuaToi
+                    ? 'max-w-[75%] rounded-2xl rounded-br-sm bg-blue-600 text-white px-3 py-2 text-sm'
+                    : 'max-w-[75%] rounded-2xl rounded-bl-sm bg-white border border-gray-200 text-gray-800 px-3 py-2 text-sm';
+                var bongBong = taoPhanTu('div', kieuBongBong);
+                bongBong.appendChild(taoPhanTu('div', 'whitespace-pre-wrap break-words', tin.noiDung));
+                bongBong.appendChild(taoPhanTu('div', 'text-[10px] opacity-70 mt-1 text-right', dinhDangThoiGian(tin.thoiGianGui, true)));
+                hang.appendChild(bongBong);
+                return hang;
+            }
+
+            /** Vẽ lại toàn bộ danh sách tin (dùng khi mở cuộc trò chuyện hoặc làm mới định kỳ). */
+            function veTinNhan(danhSachTin) {
+                xoaHetCon(khungTinNhan);
+                trangThai.idTinDaHien = {};
+
+                if (danhSachTin.length === 0) {
+                    khungTinNhan.appendChild(taoPhanTu('p', 'pt-10 text-center text-sm text-gray-400', 'Hãy gửi tin nhắn đầu tiên.'));
+                    return;
+                }
+
+                danhSachTin.forEach(function (tin) {
+                    khungTinNhan.appendChild(taoHangTinNhan(tin));
+                    trangThai.idTinDaHien[tin.id] = true;
+                });
+            }
+
+            /** Thêm MỘT tin mới vào cuối khung (khi nhận tin qua WebSocket), không vẽ lại cả danh sách. */
+            function themTinMoi(tin) {
+                if (trangThai.idTinDaHien[tin.id]) { return; }          // tin này đã hiển thị rồi
+
+                if (trangThai.soTinDangHien === 0) { xoaHetCon(khungTinNhan); }   // bỏ dòng "Hãy gửi tin nhắn đầu tiên"
+
+                var dangODuoiCung = khungTinNhan.scrollHeight - khungTinNhan.scrollTop - khungTinNhan.clientHeight < 60;
+                khungTinNhan.appendChild(taoHangTinNhan(tin));
+                trangThai.idTinDaHien[tin.id] = true;
+                trangThai.soTinDangHien++;
+                trangThai.tinCuoiId = tin.id;
+
+                // Tin của mình hoặc đang xem ở cuối thì kéo xuống tin mới nhất
+                if (tin.laCuaToi || dangODuoiCung) { khungTinNhan.scrollTop = khungTinNhan.scrollHeight; }
+            }
+
+            /** Tải lại lịch sử bằng HTTP. cuonXuongCuoi = true khi vừa mở cuộc trò chuyện. */
+            function taiTinNhan(cuonXuongCuoi) {
+                var cuocDangXem = trangThai.cuocId;
+                return goiApi('GET', '/cuocTroChuyen/' + cuocDangXem + '/tinNhan').then(function (danhSachTin) {
+                    if (cuocDangXem !== trangThai.cuocId) { return; }   // người dùng đã chuyển sang cuộc khác
+
+                    var tinCuoi = danhSachTin.length > 0 ? danhSachTin[danhSachTin.length - 1] : null;
+                    var idTinCuoi = tinCuoi ? tinCuoi.id : null;
+                    var coThayDoi = idTinCuoi !== trangThai.tinCuoiId || danhSachTin.length !== trangThai.soTinDangHien;
+
+                    if (coThayDoi) {
+                        var dangODuoiCung = khungTinNhan.scrollHeight - khungTinNhan.scrollTop - khungTinNhan.clientHeight < 60;
+                        veTinNhan(danhSachTin);
+                        trangThai.tinCuoiId = idTinCuoi;
+                        trangThai.soTinDangHien = danhSachTin.length;
+                        if (cuonXuongCuoi || dangODuoiCung) { khungTinNhan.scrollTop = khungTinNhan.scrollHeight; }
+                    }
+
+                    // Có tin của đối phương chưa đọc thì đánh dấu đã đọc, rồi cập nhật huy hiệu
+                    var coTinChuaDoc = danhSachTin.some(function (tin) { return !tin.laCuaToi && !tin.daDoc; });
+                    if (coTinChuaDoc) { danhDauDaDoc(cuocDangXem); }
+                }).catch(function (loi) { hienLoi(loi.message); });
+            }
+
+            function danhDauDaDoc(cuocId) {
+                goiApi('POST', '/cuocTroChuyen/' + cuocId + '/daDoc').then(capNhatHuyHieu).catch(function () {});
+            }
+
+            /** Gửi tin bằng WebSocket tới /app/chat.gui. Tin hiện lên khi server đẩy bản sao về (thường chỉ vài mili giây). */
+            function guiTinNhan(suKien) {
+                suKien.preventDefault();
+                var noiDung = oNhapTin.value.trim();
+                if (noiDung === '' || trangThai.cuocId === null) { return; }
+
+                anLoi();
+                noiDungVuaGui = noiDung;
+
+                if (daKetNoiWs) {
+                    // Cách chính: gửi qua WebSocket
+                    ketNoiWs.publish({
+                        destination: '/app/chat.gui',
+                        body: JSON.stringify({ idTroChuyen: trangThai.cuocId, noiDung: noiDung })
+                    });
+                } else {
+                    // Dự phòng: WebSocket chưa kết nối thì gửi bằng HTTP POST
+                    guiBangHttp(noiDung);
+                }
+                oNhapTin.value = '';
+                oNhapTin.focus();
+            }
+
+            /** Gửi tin bằng HTTP. Server trả lại chính tin vừa lưu nên hiện luôn (themTinMoi tự bỏ qua nếu tin đã hiện rồi). */
+            function guiBangHttp(noiDung) {
+                goiApi('POST', '/cuocTroChuyen/' + trangThai.cuocId + '/tinNhan', { noiDung: noiDung })
+                    .then(function (tin) { themTinMoi(tin); })
+                    .catch(function (loi) { xuLyLoi({ loi: loi.message }); });
+            }
+
+            // =========================================================
+            // WEBSOCKET: nhận tin mới và thông báo lỗi từ server
+            // =========================================================
+
+            /** Server đẩy về một tin nhắn mới (của đối phương, hoặc bản sao tin mình vừa gửi). */
+            function xuLyTinMoi(tin) {
+                capNhatHuyHieu();
+                if (!trangThai.dangMo) { return; }
+
+                var dangXemCuocNay = trangThai.manHinh === 'chat' && tin.cuocTroChuyenId === trangThai.cuocId;
+                if (dangXemCuocNay) {
+                    themTinMoi(tin);
+                    if (!tin.laCuaToi) { danhDauDaDoc(trangThai.cuocId); }   // đang xem thì coi như đã đọc
+                } else if (trangThai.manHinh === 'danhSach') {
+                    taiDanhSachCuoc();     // đang xem danh sách: cập nhật tin cuối và số tin chưa đọc
+                }
+            }
+
+            /** Server báo lỗi khi gửi tin (ví dụ người nhận bị khóa): hiện lỗi và trả lại nội dung vào ô nhập. */
+            function xuLyLoi(loi) {
+                hienLoi(loi.loi || 'Không gửi được tin nhắn');
+                if (oNhapTin.value === '' && noiDungVuaGui) { oNhapTin.value = noiDungVuaGui; }
+            }
+
+            function batDauWebSocket() {
+                if (ketNoiWs !== null) { return; }
+                if (typeof StompJs === 'undefined') { return; }   // thư viện không tải được: dùng polling như cũ
+
+                var giaoThuc = (window.location.protocol === 'https:') ? 'wss://' : 'ws://';
+                ketNoiWs = new StompJs.Client({
+                    brokerURL: giaoThuc + window.location.host + DUONG_DAN_WS,
+                    reconnectDelay: 5000        // mất kết nối thì 5 giây sau tự thử lại
+                });
+
+                ketNoiWs.onConnect = function () {
+                    daKetNoiWs = true;
+                    // Đăng ký nghe kênh riêng của mình (Spring tự ghép với id tài khoản)
+                    ketNoiWs.subscribe('/user/queue/tinNhan', function (khung) { xuLyTinMoi(JSON.parse(khung.body)); });
+                    ketNoiWs.subscribe('/user/queue/loi', function (khung) { xuLyLoi(JSON.parse(khung.body)); });
+
+                    // Bù lại những gì có thể đã lỡ trong lúc mất kết nối
+                    capNhatHuyHieu();
+                    if (trangThai.dangMo && trangThai.manHinh === 'chat' && trangThai.cuocId !== null) { taiTinNhan(false); }
+                };
+                ketNoiWs.onWebSocketClose = function () { daKetNoiWs = false; };
+                ketNoiWs.onStompError = function () { daKetNoiWs = false; };
+
+                ketNoiWs.activate();
+            }
+
+            // =========================================================
+            // GẮN SỰ KIỆN
+            // =========================================================
+
+            nutNoi.addEventListener('click', function () {
+                if (trangThai.dangMo) { dongKhung(); } else { moKhung(); }
+            });
+            nutDong.addEventListener('click', dongKhung);
+
+            nutCuocMoi.addEventListener('click', function () {
+                hienManHinh('lienHe');
+                oTimLienHe.value = '';
+                taiLienHe('');
+                oTimLienHe.focus();
+            });
+
+            nutQuayLai.addEventListener('click', function () {
+                trangThai.cuocId = null;
+                hienManHinh('danhSach');
+                taiDanhSachCuoc();
+                capNhatHuyHieu();
+            });
+
+            // Gõ tìm kiếm: đợi 300ms sau lần gõ cuối rồi mới gọi API
+            var boHenGioTim = null;
+            oTimLienHe.addEventListener('input', function () {
+                clearTimeout(boHenGioTim);
+                boHenGioTim = setTimeout(function () { taiLienHe(oTimLienHe.value.trim()); }, 300);
+            });
+
+            bieuMauGui.addEventListener('submit', guiTinNhan);
+
+            // Phương án dự phòng (polling): khi WebSocket đang chạy thì chỉ làm mới thưa (khoảng 32 giây một lần),
+            // khi WebSocket không chạy thì làm mới mỗi 4 giây như trước.
+            var soNhip = 0;
+            setInterval(function () {
+                if (document.hidden) { return; }
+                soNhip++;
+                var soNhipMoiLanHoi = daKetNoiWs ? 8 : 1;
+                if (soNhip % soNhipMoiLanHoi !== 0) { return; }
+
+                capNhatHuyHieu();
+                if (trangThai.dangMo && trangThai.manHinh === 'chat' && trangThai.cuocId !== null) { taiTinNhan(false); }
+                if (trangThai.dangMo && trangThai.manHinh === 'danhSach') { taiDanhSachCuoc(); }
+            }, CHU_KY_CAP_NHAT_MS);
+
+            // Lần đầu: kiểm tra đăng nhập + lấy số tin chưa đọc. Thành công thì hiện nút nổi và mở WebSocket.
+            capNhatHuyHieu().then(function (daDangNhap) {
+                if (daDangNhap) { batDauWebSocket(); }
+            });
+        })();
+    </script>
+</div>
+
+</body>
+</html>
